@@ -1,0 +1,7 @@
+rocketmq:
+  name-server: REDACTED:9876  # NameServer 地址[reference:5]
+
+  producer:
+    group: boot-producer-group
+    send-message-timeout: 3000
+    retry-times-when-send-async-failed: 2

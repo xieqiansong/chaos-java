@@ -1,0 +1,25 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        # 共享配置与优先级（场景 4）
+        #
+        # 覆盖优先级（从高到低）：
+        #   远程 data-id（自身 {name}-{profile}.{ext} / {name}.{ext}）
+        #     > extension-configs（数组下标越大优先级越高）
+        #     > shared-configs（数组下标越大优先级越高）
+        #     > 本地 application.yml
+        #
+        # shared-configs：多个应用复用的公共配置（如通用日志、公共开关）
+        shared-configs:
+          - data-id: common-base.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+        # extension-configs：本应用额外扩展的配置（如 DB、Redis 连接）
+        extension-configs:
+          - data-id: common-datasource.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+          - data-id: common-redis.yaml
+            group: DEFAULT_GROUP
+            refresh: true

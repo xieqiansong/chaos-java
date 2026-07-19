@@ -1,0 +1,21 @@
+server:
+  # 多实例演示：换端口再启一个（如 -Dserver.port=8082）即可观察消费端负载均衡
+  port: 8081
+
+spring:
+  application:
+    name: nacos-provider
+  cloud:
+    nacos:
+      discovery:
+        server-addr: REDACTED:8848
+        # 命名空间：区分环境（public 为默认），生产用不同 namespace 隔离 dev/test/prod
+        namespace: public
+        # 分组：区分业务线
+        group: DEFAULT_GROUP
+        # 实例元数据：可用于灰度路由、版本隔离等
+        metadata:
+          version: v1
+          zone: shanghai
+        # true=临时实例（心跳保活，掉线自动剔除，默认）；false=持久实例（注册信息落盘）
+        ephemeral: true

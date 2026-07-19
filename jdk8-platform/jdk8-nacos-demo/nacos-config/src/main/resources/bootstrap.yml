@@ -1,0 +1,28 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    # 应用名同时作为 Nacos Config 的默认 data-id 前缀：{name}.{file-extension}
+    name: nacos-config
+  # 默认激活的 profile；换成 dev/test 可切换命名空间（见 bootstrap-dev/test.yml）
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      config:
+        # Nacos 服务地址（gRPC 默认 8848）
+        server-addr: REDACTED:8848
+        # 远程配置文件格式，决定 data-id 后缀：nacos-config.yaml
+        file-extension: yaml
+        # 业务分组
+        group: DEFAULT_GROUP
+        # 配置变更自动刷新（配合 @RefreshScope），默认即为 true
+        refresh-enabled: true
+
+# 暴露 refresh 端点，便于手动触发刷新验证
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh,health,info

@@ -1,0 +1,9 @@
+# 下载解压后的 Nacos 二进制（体积大，不入库）
+nacos/
+downloads/
+*.tar.gz
+*.zip
+
+# 运行产物
+data/
+logs/

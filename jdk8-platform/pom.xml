@@ -11,6 +11,9 @@
     <modules>
         <module>jdk8-common</module>
         <module>jdk8-mapstruct-demo</module>
+        <module>jdk8-mybatis-plus-demo</module>
+        <module>jdk8-nacos-demo</module>
+        <module>jdk8-rocketmq-demo</module>
     </modules>
 
     <properties>
@@ -31,7 +34,7 @@
 
         <!-- 常用第三方组件 -->
         <druid.version>1.2.23</druid.version>
-        <mybatis-plus.version>3.5.5</mybatis-plus.version>
+        <mybatis-plus.version>3.5.17</mybatis-plus.version>
         <hutool.version>5.8.46</hutool.version>
         <guava.version>33.6.0-jre</guava.version>
         <lombok.version>1.18.46</lombok.version>
@@ -81,7 +84,7 @@
             <!-- MyBatis Plus -->
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <artifactId>maven-compiler-plugin</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
 

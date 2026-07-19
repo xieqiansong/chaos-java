@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        # 多环境隔离（场景 3）：test 命名空间的 ID
+        # 请在 Nacos 控制台创建 test 命名空间后，将其 ID 填到这里。
+        namespace: test

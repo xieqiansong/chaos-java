@@ -1,0 +1,8 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        # 多环境隔离（场景 3）：dev 命名空间的 ID
+        # 注意：namespace 填「命名空间 ID」而非名称；public 命名空间留空即可。
+        # 请在 Nacos 控制台「命名空间」创建 dev 后，将其 ID 填到这里。
+        namespace: dev

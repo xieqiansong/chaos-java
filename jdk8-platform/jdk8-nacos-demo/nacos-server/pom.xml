@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>lan.chaos</groupId>
+        <artifactId>nacos-demo</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <!-- 该模块不编译任何 Java 代码，仅作为「Nacos 服务端启动与配置」的运维目录。
+         真正启动 Nacos 有两种方式：本地二进制（需下载）或 Docker（见 README / docker-compose.yml）。 -->
+    <artifactId>nacos-server</artifactId>
+    <packaging>pom</packaging>
+    <name>nacos-server</name>
+</project>

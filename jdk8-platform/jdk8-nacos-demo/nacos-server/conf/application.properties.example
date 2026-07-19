@@ -1,0 +1,28 @@
+# ============================================================
+# Nacos 服务端配置示例（学习用）
+# 复制本文件为 application.properties 并挂载到 /home/nacos/conf/ 即可生效。
+# 完整字段见 Nacos 自带 conf/application.properties。
+# ============================================================
+
+# ---- 端口 ----
+server.port=8848
+# 绑定的网卡/IP；多网卡环境下建议显式指定，避免注册到错误 IP
+# nacos.inetutils.ip-address=127.0.0.1
+
+# ---- 鉴权（2.1+ 默认开启） ----
+# 控制台与客户端都需携带用户名密码（默认 nacos/nacos）。
+# 关闭鉴权仅用于纯本地学习（不安全，切勿上生产）：
+# nacos.core.auth.enabled=false
+
+# ---- 数据源 ----
+# 默认使用内置 Derby，零外部依赖，适合学习。
+# 切到生产推荐 MySQL（需先建库并执行 conf/mysql-schema.sql）：
+# spring.datasource.platform=mysql
+# db.num=1
+# db.url.0=jdbc:mysql://127.0.0.1:3306/nacos?characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useUnicode=true&useSSL=false&serverTimezone=UTC
+# db.user.0=nacos
+# db.password.0=nacos
+
+# ---- 模式 ----
+# 单机学习用 standalone；集群部署用 cluster（配合 cluster.conf）
+# nacos.mode=standalone
