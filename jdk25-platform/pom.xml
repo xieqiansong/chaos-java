@@ -29,11 +29,12 @@
         <!-- 常用第三方组件 -->
         <mybatis-plus.version>3.5.7</mybatis-plus.version>
         <druid.version>1.2.23</druid.version>
-        <hutool.version>5.8.26</hutool.version>
+        <hutool.version>5.8.46</hutool.version>
+        <guava.version>33.6.0-jre</guava.version>
         <lombok.version>1.18.46</lombok.version> <!-- JDK 25 需要 1.18.36+ -->
 
         <!-- Maven 插件版本 -->
-        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
     </properties>
@@ -82,11 +83,18 @@
                 <version>${mybatis-plus.version}</version>
             </dependency>
 
-            <!-- Hutool -->
+            <!-- Hutool 工具库 -->
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
+            </dependency>
+
+            <!-- Guava 工具库 -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
             </dependency>
 
             <!-- Lombok：JDK 25 需要 1.18.36+ -->
