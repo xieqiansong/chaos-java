@@ -137,7 +137,7 @@
               <include>**/*Test.java</include>
               <include>**/*Tests.java</include>
             </includes>
-            <skipTests>false</skipTests>
+            <!-- <skipTests>false</skipTests>-->
           </configuration>
         </plugin>
 

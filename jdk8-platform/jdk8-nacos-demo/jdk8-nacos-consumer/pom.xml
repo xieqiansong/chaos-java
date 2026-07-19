@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>lan.chaos</groupId>
-        <artifactId>nacos-demo</artifactId>
+        <artifactId>jdk8-nacos-demo</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>nacos-consumer</artifactId>
+    <artifactId>jdk8-nacos-consumer</artifactId>
     <packaging>jar</packaging>
     <name>nacos-consumer</name>
 
@@ -33,7 +33,7 @@
         <!-- 共享实体 + Feign 客户端接口 -->
         <dependency>
             <groupId>lan.chaos</groupId>
-            <artifactId>nacos-common</artifactId>
+            <artifactId>jdk8-nacos-common</artifactId>
         </dependency>
     </dependencies>
 

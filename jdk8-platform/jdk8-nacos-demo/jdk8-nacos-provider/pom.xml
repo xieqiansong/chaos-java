@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>lan.chaos</groupId>
-        <artifactId>nacos-demo</artifactId>
+        <artifactId>jdk8-nacos-demo</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>nacos-provider</artifactId>
+    <artifactId>jdk8-nacos-provider</artifactId>
     <packaging>jar</packaging>
     <name>nacos-provider</name>
 
@@ -27,7 +27,7 @@
         <!-- 共享实体 -->
         <dependency>
             <groupId>lan.chaos</groupId>
-            <artifactId>nacos-common</artifactId>
+            <artifactId>jdk8-nacos-common</artifactId>
         </dependency>
     </dependencies>
 
