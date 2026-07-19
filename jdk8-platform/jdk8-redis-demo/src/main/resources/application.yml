@@ -1,0 +1,22 @@
+server:
+  port: 8081
+
+spring:
+  redis:
+    host: localhost
+    port: 30102
+    # 有密码时填写，学习环境一般留空
+    password: REDACTED
+    database: 0
+    # 连接超时
+    timeout: 5000ms
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: 1000ms
+
+logging:
+  level:
+    lan.chaos.redis: info

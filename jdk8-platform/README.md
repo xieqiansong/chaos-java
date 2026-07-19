@@ -25,12 +25,14 @@
 | `jdk8-mybatis-plus-demo` | ⚪ 未开始 | 已建模块骨架，待补充 MyBatis-Plus 示例 |
 | `jdk8-nacos-demo` | ✅ 完成 | Nacos 服务注册发现 + 配置中心：nacos-common / nacos-provider / nacos-consumer / nacos-config |
 | `jdk8-rocketmq-demo` | ✅ 完成 | RocketMQ 全场景：simple / batch / broadcast / delay / filter / order / pull / requestreply / retry / transaction / trace / throttle / acl / faulttolerant 等 |
+| `jdk8-redis-demo` | ✅ 完成 | Redis 全场景：字符串/对象缓存、Hash/List/Set、ZSet 排行榜、计数、分布式锁、Lua 限流/扣库存、Pipeline、PubSub（HTTP 端点 `/redis/**` + `/redis` 场景清单） |
 
 ### 模块详情
 
 - **jdk8-mapstruct-demo**：覆盖基础字段映射、集合映射、自定义方法（`@Mapping` + `MappingUtil`）、嵌套对象映射；`target/generated-sources` 下已生成 `XxxMapperImpl` 验证注解处理器生效，测试覆盖 basic / collection / custom / nested。
 - **jdk8-nacos-demo**：基于 Spring Cloud Alibaba，演示 Provider 注册、`@LoadBalanced` RestTemplate / OpenFeign 消费、配置中心 `@RefreshScope` 动态刷新与编程式 `ConfigService.addListener` 监听。
 - **jdk8-rocketmq-demo**：使用原生 RocketMQ Client，以独立类演示各类消息模型与生产消费模式，并包含幂等、重试、死信、事务、ACL、故障容错、消息轨迹等进阶能力。
+- **jdk8-redis-demo**：基于 Spring Data Redis + Lettuce，按能力分包（cache/collection/rank/counter/lock/advanced）。`RedisController` 聚合在 `/redis/**` 下，并新增 `GET /redis` 返回场景清单作为「场景加载入口」；`RedisConfig` 用 JSON 序列化器让对象缓存可读可还原。
 
 ## 迁移计划（来自 chaos-java-example-old）
 
@@ -42,12 +44,13 @@
 |--------|----------|------|
 | `chaos-java-example-old/nacos-demo` | `jdk8-nacos-demo` | 已迁移并完善（多环境/共享配置 old 中有，可酌情补充） |
 | `chaos-java-example-old/rocketmq-demo` | `jdk8-rocketmq-demo` | 已迁移并扩展更多场景 |
+| `chaos-java-example-old/redis-demo` | `jdk8-redis-demo` | 已迁移：HTTP 场景入口 + 新增 `/redis` 场景清单 + 修复空 RedisConfig 与 getUser 路径变量 |
 
 ### 待迁移任务清单
 
 | # | 原模块 | 目标模块 | 优先级 | 说明 |
 |---|--------|----------|--------|------|
-| 1 | `redis-demo` | `jdk8-redis-demo` | 高 | Redis 缓存/集合/ZSet 排行榜/计数/分布式锁/Lua/Pipeline/PubSub（已有详细 README，迁移时保留） |
+| 1 | `redis-demo` | `jdk8-redis-demo` | 高 | ✅ 已迁移（见上方「已完成学习记录」「已迁移」表） |
 | 2 | `kafka-demo` | `jdk8-kafka-demo` | 中 | Kafka 生产消费、分区、消费者组等（old 中为注释模块，需先启用） |
 | 3 | `seata-demo` | `jdk8-seata-demo` | 中 | Seata 分布式事务（account/order/storage/business + common，含 sql） |
 | 4 | `sentinel-demo` | `jdk8-sentinel-demo` | 中 | Sentinel 限流/熔断/降级，动态规则源（old 中为注释模块） |

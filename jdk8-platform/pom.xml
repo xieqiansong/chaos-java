@@ -14,6 +14,7 @@
         <module>jdk8-mybatis-plus-demo</module>
         <module>jdk8-nacos-demo</module>
         <module>jdk8-rocketmq-demo</module>
+        <module>jdk8-redis-demo</module>
     </modules>
 
     <properties>

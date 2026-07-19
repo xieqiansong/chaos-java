@@ -31,8 +31,8 @@
 - **一个场景一个文件**：类/方法单一职责，命名见名知意（`CacheUserScenario`、`OrderProducer`）。
 - **自带样例数据**：提供 `sampleXxx()` 工厂造默认数据，用户无需自己准备输入。
 - **必须可观察**：场景执行后务必打印/返回「输入 → 输出」（日志、JSON、控制台），**静默执行是零分**。
-- **按能力分包**：`lan.chaos.xxx.<capability>`（如 `cache` / `lock` / `rank`），每包聚焦一类知识点；必要时像 rocketmq 那样抽出 `common` 放公共工具。
-- **常量前置**：topic / key / 端口等定义在本类或 `constant` 包顶部，避免魔法值。
+- **按能力分包（顶层就是能力，不是 service）**：场景能力必须是**顶层包**——`lan.chaos.xxx.<capability>`（如 `cache` / `lock` / `rank` / `simple` / `order`），每包聚焦一类知识点、一个场景一个类。`config` / `constant` / `controller` / `model` 这类「触发与支撑」只是学习的**边缘关注**，不要和能力平起平坐占顶层包，统一收进 `common/`（参考 `jdk8-rocketmq-demo`：能力是顶层包，去重/ID 存储等公共能力放 `common/`；`jdk8-redis-demo` 也是 `cache/collection/rank/...` 为顶层、`common/config|constant|controller|model` 为支撑）。
+- **常量前置**：topic / key / 端口等公共常量集中在 `common/constant`，避免魔法值。
 - **外部依赖最小化**：必须连外部组件（Redis / Kafka / Nacos）时，提供 `docker-compose.yml` + 合理默认地址，README 写明「先起组件再起 Demo」。
 - **解释 WHY 而非只写 WHAT**：注释/README 要讲清设计取舍、踩坑点、生产化差异（参考上面两个标杆的注释风格）。
 
@@ -40,14 +40,18 @@
 
 ## 四、场景加载：几种形态（参考，不强制）
 
+**首要形态是「单元测试」**：每个场景至少有一条可断言的 `*Test`，既验证语义、又充当「可观察输出」，CI 无外部依赖时靠 `Assumptions` 优雅跳过。这是及格线，没有 HTTP 端点也完全成立（`jdk8-redis-demo`、`jdk8-mapstruct-demo` 均以此为核心）。
+
 | 形态 | 适用 | 示例 |
 |------|------|------|
-| HTTP 端点 | 有外部组件 / Web 交互 | `redis-demo` 的 `/redis/cache`、`/redis/lock` |
-| 控制台 Runner | 纯库 / 非 Web | `jdk8-mapstruct-demo` 的 `DemoApp.main()` 分节打印 |
-| 单元测试 | 任何可断言逻辑 | `jdk8-mapstruct-demo` 的 `*Test` |
+| 单元测试 | **任何场景的核心验证，首选** | `jdk8-mapstruct-demo` 的 `*Test` |
+| 控制台 Runner | 纯库 / 非 Web，想分节打印「输入→输出」 | `jdk8-mapstruct-demo` 的 `DemoApp.main()` |
+| HTTP 端点 | **仅当**你想用 curl/Postman 交互式把玩时才加 | 非必须，属于「触发外壳」，放 `common/controller` |
 | 场景注册表 | 场景多、想「按名 / 一键全跑」 | 见下 |
 
-可选「场景注册表」思路（概念，非强制模板）：把场景抽象为 `Scenario { name(); description(); run(); }`，由 Spring 自动收集进 `ScenarioRegistry`，再经 HTTP 或 `ApplicationRunner` 加载。Web 类 Demo 推荐「HTTP 端点触发」，库类推荐「控制台 Runner + 测试」。
+> 关键认知：**Demo 的好坏不靠一个 Web 控制器撑着**。HTTP 端点只是可选的「触发外壳」，没有它，单元测试 + 控制台输出同样能把每个场景讲清楚、跑通、可观察。不要为了「看起来完整」而堆一个不含知识点的 Controller。
+
+可选「场景注册表」思路（概念，非强制模板）：把场景抽象为 `Scenario { name(); description(); run(); }`，由 Spring 自动收集进 `ScenarioRegistry`，再经 `ApplicationRunner` 或测试加载。
 
 ---
 

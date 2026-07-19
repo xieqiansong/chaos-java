@@ -13,6 +13,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="jdk8-nacos-config" />
         <module name="jdk8-common" />
+        <module name="jdk8-redis-demo" />
         <module name="jdk8-rocketmq-demo" />
         <module name="jdk11-common" />
         <module name="jdk8-nacos-common" />
