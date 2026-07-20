@@ -10,6 +10,21 @@ Nacos 服务治理演示模块，覆盖**服务注册与发现**与**配置中�
 
 > 使用频率标注：`★★★ 高频`（几乎每个微服务项目都会用）／`★★☆ 中频`（常见但不一定都有）／`★☆☆ 低频`（特定场景才需要）／`◆ 基础`（公共模块，非独立业务场景）。
 
+## 快速开始
+
+```bash
+# 1) 起 Nacos Server（standalone，见 jdk8-nacos-server/docker-compose.yml；需 Docker）
+cd jdk8-nacos-server && docker-compose up -d
+
+# 2) 跑配置中心场景测试：无 Nacos 时自动跳过，有 Nacos 时启动上下文并断言动态配置 Bean 绑定
+mvn -o -pl jdk8-nacos-demo/jdk8-nacos-config -am test
+```
+
+> 触发入口 `ConfigTest` 挂 `NacosReachableCondition`：在 Spring 上下文启动**之前** TCP 探测 `REDACTED:8848`，
+> 不可达时整类优雅跳过（CI 零误报），可达时启动 `ConfigApplication` 并断言 `DynamicConfig` 已绑定。
+
+---
+
 ## 目录结构（规划）
 
 ```
