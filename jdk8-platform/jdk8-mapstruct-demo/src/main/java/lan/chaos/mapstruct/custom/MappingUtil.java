@@ -1,7 +1,7 @@
 package lan.chaos.mapstruct.custom;
 
-import lan.chaos.mapstruct.model.Gender;
-import lan.chaos.mapstruct.model.Role;
+import lan.chaos.mapstruct.common.model.Gender;
+import lan.chaos.mapstruct.common.model.Role;
 import org.mapstruct.Named;
 
 /**

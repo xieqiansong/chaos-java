@@ -1,9 +1,9 @@
 package lan.chaos.mapstruct.collection;
 
 import lan.chaos.mapstruct.basic.UserDto;
-import lan.chaos.mapstruct.model.Gender;
-import lan.chaos.mapstruct.model.Role;
-import lan.chaos.mapstruct.model.User;
+import lan.chaos.mapstruct.common.model.Gender;
+import lan.chaos.mapstruct.common.model.Role;
+import lan.chaos.mapstruct.common.model.User;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

@@ -2,7 +2,7 @@ package lan.chaos.mapstruct.collection;
 
 import lan.chaos.mapstruct.basic.BasicMapper;
 import lan.chaos.mapstruct.basic.UserDto;
-import lan.chaos.mapstruct.model.User;
+import lan.chaos.mapstruct.common.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

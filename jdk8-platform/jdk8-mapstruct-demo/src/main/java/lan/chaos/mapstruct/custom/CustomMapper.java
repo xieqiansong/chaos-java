@@ -1,7 +1,7 @@
 package lan.chaos.mapstruct.custom;
 
 import lan.chaos.mapstruct.basic.AddressDto;
-import lan.chaos.mapstruct.model.User;
+import lan.chaos.mapstruct.common.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

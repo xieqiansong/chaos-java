@@ -1,0 +1,28 @@
+# Maven 构建产物
+target/
+**/target/
+*.class
+*.jar
+*.war
+*.ear
+
+# 生成源码（注解处理器产物，如 MapStruct）
+target/generated-sources/
+generated-sources/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.eclipse/
+.project
+.classpath
+.settings/
+.vscode/
+*.code-workspace
+
+# 系统/临时
+.DS_Store
+Thumbs.db
+*.log

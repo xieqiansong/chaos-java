@@ -1,6 +1,6 @@
 package lan.chaos.mapstruct.basic;
 
-import lan.chaos.mapstruct.model.User;
+import lan.chaos.mapstruct.common.model.User;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

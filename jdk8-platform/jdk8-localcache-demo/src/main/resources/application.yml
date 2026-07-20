@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: jdk8-localcache-demo
+logging:
+  level:
+    lan.chaos.localcache: info

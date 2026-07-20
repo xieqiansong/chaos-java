@@ -16,6 +16,7 @@
         <module>jdk8-rocketmq-demo</module>
         <module>jdk8-redis-demo</module>
         <module>jdk8-kafka-demo</module>
+        <module>jdk8-localcache-demo</module>
         <module>jdk8-seata-demo</module>
         <module>jdk8-sentinel-demo</module>
         <module>jdk8-elasticsearch-demo</module>
@@ -46,6 +47,7 @@
         <hutool.version>5.8.46</hutool.version>
         <guava.version>33.6.0-jre</guava.version>
         <lombok.version>1.18.46</lombok.version>
+        <caffeine.version>2.9.3</caffeine.version>
 
         <!-- Maven 插件版本 -->
         <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
@@ -115,6 +117,13 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
+            </dependency>
+
+            <!-- Caffeine 本地缓存（JDK8 用 2.x；JDK11+ 才用 3.x） -->
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${caffeine.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

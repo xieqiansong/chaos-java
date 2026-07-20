@@ -1,4 +1,4 @@
-package lan.chaos.mapstruct.model;
+package lan.chaos.mapstruct.common.model;
 
 /**
  * 性别枚举，用于演示 {@code qualifiedByName} 自定义类型转换。

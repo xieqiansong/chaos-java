@@ -1,4 +1,4 @@
-package lan.chaos.mapstruct.model;
+package lan.chaos.mapstruct.common.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

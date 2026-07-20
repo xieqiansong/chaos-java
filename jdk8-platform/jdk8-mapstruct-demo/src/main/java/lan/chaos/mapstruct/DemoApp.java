@@ -9,10 +9,10 @@ import lan.chaos.mapstruct.collection.CollectionMapper;
 import lan.chaos.mapstruct.custom.CustomMapper;
 import lan.chaos.mapstruct.custom.UserCardDto;
 import lan.chaos.mapstruct.custom.UserSummaryDto;
-import lan.chaos.mapstruct.model.Address;
-import lan.chaos.mapstruct.model.Gender;
-import lan.chaos.mapstruct.model.Role;
-import lan.chaos.mapstruct.model.User;
+import lan.chaos.mapstruct.common.model.Address;
+import lan.chaos.mapstruct.common.model.Gender;
+import lan.chaos.mapstruct.common.model.Role;
+import lan.chaos.mapstruct.common.model.User;
 import lan.chaos.mapstruct.nested.NestedMapper;
 import lan.chaos.mapstruct.nested.Person;
 
