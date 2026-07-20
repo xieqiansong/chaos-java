@@ -1,0 +1,15 @@
+spring:
+  kafka:
+    bootstrap-servers: ${spring.embedded.kafka.brokers}
+    listener:
+      # SimpleConsumer 等需要手动 ack 来显式提交 offset
+      ack-mode: manual_immediate
+    consumer:
+      # blocking early: 即使部分 partition 无 leader 也继续消费（EmbeddedKafka 场景用）
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      properties:
+        allow.auto.create.topics: true
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer

@@ -1,0 +1,45 @@
+# ============================================================
+# Seata 分布式事务 Demo — 外部组件编排
+#
+# 用途：提供 Seata Server + MySQL，与 jdk8-seata-demo 配合
+#       体验完整的分布式事务（AT 回滚 / TCC Cancel）。
+#
+# 启动：
+#   docker compose up -d
+# 停止：
+#   docker compose down
+# ============================================================
+version: "3.8"
+
+services:
+  # ==================== Seata Server（TC） ====================
+  seata-server:
+    image: seataio/seata-server:1.6.1
+    container_name: seata-server
+    ports:
+      - "7091:7091"   # Web 控制台（查看全局事务日志）
+      - "8091:8091"   # 事务协调端口（TM / RM 通信）
+    environment:
+      # 注册中心类型：file 模式（文件直连，无需 Nacos / Eureka）
+      - SEATA_REGISTRY_TYPE=file
+      # 配置中心类型：file 模式
+      - SEATA_CONFIG_TYPE=file
+      # 存储模式：file（事务日志存本地文件，学习环境足够）
+      - STORE_MODE=file
+      # Seata Server 控制台端口
+      - SEATA_PORT=7091
+
+  # ==================== MySQL（可选，生产模拟） ====================
+  # 默认使用 H2 内存数据库（无需 MySQL），此服务供可选的生产化验证。
+  # 若需使用 MySQL，启动后通过命令行 --spring.datasource.url=... 覆盖。
+  mysql:
+    image: mysql:8.0
+    container_name: seata-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: seata_demo
+    command:
+      - --default-authentication-plugin=mysql_native_password
+    # Seata Server 启动不依赖 MySQL，但 Demo 应用可选连接

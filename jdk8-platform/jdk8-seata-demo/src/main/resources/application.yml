@@ -1,0 +1,45 @@
+spring:
+  # ================================
+  # 数据源：默认 H2 内存库，单元测试开箱即跑
+  # docker-compose 场景通过命令行 --spring.datasource.url=... 覆盖
+  # ================================
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:seata_demo;DB_CLOSE_DELAY=-1;MODE=MySQL
+    username: sa
+    password:
+    # Druid 连接池（监控 + Seata 兼容）
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 2
+      min-idle: 2
+      max-active: 10
+
+  # schema.sql 自动初始化（首次连接时执行建表 + 种子数据）
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+
+  # 禁用 H2 控制台（学习需要时可改为 true）
+  h2:
+    console:
+      enabled: false
+
+# ================================
+# Seata 分布式事务配置
+# ================================
+# 注：spring-cloud-starter-alibaba-seata 会自动读取以下配置。
+# 文件模式适合单机学习，生产环境应改为 nacos / consul 注册中心。
+seata:
+  enabled: true
+  tx-service-group: chaos-seata-tx-group
+  service:
+    vgroup-mapping:
+      chaos-seata-tx-group: default
+    grouplist:
+      default: 127.0.0.1:8091
+  config:
+    type: file
+  registry:
+    type: file

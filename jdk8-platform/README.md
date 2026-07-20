@@ -25,14 +25,20 @@
 | `jdk8-mybatis-plus-demo` | ⚪ 未开始 | 已建模块骨架，待补充 MyBatis-Plus 示例 |
 | `jdk8-nacos-demo` | ✅ 完成 | Nacos 服务注册发现 + 配置中心：nacos-common / nacos-provider / nacos-consumer / nacos-config |
 | `jdk8-rocketmq-demo` | ✅ 完成 | RocketMQ 全场景：simple / batch / broadcast / delay / filter / order / pull / requestreply / retry / transaction / trace / throttle / acl / faulttolerant 等 |
-| `jdk8-redis-demo` | ✅ 完成 | Redis 全场景：字符串/对象缓存、Hash/List/Set、ZSet 排行榜、计数、分布式锁、Lua 限流/扣库存、Pipeline、PubSub（HTTP 端点 `/redis/**` + `/redis` 场景清单） |
+| `jdk8-redis-demo` | ✅ 完成 | Redis 全场景：字符串/对象缓存、Hash/List/Set、ZSet 排行榜、计数、分布式锁、Lua 限流/扣库存、Pipeline、PubSub（单元测试驱动） |
+| `jdk8-kafka-demo` | ✅ 完成 | Kafka 全场景：基础收发、批量发送/消费、分区有序、Exactly-Once 事务、重试/死信、Header 消息过滤（@EmbeddedKafka 自包含测试） |
+| `jdk8-seata-demo` | ✅ 完成 | Seata 分布式事务：AT 自动补偿 + TCC Try/Confirm/Cancel，H2 内存数据库自包含测试 |
+| `jdk8-sentinel-demo` | ✅ 完成 | Sentinel 流控/熔断/热点参数/@SentinelResource，SphU.entry() 程序化 + 注解双轨，自包含测试 |
 
 ### 模块详情
 
 - **jdk8-mapstruct-demo**：覆盖基础字段映射、集合映射、自定义方法（`@Mapping` + `MappingUtil`）、嵌套对象映射；`target/generated-sources` 下已生成 `XxxMapperImpl` 验证注解处理器生效，测试覆盖 basic / collection / custom / nested。
 - **jdk8-nacos-demo**：基于 Spring Cloud Alibaba，演示 Provider 注册、`@LoadBalanced` RestTemplate / OpenFeign 消费、配置中心 `@RefreshScope` 动态刷新与编程式 `ConfigService.addListener` 监听。
 - **jdk8-rocketmq-demo**：使用原生 RocketMQ Client，以独立类演示各类消息模型与生产消费模式，并包含幂等、重试、死信、事务、ACL、故障容错、消息轨迹等进阶能力。
-- **jdk8-redis-demo**：基于 Spring Data Redis + Lettuce，按能力分包（cache/collection/rank/counter/lock/advanced）。`RedisController` 聚合在 `/redis/**` 下，并新增 `GET /redis` 返回场景清单作为「场景加载入口」；`RedisConfig` 用 JSON 序列化器让对象缓存可读可还原。
+- **jdk8-redis-demo**：基于 Spring Data Redis + Lettuce，按能力分包（cache/collection/rank/counter/lock/ratelimit/stock/pipeline/pubsub），以单元测试为核心验证手段。
+- **jdk8-kafka-demo**：基于 Spring Kafka 2.8.x，覆盖基础收发、批量发送/消费、分区有序、Exactly-Once 事务、重试/死信、Header 消息过滤，@EmbeddedKafka 自包含测试无需外部 Broker。
+- **jdk8-seata-demo**：基于 Seata 1.6.x + Spring Cloud Alibaba，覆盖 AT 模式（自动 undo_log 补偿）和 TCC 模式（手动 Try/Confirm/Cancel），JdbcTemplate 直操作业聚焦事务概念，H2 内存数据库自包含测试。
+- **jdk8-sentinel-demo**：基于 Sentinel 1.8.6 + Spring Cloud Alibaba，覆盖 QPS 直接/关联/WarmUp 流控、异常数/异常比例/慢调用比例熔断、热点参数限流、@SentinelResource 注解（blockHandler/fallback），SphU.entry() 程序化方式核心稳定，包含 Dashboard docker-compose。
 
 ## 迁移计划（来自 chaos-java-example-old）
 
@@ -51,9 +57,9 @@
 | # | 原模块 | 目标模块 | 优先级 | 说明 |
 |---|--------|----------|--------|------|
 | 1 | `redis-demo` | `jdk8-redis-demo` | 高 | ✅ 已迁移（见上方「已完成学习记录」「已迁移」表） |
-| 2 | `kafka-demo` | `jdk8-kafka-demo` | 中 | Kafka 生产消费、分区、消费者组等（old 中为注释模块，需先启用） |
-| 3 | `seata-demo` | `jdk8-seata-demo` | 中 | Seata 分布式事务（account/order/storage/business + common，含 sql） |
-| 4 | `sentinel-demo` | `jdk8-sentinel-demo` | 中 | Sentinel 限流/熔断/降级，动态规则源（old 中为注释模块） |
+| 2 | `kafka-demo` | `jdk8-kafka-demo` | 中 | ✅ 已迁移 |
+| 3 | `seata-demo` | `jdk8-seata-demo` | 中 | ✅ 已迁移：AT + TCC 两种模式，H2 自包含测试 |
+| 4 | `sentinel-demo` | `jdk8-sentinel-demo` | 中 | ✅ 已迁移：流控/熔断/热点/@SentinelResource，SphU 程序化 + 注解双轨 |
 | 5 | `elasticsearch-demo` | `jdk8-elasticsearch-demo` | 中 | ES 索引/文档/搜索（old 中为注释模块） |
 | 6 | `demo-seckill` | `jdk8-seckill-demo` | 高 | 秒杀系统：超卖/库存扣减（含 lua、sql、设计文档 `开发计划.md` 等） |
 | 7 | `demo-short-link` | `jdk8-short-link-demo` | 高 | 短链生成与跳转服务（含 sql、设计文档） |

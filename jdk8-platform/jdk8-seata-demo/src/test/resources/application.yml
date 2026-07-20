@@ -1,0 +1,22 @@
+# 测试环境：H2 内存数据库 + 禁用 Seata TC 连接
+# Seata @GlobalTransactional / @LocalTCC 依赖 TC 协调，单测阶段无法启动完整 TC，
+# 因此设置 seata.enabled=false，测试聚焦于业务逻辑正确性和本地事务行为。
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:seata_test;DB_CLOSE_DELAY=-1;MODE=MySQL
+    username: sa
+    password:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 1
+      min-idle: 1
+      max-active: 5
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+
+seata:
+  enabled: false

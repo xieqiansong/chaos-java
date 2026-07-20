@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: jdk8-sentinel-test
+  cloud:
+    sentinel:
+      # 测试环境不使用 Dashboard
+      transport:
+        dashboard: 127.0.0.1:8080
+      eager: true
+
+logging:
+  level:
+    lan.chaos.sentinel: DEBUG
+    com.alibaba.csp.sentinel: WARN

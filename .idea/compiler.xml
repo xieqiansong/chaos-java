@@ -12,13 +12,16 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="jdk8-nacos-config" />
+        <module name="jdk8-kafka-demo" />
         <module name="jdk8-common" />
         <module name="jdk8-redis-demo" />
         <module name="jdk8-rocketmq-demo" />
+        <module name="jdk8-sentinel-demo" />
         <module name="jdk11-common" />
         <module name="jdk8-nacos-common" />
         <module name="jdk8-nacos-consumer" />
         <module name="jdk8-nacos-provider" />
+        <module name="jdk8-seata-demo" />
         <module name="jdk8-mybatis-plus-demo" />
       </profile>
       <profile name="Annotation profile for jdk25-platform" enabled="true">
@@ -38,6 +41,9 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../../Users/$$USERNAME$$/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+          <entry name="$PROJECT_DIR$/../../../Users/$$USERNAME$$/.m2/repository/org/mapstruct/mapstruct-processor/1.7.0.Beta2/mapstruct-processor-1.7.0.Beta2.jar" />
+          <entry name="$PROJECT_DIR$/../../../Users/$$USERNAME$$/.m2/repository/org/projectlombok/lombok-mapstruct-binding/0.2.0/lombok-mapstruct-binding-0.2.0.jar" />
           <entry name="$PROJECT_DIR$/../../../Users/$$USERNAME$$/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
           <entry name="$PROJECT_DIR$/../../../Users/$$USERNAME$$/.m2/repository/org/mapstruct/mapstruct-processor/1.7.0.Beta2/mapstruct-processor-1.7.0.Beta2.jar" />
           <entry name="$PROJECT_DIR$/../../../Users/$$USERNAME$$/.m2/repository/org/projectlombok/lombok-mapstruct-binding/0.2.0/lombok-mapstruct-binding-0.2.0.jar" />

@@ -1,0 +1,21 @@
+# Kafka 单节点（KRaft 模式，无需 ZooKeeper），学习用
+# 启动：docker compose up -d
+# 测试用 @EmbeddedKafka 自包含，不需要 Broker 也能跑测试；
+# 此 compose 仅用于手动把玩：运行 main 方法后观察 @KafkaListener 消费日志。
+version: "3.8"
+services:
+  kafka:
+    image: bitnami/kafka:3.6
+    container_name: kafka-demo
+    ports:
+      - "9092:9092"
+    environment:
+      # KRaft 单节点配置
+      KAFKA_CFG_NODE_ID: 1
+      KAFKA_CFG_PROCESS_ROLES: broker,controller
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "true"

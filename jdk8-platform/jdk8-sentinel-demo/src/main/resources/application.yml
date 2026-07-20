@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: jdk8-sentinel-demo
+
+  cloud:
+    sentinel:
+      transport:
+        # Sentinel Dashboard 地址（Docker 启动后可用，非必须）
+        dashboard: 127.0.0.1:8080
+        port: 8719
+      # 关闭懒加载，启动即初始化 Sentinel 客户端（确保规则立即可用）
+      eager: true
+
+logging:
+  level:
+    lan.chaos.sentinel: DEBUG
+    com.alibaba.csp.sentinel: INFO
