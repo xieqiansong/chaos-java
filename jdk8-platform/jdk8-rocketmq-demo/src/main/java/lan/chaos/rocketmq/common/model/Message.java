@@ -1,4 +1,4 @@
-package lan.chaos.rocketmq.message;
+package lan.chaos.rocketmq.common.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

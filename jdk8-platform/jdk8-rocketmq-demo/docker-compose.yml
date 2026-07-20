@@ -1,0 +1,29 @@
+# RocketMQ 单节点（NameServer + Broker），用于本地跑通 jdk8-rocketmq-demo。
+#
+# 启动：docker-compose up -d
+# 停止：docker-compose down
+#
+# 关键坑点（呼应 AGENTS「生产坑」）：
+#   Broker 启动后会向 NameServer 注册自己的「对外地址」。若用默认 bridge 网络，
+#   注册的是容器内部 IP，宿主机上的 Java 客户端拿到后连不上。
+#   本编排让 broker 使用 `network_mode: host`，直接以宿主机 IP 注册，绕开该问题。
+#   若你的环境不支持 host 网络（如部分 macOS Docker），需改用自定义网络 + brokerIP1 显式指定宿主机 IP。
+version: '3.8'
+
+services:
+  namesrv:
+    image: apache/rocketmq:4.9.8
+    container_name: rmq-namesrv
+    ports:
+      - "9876:9876"
+    command: sh -c "mqnamesrv"
+
+  broker:
+    image: apache/rocketmq:4.9.8
+    container_name: rmq-broker
+    network_mode: host
+    depends_on:
+      - namesrv
+    environment:
+      JAVA_OPT_EXT: "-server -Xms512m -Xmx512m"
+    command: sh -c "mqbroker -n 127.0.0.1:9876 autoCreateTopicEnable=true"

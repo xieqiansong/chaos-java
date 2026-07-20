@@ -3,10 +3,11 @@
 RocketMQ 常用场景演示模块，按功能子包分层，以 `DemoTest` 为统一触发入口（所有场景由测试触发，应用启动不自动收发消息）。
 
 - 基础包：`lan.chaos.rocketmq`
-- 触发入口：`DemoTest`（JUnit 5，已开启并行执行）
+- 触发入口：`DemoTest`（JUnit 5，已开启并行执行；**已去除类级 `@Disabled`**，无 broker 时由 `Assumptions` 优雅跳过）
 - 配置：`application.yml`（NameServer 等，默认 `REDACTED:9876`）
 
-> 所有场景均连真实 RocketMQ（`REDACTED:9876`），请先启动 NameServer + Broker 再跑测试。
+> 所有场景均连真实 RocketMQ（`REDACTED:9876`）。请先用本项目 `docker-compose.yml` 起 NameServer + Broker：
+> `docker-compose up -d`（停止：`docker-compose down`），再跑测试。
 
 > 使用频率标注：`★★★ 高频`（几乎每个项目都会用）／`★★☆ 中频`（常见但不一定都有）／`★☆☆ 低频`（特定场景才需要）／`◆ 基础`（公共模块，非独立业务场景）。
 
@@ -111,23 +112,14 @@ rocketmq-demo/src/main/java/lan/chaos/rocketmq/
 
 ### common 公共抽象 `◆`
 
-幂等去重、本地事务状态存储等的接口与内存实现，供多个场景复用（生产应替换为 Redis / 数据库）。
+幂等去重、本地事务状态存储、统一消息信封等的接口与内存实现，供多个场景复用（生产应替换为 Redis / 数据库）。
 
 | 类 | 说明 |
 |----|------|
+| `common/model/Message.java` | 统一消息信封：消息载体（body + timestamp） |
+| `common/util/MessageUtils.java` | 信封封装/解析工具（`pack`/`unpack`/`costMillis`，刻意不用 JSON 以免序列化开销污染耗时测量） |
 | `common/MessageIdStore.java` | 幂等去重存储接口 |
 | `common/InMemoryMessageIdStore.java` | 内存实现（演示用） |
-
----
-
-### message 统一消息信封 `◆`
-
-刻意不用 JSON，避免序列化开销污染耗时测量：`MessageUtils.pack(body)` 拼成 `时间戳毫秒|正文`，`unpack` 按首个 `|` 切分。
-
-| 类 | 说明 |
-|----|------|
-| `message/Message.java` | 消息载体 |
-| `message/MessageUtils.java` | 封装 / 解析工具 |
 
 ---
 
@@ -333,27 +325,35 @@ RocketMQ 半消息 + 本地事务回查机制实现最终一致：`TransactionLi
 
 ---
 
-## 如何运行
+## 快速开始
 
 ```bash
-# 编译（离线）
-mvn -o test-compile -DskipTests
+# 1) 起 RocketMQ（NameServer + Broker，见 docker-compose.yml；需 Docker）
+docker-compose up -d
 
-# 运行单个场景（需可达 REDACTED:9876 的 RocketMQ）
-mvn -o test -Dtest=DemoTest#sync
-mvn -o test -Dtest=DemoTest#broadcast
-mvn -o test -Dtest=DemoTest#requestReply
-mvn -o test -Dtest=DemoTest#pull
-mvn -o test -Dtest=DemoTest#globalOrder
-mvn -o test -Dtest=DemoTest#keyQuery
-mvn -o test -Dtest=DemoTest#faultTolerant
-mvn -o test -Dtest=DemoTest#trace
-mvn -o test -Dtest=DemoTest#acl
-mvn -o test -Dtest=DemoTest#throttle
-mvn -o test -Dtest=DemoTest#broadcastNoRetry
+# 2) 跑全部场景：无 broker 时自动跳过，有 broker 时真实发送并断言
+mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test
+
+# 3) 跑单个场景
+mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#sync
+mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#broadcast
+mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#requestReply
+mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#pull
+mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#globalOrder
+mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#keyQuery
+mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#faultTolerant
+mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#trace
+mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#acl
+mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#throttle
+mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#broadcastNoRetry
 ```
 
-每个用例发送后用 `ThreadUtil.sleep` 等待消费端打印；消费者日志含 `耗时=xxxms`（消息从发送到被消费的端到端耗时）。
+> 触发入口 `DemoTest` 已去除类级 `@Disabled`：每个场景独立 `@Test`；类上挂 `BrokerReachableCondition`，
+> 在 Spring 上下文启动**之前**用 TCP 探测 NameServer 是否可达，不可达时整类被**优雅跳过**（CI 无外部依赖时零误报，而非上下文崩溃报错），
+> 可达时真实发送并用 `assertDoesNotThrow` 断言链路不抛异常。
+> 末尾 `ThreadUtil.sleep` 仅用于等待异步消费端打印结果（可观察输出），并非测试入口。
+>
+> 消费者日志含 `耗时=xxxms`（消息从发送到被消费的端到端耗时）。
 
 ## 依赖外部配置的场景
 
@@ -362,6 +362,14 @@ mvn -o test -Dtest=DemoTest#broadcastNoRetry
 | 消息过滤-SQL92 | Broker `enablePropertyFilter=true` | 监听启动失败（已 `@Profile("sql92")` 隔离） |
 | 消息轨迹 | Broker 存在 `RMQ_SYS_TRACE_TOPIC` | 仅丢轨迹，不影响主消息 |
 | ACL 鉴权 | Broker 开启 ACL 并配账号 | `No permission` 鉴权失败（仅演示客户端写法） |
+
+## 进阶方向（生产化考量，本项目未实现）
+
+- **部署拓扑**：Broker 向 NameServer 注册的地址须宿主机可达（docker-compose 用 `network_mode: host` 规避），生产多 Broker 需配 `brokerIP1` 与多副本保障高可用。
+- **鉴权与过滤**：ACL 需在 Broker 配好账号并开启；SQL92 过滤需 `enablePropertyFilter=true`，否则监听启动失败（已用 `@Profile("sql92")` 隔离）。
+- **幂等 / 事务存储**：`MessageIdStore`、`LocalTxStore` 当前是内存实现，重启 / 多实例失效；生产替换为 Redis(SETNX+EX) 或数据库唯一键。
+- **可观测**：接入消息轨迹（`RMQ_SYS_TRACE_TOPIC`）、死信队列告警、消费堆积监控，定位丢消息 / 重复 / 积压。
+- **客户端参数**：发送容错（`latencyMax`/`notAvailableDuration`）、消费并发与拉取批次按下游能力调优，防瞬时洪峰压垮下游。
 
 ## 设计要点
 

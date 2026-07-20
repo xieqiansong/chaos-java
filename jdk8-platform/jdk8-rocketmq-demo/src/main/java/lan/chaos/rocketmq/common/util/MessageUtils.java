@@ -1,4 +1,6 @@
-package lan.chaos.rocketmq.message;
+package lan.chaos.rocketmq.common.util;
+
+import lan.chaos.rocketmq.common.model.Message;
 
 /**
  * 消息信封的轻量封装/解析工具（不使用 JSON，避免序列化本身的开销污染"耗时"测量）。

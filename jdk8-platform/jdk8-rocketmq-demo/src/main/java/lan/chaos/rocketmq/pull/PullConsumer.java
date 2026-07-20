@@ -1,7 +1,7 @@
 package lan.chaos.rocketmq.pull;
 
-import lan.chaos.rocketmq.message.Message;
-import lan.chaos.rocketmq.message.MessageUtils;
+import lan.chaos.rocketmq.common.model.Message;
+import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.DefaultLitePullConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;

@@ -1,7 +1,7 @@
 package lan.chaos.rocketmq.broadcast;
 
-import lan.chaos.rocketmq.message.Message;
-import lan.chaos.rocketmq.message.MessageUtils;
+import lan.chaos.rocketmq.common.model.Message;
+import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.annotation.MessageModel;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;

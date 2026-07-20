@@ -1,6 +1,6 @@
 package lan.chaos.rocketmq.acl;
 
-import lan.chaos.rocketmq.message.MessageUtils;
+import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.acl.common.AclClientRPCHook;
 import org.apache.rocketmq.acl.common.SessionCredentials;
