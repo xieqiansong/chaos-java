@@ -9,23 +9,90 @@
 
     <artifactId>jdk8-mybatis-plus-demo</artifactId>
     <packaging>jar</packaging>
-
     <name>jdk8-mybatis-plus</name>
     <url>http://maven.apache.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- 覆盖父 POM 的 3.5.17：3.5.3.2 仍内置 Pagination/TenantLine/BlockAttack 等拦截器（3.5.7+ 起被移除），便于演示完整高阶插件 -->
+        <mybatis-plus.version>3.5.3.2</mybatis-plus.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter</artifactId>
         </dependency>
+
+        <!-- MyBatis-Plus（版本由父 POM dependencyManagement 统一管理） -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>${mybatis-plus.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- jsqlparser：MyBatis-Plus 3.5.3.2 的分页/多租户拦截器在运行时依赖它；
+             注意 4.7+ 已移除 net.sf.jsqlparser.statement.select.SelectExpressionItem，
+             与 MP 3.5.3.2 不兼容，故锁定 4.6 -->
+        <dependency>
+            <groupId>com.github.jsqlparser</groupId>
+            <artifactId>jsqlparser</artifactId>
+            <version>4.6</version>
+        </dependency>
+
+        <!-- H2 内存库：测试零外部依赖，CI 自包含（runtime 即可，无需驱动单独依赖） -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <!-- 显式声明 Lombok 注解处理器，确保 @Data 等生成 getter/setter -->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <!-- Spring Boot 插件：提供「一条命令启动」入口（mvn spring-boot:run / java -jar），
+                 并让 mvn package 产出可直接运行的 fat-jar。版本对应 Spring Boot 2.7.18。 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.7.18</version>
+                <configuration>
+                    <mainClass>lan.chaos.mybatisplus.DemoApp</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
