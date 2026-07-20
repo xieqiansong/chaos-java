@@ -21,6 +21,7 @@
         <module>jdk8-elasticsearch-demo</module>
         <module>jdk8-seckill-demo</module>
         <module>jdk8-short-link-demo</module>
+        <module>jdk8-base</module>
     </modules>
 
     <properties>

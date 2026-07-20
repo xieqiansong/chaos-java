@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>lan.chaos</groupId>
+        <artifactId>jdk8-platform</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>jdk8-base</artifactId>
+    <packaging>jar</packaging>
+    <name>jdk8-base</name>
+    <description>Java 基础与杂项 demo 合集：分布式 ID/Paxos、IO/NIO/Netty/SPI/JUC、JVM/类加载/迷你 Servlet 容器/JMH 基准</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <!-- 工具库：Snowflake、IO、线程等（版本由父 POM 管理） -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!-- 日志：tech-pdai 部分 demo 使用 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+            <version>2.7.18</version>
+        </dependency>
+
+        <!-- 分布式 ID：Redis INCR 示例（RedisIdExample） -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>3.7.0</version>
+        </dependency>
+
+        <!-- 分布式 ID：美团 Leaf 号段模式（LeafSegmentExample） -->
+        <dependency>
+            <groupId>com.tencent.devops.leaf</groupId>
+            <artifactId>leaf-boot-starter</artifactId>
+            <version>1.0.2-RELEASE</version>
+        </dependency>
+
+        <!-- 分布式 ID：滴滴 TinyId 客户端（TinyIdExample） -->
+        <dependency>
+            <groupId>com.xiaoju.uemc.tinyid</groupId>
+            <artifactId>tinyid-client</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- BIO/NIO/Netty 章节：JBoss Netty 3.x（NettyServer/NettyClient） -->
+        <dependency>
+            <groupId>org.jboss.netty</groupId>
+            <artifactId>netty</artifactId>
+            <version>3.2.5.Final</version>
+        </dependency>
+
+        <!-- JVM 章节：CGLib 动态代理（JvmTest） -->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+
+        <!-- JMH 微基准：字符串拼接等基准（SimpleBenchmark/RealisticConcatBenchmark），原 common 模块提供 -->
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <version>1.37</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <version>1.37</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>

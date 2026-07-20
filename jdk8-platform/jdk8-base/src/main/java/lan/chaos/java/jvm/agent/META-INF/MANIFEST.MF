@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Premain-Class: lan.chaos.SimpleAgent
+Created-By: 1.8.0_421 (Oracle Corporation)
+
