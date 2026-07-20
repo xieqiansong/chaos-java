@@ -1,7 +1,7 @@
 package lan.chaos.elasticsearch.index;
 
 import lan.chaos.elasticsearch.common.constant.EsConstants;
-import lan.chaos.elasticsearch.model.Product;
+import lan.chaos.elasticsearch.common.model.Product;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.elasticsearch.core.IndexOperations;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;

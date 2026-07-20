@@ -1,7 +1,7 @@
 package lan.chaos.elasticsearch.search;
 
 import lan.chaos.elasticsearch.common.constant.EsConstants;
-import lan.chaos.elasticsearch.model.Product;
+import lan.chaos.elasticsearch.common.model.Product;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;

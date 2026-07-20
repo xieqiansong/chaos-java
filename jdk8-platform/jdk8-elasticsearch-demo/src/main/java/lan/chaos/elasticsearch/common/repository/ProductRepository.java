@@ -1,6 +1,6 @@
 package lan.chaos.elasticsearch.common.repository;
 
-import lan.chaos.elasticsearch.model.Product;
+import lan.chaos.elasticsearch.common.model.Product;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 

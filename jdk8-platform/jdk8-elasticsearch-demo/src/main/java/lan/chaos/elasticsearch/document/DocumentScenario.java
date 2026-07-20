@@ -1,7 +1,7 @@
 package lan.chaos.elasticsearch.document;
 
 import lan.chaos.elasticsearch.common.repository.ProductRepository;
-import lan.chaos.elasticsearch.model.Product;
+import lan.chaos.elasticsearch.common.model.Product;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.stereotype.Service;

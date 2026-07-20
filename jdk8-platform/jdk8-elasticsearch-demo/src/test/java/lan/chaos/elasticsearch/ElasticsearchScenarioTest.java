@@ -4,7 +4,7 @@ import lan.chaos.elasticsearch.aggregation.AggregationScenario;
 import lan.chaos.elasticsearch.common.repository.ProductRepository;
 import lan.chaos.elasticsearch.document.DocumentScenario;
 import lan.chaos.elasticsearch.index.IndexScenario;
-import lan.chaos.elasticsearch.model.Product;
+import lan.chaos.elasticsearch.common.model.Product;
 import lan.chaos.elasticsearch.search.SearchScenario;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.jupiter.api.*;

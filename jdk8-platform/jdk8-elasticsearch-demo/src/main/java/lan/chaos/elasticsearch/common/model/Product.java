@@ -1,4 +1,4 @@
-package lan.chaos.elasticsearch.model;
+package lan.chaos.elasticsearch.common.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
