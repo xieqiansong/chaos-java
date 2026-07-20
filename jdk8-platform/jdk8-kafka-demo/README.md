@@ -49,7 +49,7 @@ jdk8-kafka-demo/src/main/java/lan/chaos/kafka/
 `★★★ 高频`
 
 - [基础收发 simple](#1-基础收发-simple-) → `KafkaScenarioTest#simple_syncSend_shouldArrive` / `#simple_asyncSend_shouldArrive` / `#simple_fireAndForget_shouldArrive`
-- [重试 + 死信 retry](#5-重试与死信-retry-) → 代码可直接阅读（EmbeddedKafka 下 DLT 时序不稳定，已 @Disabled）
+- [重试 + 死信 retry](#5-重试与死信-retry-) → `@EmbeddedKafka` 下真实跑通并断言：重试耗尽后消息进 DLT
 
 `★★☆ 中频`
 
@@ -130,7 +130,7 @@ Kafka 事务保证「多分区/多 Topic 的原子写入」，搭配 `read_commi
 | `retry/RetryConsumer.java` | body 含 "error" → 抛异常 → 触发重试 |
 | `retry/DeadLetterConsumer.java` | 收容 DLT 消息，记录日志 |
 
-验证：由于 EmbeddedKafka 下 backoff 时序不稳定（retries 默认 0 且 seek 行为依赖真实 Broker 的 poll 间隔），此用例已 `@Disabled`。代码逻辑可独立阅读——`RetryConsumer` 失败抛异常 → `DefaultErrorHandler` 重试 → DLT。
+验证：`KafkaScenarioTest.retry_errorMessage_shouldEndUpInDLT` 在 `@EmbeddedKafka` 下真实跑通——专属 `retryContainerFactory`（`DefaultErrorHandler` + `DeadLetterPublishingRecoverer`，`FixedBackOff` 重试 1 次）使 `RetryConsumer` 失败抛异常 → 重试 → 投递到 `demo-retry-dlt`，由 `DeadLetterConsumer` 收容并断言。
 
 **生产要点：** DLT 必须配合告警 + 人工/自动补偿，否则死信积压无感知。
 

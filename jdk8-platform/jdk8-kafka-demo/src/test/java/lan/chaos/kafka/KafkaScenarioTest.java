@@ -8,6 +8,7 @@ import lan.chaos.kafka.filter.FilterProducer;
 import lan.chaos.kafka.order.OrderConsumer;
 import lan.chaos.kafka.order.OrderProducer;
 import lan.chaos.kafka.retry.DeadLetterConsumer;
+import lan.chaos.kafka.retry.RetryConsumer;
 import lan.chaos.kafka.retry.RetryProducer;
 import lan.chaos.kafka.simple.SimpleConsumer;
 import lan.chaos.kafka.simple.SimpleProducer;
@@ -66,6 +67,7 @@ class KafkaScenarioTest {
     @Autowired private TransactionConsumer transactionConsumer;
 
     @Autowired private RetryProducer retryProducer;
+    @Autowired private DeadLetterConsumer deadLetterConsumer;
 
     @Autowired private FilterProducer filterProducer;
     @Autowired private FilterConsumer filterConsumer;
@@ -205,10 +207,20 @@ class KafkaScenarioTest {
     // ==================== Retry ====================
 
     @Test
-    @org.junit.jupiter.api.Disabled("重试+DLT 场景依赖 SeeksToCurrentErrorHandler 的 backoff 配置，需连真实 broker 调大 max.retries 才会触发 DLT。已保留代码逻辑，真实 broker 下可取消 @Disabled 体验。")
     void retry_errorMessage_shouldEndUpInDLT() {
-        // 此用例需真实 broker + 配置 retries > 0，EmbeddedKafka 下 backoff 时序不稳定
-        // 重试消费者（RetryConsumer）与死信消费者（DeadLetterConsumer）的代码逻辑本身已可阅读。
+        deadLetterConsumer.clear();
+        String key = "retry-dlt-" + System.nanoTime();
+        String body = "boom-error-" + System.nanoTime();
+
+        retryProducer.send(key, body);
+
+        // RetryConsumer 消费含 "error" 的消息抛异常 → DefaultErrorHandler 重试 1 次 →
+        // 耗尽后 DeadLetterPublishingRecoverer 投递到 demo-retry-dlt，由 DeadLetterConsumer 收容
+        await().atMost(Duration.ofSeconds(30))
+                .untilAsserted(() -> assertTrue(
+                        deadLetterConsumer.getDeadLetters().stream()
+                                .anyMatch(m -> m.contains(body)),
+                        "重试耗尽后，错误消息应被投递到 DLT（demo-retry-dlt）"));
     }
 
     // ==================== Filter ====================

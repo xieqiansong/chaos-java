@@ -26,7 +26,8 @@ public class RetryConsumer {
 
     @KafkaListener(
             topics = KafkaConstants.TOPIC_RETRY,
-            groupId = KafkaConstants.GROUP_RETRY)
+            groupId = KafkaConstants.GROUP_RETRY,
+            containerFactory = "retryContainerFactory")
     public void onMessage(ConsumerRecord<String, String> record) {
         String body = record.value();
         log.info("[retry] 消费 | key={}, partition={}, offset={}, value={}",
