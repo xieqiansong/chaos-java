@@ -1,0 +1,47 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: demo-short-link
+
+  # ======== PostgreSQL 数据源 ========
+  datasource:
+    url: jdbc:postgresql://localhost:30101/demo_short_link
+    username: postgres
+    password: REDACTED
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      # update: 自动建表/更新（开发便捷）；validate: 校验实体与表一致（生产推荐）
+      # 首次运行用 update，稳定后改为 validate，手动执行 src/main/resources/sql/ 下的脚本
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+
+  # ======== Redis 配置 ========
+  redis:
+    host: localhost
+    port: 30102
+    password: REDACTED
+    database: 0
+    timeout: 3000ms
+    lettuce:
+      pool:
+        max-active: 32
+        max-idle: 16
+        min-idle: 8
+
+# ======== 短链配置 ========
+short-link:
+  # 短链域名（部署时替换为实际域名）
+  domain: http://localhost:8080
+
+# ======== 日志配置 ========
+logging:
+  level:
+    lan.chaos.demo.shortlink: INFO

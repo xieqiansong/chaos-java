@@ -29,6 +29,9 @@
 | `jdk8-kafka-demo` | ✅ 完成 | Kafka 全场景：基础收发、批量发送/消费、分区有序、Exactly-Once 事务、重试/死信、Header 消息过滤（@EmbeddedKafka 自包含测试） |
 | `jdk8-seata-demo` | ✅ 完成 | Seata 分布式事务：AT 自动补偿 + TCC Try/Confirm/Cancel，H2 内存数据库自包含测试 |
 | `jdk8-sentinel-demo` | ✅ 完成 | Sentinel 流控/熔断/热点参数/@SentinelResource，SphU.entry() 程序化 + 注解双轨，自包含测试 |
+| `jdk8-elasticsearch-demo` | ✅ 完成 | Elasticsearch 7.17 索引/文档/搜索/聚合，RestHighLevelClient + Repository 双轨，Testcontainers 集成测试 |
+| `jdk8-seckill-demo` | ✅ 完成 | 秒杀系统：Redis 分桶库存 + Lua 原子扣减防超卖 + Redisson 分布式锁 + Kafka 异步下单 + 令牌桶限流 |
+| `jdk8-short-link-demo` | ✅ 完成 | 短链服务：Snowflake+Base62 短码 + Redisson 布隆过滤器防缓存穿透 + Redis 缓存 + PG 持久化 + 302 跳转 |
 
 ### 模块详情
 
@@ -39,6 +42,9 @@
 - **jdk8-kafka-demo**：基于 Spring Kafka 2.8.x，覆盖基础收发、批量发送/消费、分区有序、Exactly-Once 事务、重试/死信、Header 消息过滤，@EmbeddedKafka 自包含测试无需外部 Broker。
 - **jdk8-seata-demo**：基于 Seata 1.6.x + Spring Cloud Alibaba，覆盖 AT 模式（自动 undo_log 补偿）和 TCC 模式（手动 Try/Confirm/Cancel），JdbcTemplate 直操作业聚焦事务概念，H2 内存数据库自包含测试。
 - **jdk8-sentinel-demo**：基于 Sentinel 1.8.6 + Spring Cloud Alibaba，覆盖 QPS 直接/关联/WarmUp 流控、异常数/异常比例/慢调用比例熔断、热点参数限流、@SentinelResource 注解（blockHandler/fallback），SphU.entry() 程序化方式核心稳定，包含 Dashboard docker-compose。
+- **jdk8-elasticsearch-demo**：基于 Elasticsearch 7.17 + Spring Data Elasticsearch 4.4，覆盖索引管理、文档 CRUD/批量、match/term/range/bool 搜索、terms/avg 聚合，`ElasticsearchRestTemplate` 与 `ElasticsearchRepository` 双轨，Testcontainers 集成测试（无 Docker 优雅跳过）。
+- **jdk8-seckill-demo**：基于 Spring Boot 2.7 + Redis/Redisson/PostgreSQL/Kafka，覆盖秒杀全链路——分桶库存预热、Lua 原子扣减防超卖、令牌桶限流、Redisson 分布式锁、Kafka 异步下单、库存定时回写，含 docker-compose 一键起依赖。
+- **jdk8-short-link-demo**：基于 Spring Boot 2.7 + Redis/Redisson/PostgreSQL，覆盖短链全链路——Snowflake 发号 + Base62 编码短码、Redisson 布隆过滤器防缓存穿透、Redis 缓存 + PG 持久化、302 跳转，含 docker-compose 一键起依赖。
 
 ## 迁移计划（来自 chaos-java-example-old）
 
@@ -60,9 +66,9 @@
 | 2 | `kafka-demo` | `jdk8-kafka-demo` | 中 | ✅ 已迁移 |
 | 3 | `seata-demo` | `jdk8-seata-demo` | 中 | ✅ 已迁移：AT + TCC 两种模式，H2 自包含测试 |
 | 4 | `sentinel-demo` | `jdk8-sentinel-demo` | 中 | ✅ 已迁移：流控/熔断/热点/@SentinelResource，SphU 程序化 + 注解双轨 |
-| 5 | `elasticsearch-demo` | `jdk8-elasticsearch-demo` | 中 | ES 索引/文档/搜索（old 中为注释模块） |
-| 6 | `demo-seckill` | `jdk8-seckill-demo` | 高 | 秒杀系统：超卖/库存扣减（含 lua、sql、设计文档 `开发计划.md` 等） |
-| 7 | `demo-short-link` | `jdk8-short-link-demo` | 高 | 短链生成与跳转服务（含 sql、设计文档） |
+| 5 | `elasticsearch-demo` | `jdk8-elasticsearch-demo` | 中 | ✅ 已迁移：索引/文档/搜索/聚合，RestHighLevelClient + Repository 双轨 |
+| 6 | `demo-seckill` | `jdk8-seckill-demo` | 高 | ✅ 已迁移：Redis 分桶库存 + Lua 原子扣减 + Redisson 锁 + Kafka 异步下单 + 令牌桶限流 |
+| 7 | `demo-short-link` | `jdk8-short-link-demo` | 高 | ✅ 已迁移：Snowflake+Base62 短码 + 布隆过滤器防穿透 + Redis 缓存 + PG 持久化 |
 | 8 | `java-guide-demos` | `jdk8-java-guide-demos` | 低 | Java 基础/Guide 系列示例集合 |
 | 9 | `tech-pdai-java-demos` | `jdk8-tech-pdai-java-demos` | 低 | tech-pdai Java 示例集合 |
 | 10 | `tech-pdai-spring-demos` | `jdk8-tech-pdai-spring-demos` | 低 | tech-pdai Spring 示例集合（old 中为注释模块，体量大，按需迁移） |

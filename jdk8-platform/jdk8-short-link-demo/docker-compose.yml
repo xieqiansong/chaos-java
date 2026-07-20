@@ -1,0 +1,29 @@
+version: "3.8"
+
+# 端口与密码严格对齐 application.yml：
+#   PostgreSQL  -> 30101 / postgres / REDACTED / demo_short_link
+#   Redis       -> 30102 / REDACTED
+# 启动后直接在 IDE 运行 ShortLinkApplication，或：mvn -pl jdk8-short-link-demo -am spring-boot:run
+
+services:
+  postgres:
+    image: postgres:14-alpine
+    container_name: shortlink-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: REDACTED
+      POSTGRES_DB: demo_short_link
+    ports:
+      - "30101:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: shortlink-redis
+    command: ["redis-server", "--requirepass", "REDACTED"]
+    ports:
+      - "30102:6379"

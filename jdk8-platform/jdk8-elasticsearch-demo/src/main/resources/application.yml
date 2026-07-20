@@ -1,0 +1,12 @@
+server:
+  port: 8088
+
+app:
+  elasticsearch:
+    uris: http://localhost:9200
+    connect-timeout: 5000
+    socket-timeout: 10000
+
+logging:
+  level:
+    lan.chaos.elasticsearch: INFO

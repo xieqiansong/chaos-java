@@ -1,0 +1,97 @@
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for lan.chaos:jdk8-nacos-provider:jar:1.0-SNAPSHOT
+[WARNING] 'build.plugins.plugin.version' for org.springframework.boot:spring-boot-maven-plugin is missing. @ line 36, column 21
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for lan.chaos:jdk8-nacos-consumer:jar:1.0-SNAPSHOT
+[WARNING] 'build.plugins.plugin.version' for org.springframework.boot:spring-boot-maven-plugin is missing. @ line 42, column 21
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for lan.chaos:jdk8-nacos-config:jar:1.0-SNAPSHOT
+[WARNING] 'build.plugins.plugin.version' for org.springframework.boot:spring-boot-maven-plugin is missing. @ line 42, column 21
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] jdk8-platform                                                      [pom]
+[INFO] jdk8-elasticsearch-demo                                            [jar]
+[INFO] 
+[INFO] ----------------------< lan.chaos:jdk8-platform >-----------------------
+[INFO] Building jdk8-platform 1.0-SNAPSHOT                                [1/2]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] -----------------< lan.chaos:jdk8-elasticsearch-demo >------------------
+[INFO] Building jdk8-elasticsearch-demo 1.0-SNAPSHOT                      [2/2]
+[INFO]   from jdk8-elasticsearch-demo\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ jdk8-elasticsearch-demo ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ jdk8-elasticsearch-demo ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ jdk8-elasticsearch-demo ---
+[INFO] skip non existing resourceDirectory PROJECT_PATH\chaos-java\jdk8-platform\jdk8-elasticsearch-demo\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ jdk8-elasticsearch-demo ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.2.2:test (default-test) @ jdk8-elasticsearch-demo ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running lan.chaos.elasticsearch.ElasticsearchScenarioTest
+17:37:50.985 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
+17:37:50.996 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
+17:37:51.037 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [lan.chaos.elasticsearch.ElasticsearchScenarioTest] from class [org.springframework.boot.test.context.SpringBootTestContextBootstrapper]
+17:37:51.048 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [lan.chaos.elasticsearch.ElasticsearchScenarioTest], using SpringBootContextLoader
+17:37:51.051 [main] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [lan.chaos.elasticsearch.ElasticsearchScenarioTest]: class path resource [lan/chaos/elasticsearch/ElasticsearchScenarioTest-context.xml] does not exist
+17:37:51.052 [main] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [lan.chaos.elasticsearch.ElasticsearchScenarioTest]: class path resource [lan/chaos/elasticsearch/ElasticsearchScenarioTestContext.groovy] does not exist
+17:37:51.052 [main] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [lan.chaos.elasticsearch.ElasticsearchScenarioTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+17:37:51.052 [main] DEBUG org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Ignoring class [lan.chaos.elasticsearch.ElasticsearchScenarioTest$AggregationTests]; it must be static, non-private, non-final, and annotated with @Configuration to be considered a default configuration class.
+17:37:51.052 [main] DEBUG org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Ignoring class [lan.chaos.elasticsearch.ElasticsearchScenarioTest$SearchTests]; it must be static, non-private, non-final, and annotated with @Configuration to be considered a default configuration class.
+17:37:51.052 [main] DEBUG org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Ignoring class [lan.chaos.elasticsearch.ElasticsearchScenarioTest$DocumentTests]; it must be static, non-private, non-final, and annotated with @Configuration to be considered a default configuration class.
+17:37:51.052 [main] DEBUG org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Ignoring class [lan.chaos.elasticsearch.ElasticsearchScenarioTest$IndexTests]; it must be static, non-private, non-final, and annotated with @Configuration to be considered a default configuration class.
+17:37:51.053 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [lan.chaos.elasticsearch.ElasticsearchScenarioTest]: ElasticsearchScenarioTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+17:37:51.104 [main] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [lan.chaos.elasticsearch.ElasticsearchScenarioTest]
+17:37:51.168 [main] DEBUG org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider - Identified candidate component class: file [PROJECT_PATH\chaos-java\jdk8-platform\jdk8-elasticsearch-demo\target\classes\lan\chaos\elasticsearch\ElasticsearchApplication.class]
+17:37:51.169 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration lan.chaos.elasticsearch.ElasticsearchApplication for test class lan.chaos.elasticsearch.ElasticsearchScenarioTest
+17:37:51.284 [main] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - @TestExecutionListeners is not present for class [lan.chaos.elasticsearch.ElasticsearchScenarioTest]: using defaults.
+17:37:51.284 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+17:37:51.294 [main] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Skipping candidate TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener] due to a missing dependency. Specify custom listener classes or make the default listener classes and their required dependencies available. Offending class: [javax/servlet/ServletContext]
+17:37:51.301 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@1817f1eb, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@767e20cf, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@3a3e78f, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@301ec38b, org.springframework.test.context.support.DirtiesContextTestExecutionListener@17a1e4ca, org.springframework.test.context.transaction.TransactionalTestExecutionListener@10ded6a9, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@c5dc4a2, org.springframework.test.context.event.EventPublishingTestExecutionListener@4a194c39, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@52066604, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@340b9973, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@56113384, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@5669c5fb, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@373ebf74, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@5f9678e1]
+17:37:51.304 [main] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@59f63e24 testClass = ElasticsearchScenarioTest, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [MergedContextConfiguration@61f05988 testClass = ElasticsearchScenarioTest, locations = '{}', classes = '{class lan.chaos.elasticsearch.ElasticsearchApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@1033576a, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@17fc391b, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@45d84a20, org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@5a59ca5e, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@6e535154, org.springframework.test.context.support.DynamicPropertiesContextCustomizer@2a167d94, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@11c20519], contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map[[empty]]], class annotated with @DirtiesContext [false] with mode [null].
+17:37:51.373 [main] DEBUG org.testcontainers.utility.TestcontainersConfiguration - Testcontainers configuration overrides will be loaded from file:/C:/Users/$$USERNAME$$/.testcontainers.properties
+17:37:51.382 [main] WARN org.testcontainers.utility.TestcontainersConfiguration - Attempted to read Testcontainers configuration file at file:/C:/Users/$$USERNAME$$/.testcontainers.properties but the file was not found. Exception message: FileNotFoundException: C:\Users\xqs\.testcontainers.properties (系统找不到指定的文件。)
+17:37:51.393 [main] DEBUG org.testcontainers.dockerclient.DockerClientProviderStrategy - Trying out strategy: NpipeSocketClientProviderStrategy
+17:37:51.394 [main] DEBUG org.testcontainers.dockerclient.DockerClientProviderStrategy - DOCKER_HOST socket file '//./pipe/docker_engine' does not exist
+17:37:51.394 [main] DEBUG org.testcontainers.dockerclient.DockerClientProviderStrategy - strategy NpipeSocketClientProviderStrategy did not pass the test
+17:37:51.398 [main] INFO org.testcontainers.dockerclient.DockerMachineClientProviderStrategy - docker-machine executable was not found on PATH ([D:\opt\go\go1.26.3\bin, D:\opt\python\python-3.12\, D:\opt\jdk\current\bin, D:\opt\maven\current\bin, D:\opt\mingw64\bin, D:\opt\nvm, D:\opt\nvm\nodejs, D:\opt\pnpm, D:\project\confusion\bin, D:\opt\nssm\win64, D:\opt\Git LFS, D:\opt\PortableGit\bin, C:\Program Files\7-Zip, D:\opt\llama\current, C:\Windows\system32, C:\Windows, C:\Windows\System32\Wbem, C:\Windows\System32\WindowsPowerShell\v1.0\, C:\Windows\System32\OpenSSH\, C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common, C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\bin\Hostx64\x64, D:\opt\python\python-3.12\Scripts, C:\Program Files\dotnet\, C:\Program Files\PowerShell\7\, C:\Users\xqs\.cargo\bin, PROJECT_PATH\chaos-lib\scripts, C:\Users\xqs\go\bin, C:\Users\xqs\scoop\shims, C:\Users\xqs\AppData\Local\Programs\Ollama, C:\Users\xqs\AppData\Local\Programs\Trae CN\bin, C:\Users\xqs\AppData\Local\Microsoft\WindowsApps, C:\Users\xqs\AppData\Local\Programs\Tuanjie Cowork, C:\Users\xqs\AppData\Local\Programs\Tuanjie Cowork\cli\bin\win32-x64, C:\Users\xqs\AppData\Local\Programs\Tuanjie Cowork\app\resource\core\bin\win32-x64, C:\Users\xqs\AppData\Local\Programs\CodeBuddy CN\bin, C:\Users\xqs\.dotnet\tools])
+17:37:51.399 [main] ERROR org.testcontainers.dockerclient.DockerClientProviderStrategy - Could not find a valid Docker environment. Please check configuration. Attempted configurations were:
+As no valid configuration was found, execution cannot continue.
+See https://www.testcontainers.org/on_failure.html for more details.
+17:37:51.404 [main] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - After test class: context [DefaultTestContext@59f63e24 testClass = ElasticsearchScenarioTest, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [MergedContextConfiguration@61f05988 testClass = ElasticsearchScenarioTest, locations = '{}', classes = '{class lan.chaos.elasticsearch.ElasticsearchApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@1033576a, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@17fc391b, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@45d84a20, org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@5a59ca5e, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@6e535154, org.springframework.test.context.support.DynamicPropertiesContextCustomizer@2a167d94, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@11c20519], contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map[[empty]]], class annotated with @DirtiesContext [false] with mode [null].
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.488 s -- in lan.chaos.elasticsearch.ElasticsearchScenarioTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for jdk8-platform 1.0-SNAPSHOT:
+[INFO] 
+[INFO] jdk8-platform ...................................... SUCCESS [  0.004 s]
+[INFO] jdk8-elasticsearch-demo ............................ SUCCESS [  2.793 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.282 s
+[INFO] Finished at: 2026-07-20T17:37:51+08:00
+[INFO] ------------------------------------------------------------------------

@@ -1,0 +1,63 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: demo-seckill
+
+  # ======== PostgreSQL 数据源 ========
+  datasource:
+    url: jdbc:postgresql://localhost:30101/demo_seckill
+    username: postgres
+    password: REDACTED
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      # 首次运行用 update，稳定后改为 validate
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+
+  # ======== Redis 配置 ========
+  redis:
+    host: localhost
+    port: 30102
+    password: REDACTED
+    database: 0
+    timeout: 3000ms
+    lettuce:
+      pool:
+        max-active: 32
+        max-idle: 16
+        min-idle: 8
+
+  # ======== Kafka 配置 ========
+  kafka:
+    bootstrap-servers: localhost:30103
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: seckill-order-group
+      auto-offset-reset: earliest
+
+# ======== 秒杀配置 ========
+seckill:
+  # 令牌桶限流：每秒发放令牌数
+  rate-limit:
+    default-qps: 1000
+  # 订单异步处理器线程数
+  order:
+    async-pool-size: 8
+
+# ======== 日志配置 ========
+logging:
+  level:
+    lan.chaos.demo.seckill: INFO
+    org.hibernate.SQL: DEBUG

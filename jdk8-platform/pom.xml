@@ -18,6 +18,9 @@
         <module>jdk8-kafka-demo</module>
         <module>jdk8-seata-demo</module>
         <module>jdk8-sentinel-demo</module>
+        <module>jdk8-elasticsearch-demo</module>
+        <module>jdk8-seckill-demo</module>
+        <module>jdk8-short-link-demo</module>
     </modules>
 
     <properties>

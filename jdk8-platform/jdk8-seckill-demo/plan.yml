@@ -1,0 +1,492 @@
+# ============================================
+# 秒杀系统 Demo - AI Agent 开发计划
+# 参考: 设计一个支持万人同时抢购商品的秒杀系统，如何解决超卖、库存扣.md
+# 技术栈: Spring Boot 2.7.18 + JPA + Redis + Redisson + Caffeine + Kafka
+# ============================================
+name: demo-seckill-development-plan
+version: 1.0
+description: 支持万人并发抢购的秒杀系统Demo，解决超卖、库存扣减和高并发问题
+
+# ============================================
+# 一、技术架构
+# ============================================
+architecture:
+  layers:
+    - name: 流量接入层
+      tech: Spring Boot Interceptor + Redis令牌桶限流
+      responsibility: 限流削峰，防刷
+
+    - name: 缓存层
+      tech: Caffeine本地缓存 + Redis Cluster
+      responsibility: 商品信息本地缓存，库存Redis预扣
+
+    - name: 服务层
+      tech: Spring Boot Service
+      responsibility: 秒杀核心业务逻辑
+
+    - name: 异步队列层
+      tech: Kafka / 内存队列(模拟)
+      responsibility: 异步订单落库，解耦
+
+    - name: 数据层
+      tech: PostgreSQL + JPA
+      responsibility: 订单与库存持久化
+
+  key_components:
+    - Redis Lua脚本原子扣减库存
+    - Redis分桶库存策略
+    - 令牌桶限流算法
+    - 订单去重(Redis Set)
+    - 最终一致性(异步对账)
+
+# ============================================
+# 二、模块结构
+# ============================================
+module_structure:
+  base_package: lan.chaos.demo.seckill
+
+  packages:
+    - name: config
+      description: 配置类
+      files:
+        - RedisConfig.java          # Redis/Lettuce 配置
+        - CacheConfig.java          # Caffeine 本地缓存配置
+        - RedissonConfig.java       # Redisson 分布式锁配置
+        - RateLimitConfig.java      # 令牌桶限流配置
+        - KafkaConfig.java          # Kafka 配置（如使用）
+
+    - name: controller
+      description: 控制器
+      files:
+        - SeckillController.java    # 秒杀入口
+        - OrderController.java      # 订单查询
+        - AdminController.java      # 商品管理(初始化库存等)
+
+    - name: entity
+      description: 实体类
+      files:
+        - Product.java              # 商品实体
+        - SeckillOrder.java         # 秒杀订单实体
+
+    - name: repository
+      description: 数据访问层
+      files:
+        - ProductRepository.java
+        - SeckillOrderRepository.java
+
+    - name: dto
+      description: 数据传输对象
+      files:
+        - SeckillRequest.java       # 秒杀请求
+        - SeckillResponse.java      # 秒杀响应
+        - OrderResponse.java        # 订单响应
+
+    - name: service
+      description: 业务服务层
+      files:
+        - ProductService.java       # 商品服务(含本地缓存)
+        - InventoryService.java     # 库存服务(Redis预扣+Lua+分桶)
+        - SeckillService.java       # 秒杀核心服务
+        - OrderService.java         # 订单服务(异步处理)
+        - RateLimitService.java     # 限流服务(令牌桶)
+
+    - name: service.lua
+      description: Lua脚本
+      files:
+        - stock.lua                 # 库存原子扣减Lua脚本
+        - stock_bucket.lua          # 分桶库存扣减Lua脚本
+
+    - name: task
+      description: 定时任务
+      files:
+        - InventorySyncTask.java    # 库存一致性对账定时任务
+
+    - package_root: true
+      file: SeckillApplication.java # 启动类
+
+# ============================================
+# 三、数据库设计
+# ============================================
+database:
+  dialect: PostgreSQL
+
+  tables:
+    - name: t_product
+      description: 商品表
+      columns:
+        - id: BIGINT (PK, SnowflakeID)
+        - product_name: VARCHAR(128)   # 商品名称
+        - total_stock: INT             # 总库存
+        - bucket_count: INT            # 分桶数量(默认10)
+        - bucket_size: INT             # 每桶库存量
+        - start_time: TIMESTAMP        # 秒杀开始时间
+        - end_time: TIMESTAMP          # 秒杀结束时间
+        - status: VARCHAR(16)          # DRAFT/ACTIVE/SOLD_OUT/CLOSED
+        - version: INT                 # 乐观锁版本号
+        - create_time: TIMESTAMP
+        - update_time: TIMESTAMP
+
+    - name: t_seckill_order
+      description: 秒杀订单表
+      columns:
+        - id: BIGINT (PK, SnowflakeID)
+        - product_id: BIGINT           # 商品ID
+        - user_id: VARCHAR(64)         # 用户ID
+        - token: VARCHAR(64)           # 秒杀令牌(唯一)
+        - bucket_index: INT            # 库存分桶索引
+        - status: VARCHAR(16)          # PENDING/CONFIRMED/CANCELLED
+        - amount: DECIMAL(10,2)        # 订单金额
+        - create_time: TIMESTAMP
+        - update_time: TIMESTAMP
+      indexes:
+        - idx_token: UNIQUE (token)
+        - idx_user_product: (user_id, product_id)
+
+# ============================================
+# 四、Redis Key 设计
+# ============================================
+redis_keys:
+  # 库存预扣 Key
+  - key: "seckill:stock:{productId}"
+    type: String
+    description: 商品总库存余量
+
+  # 分桶库存 Key
+  - key: "seckill:stock_bucket:{productId}:{bucketIndex}"
+    type: String
+    description: 第 N 个库存桶的余量
+
+  # 已售罄标记
+  - key: "seckill:sold_out:{productId}"
+    type: String
+    description: 1=已售罄, 用于快速过滤
+
+  # 订单去重 Set
+  - key: "seckill:order_token:{productId}"
+    type: Set
+    description: 已处理的令牌集合(防止重复提交)
+
+  # 用户购买记录
+  - key: "seckill:user_bought:{productId}:{userId}"
+    type: String
+    description: 用户是否已购买(每人限购1件)
+
+  # 令牌桶
+  - key: "seckill:rate_limit:{productId}"
+    type: String
+    description: 令牌桶当前令牌数
+
+# ============================================
+# 五、开发阶段 (供 AI Agent 逐步执行)
+# ============================================
+phases:
+
+  - id: phase-01
+    name: 项目初始化与依赖配置
+    description: 创建pom.xml依赖、application.yml配置、SQL脚本、启动类
+    tasks:
+      - id: P1-T1
+        description: 更新 pom.xml，添加 Spring Boot Web/JPA/Redis/Redisson/Caffeine/Kafka 依赖
+        files_to_create:
+          - demo-seckill/pom.xml
+        depends_on: []
+
+      - id: P1-T2
+        description: 创建 application.yml，配置数据源(PostgreSQL)、Redis、Kafka
+        files_to_create:
+          - demo-seckill/src/main/resources/application.yml
+        depends_on: [P1-T1]
+
+      - id: P1-T3
+        description: 创建 SQL 建表脚本 (PostgreSQL)
+        files_to_create:
+          - demo-seckill/src/main/resources/sql/schema-postgres.sql
+        depends_on: [P1-T2]
+
+      - id: P1-T4
+        description: 创建 Spring Boot 启动类 SeckillApplication.java
+        files_to_create:
+          - demo-seckill/src/main/java/lan/chaos/demo/seckill/SeckillApplication.java
+        depends_on: [P1-T1]
+
+  - id: phase-02
+    name: 实体与数据访问层
+    description: 创建 JPA 实体类、Repository 接口
+    tasks:
+      - id: P2-T1
+        description: 创建 Product 实体，包含库存、分桶、秒杀时间等字段
+        files_to_create:
+          - demo-seckill/src/main/java/lan/chaos/demo/seckill/entity/Product.java
+        depends_on: [P1-T4]
+
+      - id: P2-T2
+        description: 创建 SeckillOrder 实体，包含订单状态、令牌、用户等字段
+        files_to_create:
+          - demo-seckill/src/main/java/lan/chaos/demo/seckill/entity/SeckillOrder.java
+        depends_on: [P1-T4]
+
+      - id: P2-T3
+        description: 创建 ProductRepository 和 SeckillOrderRepository (JPA)
+        files_to_create:
+          - demo-seckill/src/main/java/lan/chaos/demo/seckill/repository/ProductRepository.java
+          - demo-seckill/src/main/java/lan/chaos/demo/seckill/repository/SeckillOrderRepository.java
+        depends_on: [P2-T1, P2-T2]
+
+  - id: phase-03
+    name: 配置层
+    description: Redis、Caffeine、限流等配置类
+    tasks:
+      - id: P3-T1
+        description: 创建 RedisConfig (Lettuce连接池配置)
+        files_to_create:
+          - demo-seckill/src/main/java/lan/chaos/demo/seckill/config/RedisConfig.java
+        depends_on: [P1-T4]
+
+      - id: P3-T2
+        description: 创建 CacheConfig (Caffeine本地缓存，缓存商品信息)
+        files_to_create:
+          - demo-seckill/src/main/java/lan/chaos/demo/seckill/config/CacheConfig.java
+        depends_on: [P1-T4]
+
+      - id: P3-T3
+        description: 创建 RedissonConfig (分布式锁配置)
+        files_to_create:
+          - demo-seckill/src/main/java/lan/chaos/demo/seckill/config/RedissonConfig.java
+        depends_on: [P1-T4]
+
+  - id: phase-04
+    name: Lua脚本与库存服务
+    description: Redis原子扣减Lua脚本 + 分桶库存策略 + 库存服务
+    tasks:
+      - id: P4-T1
+        description: "编写 stock.lua: 原子扣减总库存，返回扣减后余量或-1"
+        files_to_create:
+          - demo-seckill/src/main/resources/lua/stock.lua
+        depends_on: [P3-T1]
+
+      - id: P4-T2
+        description: "编写 stock_bucket.lua: 分桶库存扣减，遍历多桶寻找有余量的桶扣减"
+        files_to_create:
+          - demo-seckill/src/main/resources/lua/stock_bucket.lua
+        depends_on: [P3-T1]
+
+      - id: P4-T3
+        description: 创建 DTO: SeckillRequest, SeckillResponse, OrderResponse
+        files_to_create:
+          - demo-seckill/src/main/java/lan/chaos/demo/seckill/dto/SeckillRequest.java
+          - demo-seckill/src/main/java/lan/chaos/demo/seckill/dto/SeckillResponse.java
+          - demo-seckill/src/main/java/lan/chaos/demo/seckill/dto/OrderResponse.java
+        depends_on: [P1-T4]
+
+      - id: P4-T4
+        description: 创建 InventoryService，实现Redis预扣库存(Lua)+分桶策略+库存初始化+库存回滚
+        files_to_create:
+          - demo-seckill/src/main/java/lan/chaos/demo/seckill/service/InventoryService.java
+        depends_on: [P4-T1, P4-T2, P4-T3]
+
+  - id: phase-05
+    name: 限流与秒杀核心服务
+    description: 令牌桶限流 + 秒杀核心业务 + 订单异步处理
+    tasks:
+      - id: P5-T1
+        description: 创建 RateLimitService，基于Redis实现令牌桶限流算法
+        files_to_create:
+          - demo-seckill/src/main/java/lan/chaos/demo/seckill/service/RateLimitService.java
+        depends_on: [P3-T1]
+
+      - id: P5-T2
+        description: 创建 ProductService，商品查询+本地缓存(Caffeine)缓存商品信息
+        files_to_create:
+          - demo-seckill/src/main/java/lan/chaos/demo/seckill/service/ProductService.java
+        depends_on: [P2-T3, P3-T2]
+
+      - id: P5-T3
+        description: "创建 SeckillService 核心服务: 限流检查 -> 库存预扣 -> 生成令牌 -> 异步下单"
+        files_to_create:
+          - demo-seckill/src/main/java/lan/chaos/demo/seckill/service/SeckillService.java
+        depends_on: [P5-T1, P5-T2, P4-T4]
+
+      - id: P5-T4
+        description: 创建 OrderService，处理异步订单落库、去重(Redis Set)、状态管理
+        files_to_create:
+          - demo-seckill/src/main/java/lan/chaos/demo/seckill/service/OrderService.java
+        depends_on: [P2-T3, P3-T1]
+
+      - id: P5-T5
+        description: "创建 KafkaConfig (如果使用Kafka) 或使用ApplicationEvent+@Async模拟异步"
+        files_to_create:
+          - demo-seckill/src/main/java/lan/chaos/demo/seckill/config/KafkaConfig.java
+        depends_on: [P3-T1]
+
+  - id: phase-06
+    name: 控制器层
+    description: 秒杀接口、订单查询接口、管理接口
+    tasks:
+      - id: P6-T1
+        description: "创建 SeckillController: POST /api/seckill/{productId} 秒杀入口，含限流拦截"
+        files_to_create:
+          - demo-seckill/src/main/java/lan/chaos/demo/seckill/controller/SeckillController.java
+        depends_on: [P5-T3, P5-T1]
+
+      - id: P6-T2
+        description: "创建 OrderController: GET /api/orders/{token} 订单查询"
+        files_to_create:
+          - demo-seckill/src/main/java/lan/chaos/demo/seckill/controller/OrderController.java
+        depends_on: [P5-T4]
+
+      - id: P6-T3
+        description: "创建 AdminController: POST /api/admin/product 创建商品、初始化库存桶"
+        files_to_create:
+          - demo-seckill/src/main/java/lan/chaos/demo/seckill/controller/AdminController.java
+        depends_on: [P5-T2, P4-T4]
+
+  - id: phase-07
+    name: 定时任务与容灾
+    description: 库存一致性对账、超时订单处理
+    tasks:
+      - id: P7-T1
+        description: 创建 InventorySyncTask，定时对比Redis与DB库存，自动修复不一致
+        files_to_create:
+          - demo-seckill/src/main/java/lan/chaos/demo/seckill/task/InventorySyncTask.java
+        depends_on: [P4-T4, P2-T3]
+
+      - id: P7-T2
+        description: 可选：超时未支付订单取消+库存回滚
+        files_to_create: []
+        depends_on: [P7-T1]
+
+  - id: phase-08
+    name: 集成测试与验证
+    description: 编写单元测试和并发测试，验证超卖防护
+    tasks:
+      - id: P8-T1
+        description: 编写 InventoryService 单元测试(验证Lua扣减原子性)
+        depends_on: [P4-T4]
+
+      - id: P8-T2
+        description: 编写 SeckillService 集成测试(模拟多线程并发抢购)
+        depends_on: [P5-T3]
+
+      - id: P8-T3
+        description: 编写并发测试(CountDownLatch模拟100线程同时秒杀，验证无超卖)
+        depends_on: [P6-T1]
+
+# ============================================
+# 六、API 接口设计
+# ============================================
+api_design:
+  - endpoint: POST /api/seckill/{productId}
+    description: 秒杀接口
+    request_body: |
+      {
+        "userId": "user123",
+        "quantity": 1
+      }
+    response: |
+      {
+        "code": 200,
+        "message": "抢购成功",
+        "data": {
+          "token": "s8f7a3d2f9...",
+          "orderId": 123456789
+        }
+      }
+    error_codes:
+      - 429: "请求太频繁，已被限流"
+      - 410: "商品已售罄"
+      - 409: "您已购买过该商品，限购1件"
+
+  - endpoint: GET /api/orders/{token}
+    description: 查询订单状态
+    response: |
+      {
+        "code": 200,
+        "data": {
+          "orderId": 123456789,
+          "productId": 1,
+          "status": "CONFIRMED",
+          "createTime": "2026-07-02 10:00:00"
+        }
+      }
+
+  - endpoint: POST /api/admin/product
+    description: 创建秒杀商品(含库存初始化)
+    request_body: |
+      {
+        "productName": "iPhone 16 Pro",
+        "totalStock": 1000,
+        "bucketCount": 10,
+        "startTime": "2026-07-02 10:00:00",
+        "endTime": "2026-07-02 11:00:00"
+      }
+
+# ============================================
+# 七、核心流程
+# ============================================
+core_flow:
+  seckill_process:
+    - step: 1
+      action: 用户请求进入 SeckillController
+      detail: 校验请求参数
+
+    - step: 2
+      action: RateLimitInterceptor 令牌桶限流
+      detail: 每秒固定速率生成令牌，令牌不足返回429
+
+    - step: 3
+      action: 检查商品是否售罄
+      detail: 查询Redis售罄标记，快速过滤
+
+    - step: 4
+      action: 检查用户是否已购买
+      detail: 查询Redis Set，每人限购1件
+
+    - step: 5
+      action: Redis Lua 原子扣减库存(分桶)
+      detail: 执行 stock_bucket.lua，遍历分桶扣减
+
+    - step: 6
+      action: 生成唯一令牌(Token)
+      detail: UUID/Snowflake，记录到Redis Set
+
+    - step: 7
+      action: 异步发送订单消息
+      detail: 发送到Kafka/Event，消费者落库
+
+    - step: 8
+      action: 返回秒杀成功+令牌
+      detail: 用户凭令牌查询订单状态
+
+  inventory_reconciliation:
+    - step: 1
+      action: 定时任务扫描所有活跃商品
+    - step: 2
+      action: 汇总Redis各分桶余量
+    - step: 3
+      action: 查询DB实际库存(已售订单数)
+    - step: 4
+      action: 若不一致，以DB为准修正Redis
+
+# ============================================
+# 八、防超卖关键设计
+# ============================================
+anti_oversell:
+  - mechanism: Redis Lua 原子扣减
+    layer: 缓存层
+    description: 单线程执行Lua脚本，确保判断库存>0和扣减的原子性
+
+  - mechanism: 分桶库存
+    layer: 缓存层
+    description: 将1000件库存分散到10个桶，降低单Key热点竞争
+
+  - mechanism: 数据库乐观锁
+    layer: 数据层
+    description: UPDATE stock SET count=count-1 WHERE id=? AND count>0，CAS保障
+
+  - mechanism: 订单去重
+    layer: 服务层
+    description: Redis Set + 令牌机制，防止重复下单
+
+  - mechanism: 最终一致性对账
+    layer: 定时任务
+    description: 定期对比Redis与DB库存差异，自动修复
