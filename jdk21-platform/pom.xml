@@ -8,9 +8,10 @@
   <artifactId>jdk21-platform</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <modules>
-    <module>jdk21-common</module>
-  </modules>
+    <modules>
+        <module>jdk21-common</module>
+        <module>jdk21-newfeatures-demo</module>
+    </modules>
 
   <properties>
     <!-- 编码 -->
