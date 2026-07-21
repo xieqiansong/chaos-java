@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>jdk17-common</module>
+        <module>jdk17-newfeatures-demo</module>
     </modules>
 
     <properties>
