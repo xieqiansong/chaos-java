@@ -5,7 +5,7 @@ import lan.chaos.mybatisplus.common.context.DynamicTableContext;
 import lan.chaos.mybatisplus.common.context.TenantContext;
 import lan.chaos.mybatisplus.dynamictable.DynamicTableScenario;
 import lan.chaos.mybatisplus.encrypt.EncryptScenario;
-import lan.chaos.mybatisplus.entity.User;
+import lan.chaos.mybatisplus.common.model.User;
 import lan.chaos.mybatisplus.page.PageScenario;
 import lan.chaos.mybatisplus.tenant.TenantScenario;
 import lan.chaos.mybatisplus.wrapper.WrapperScenario;
@@ -27,7 +27,7 @@ import java.util.List;
  * 本类的 @SpringBootApplication 同时是各 *Test 的 @SpringBootTest 配置来源（组件扫描包 lan.chaos.mybatisplus）。
  */
 @SpringBootApplication
-@MapperScan("lan.chaos.mybatisplus.mapper")
+@MapperScan("lan.chaos.mybatisplus.common.mapper")
 public class DemoApp {
 
     public static void main(String[] args) {

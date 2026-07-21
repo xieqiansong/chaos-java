@@ -1,4 +1,4 @@
-package lan.chaos.mybatisplus.entity;
+package lan.chaos.mybatisplus.common.model;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;

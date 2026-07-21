@@ -1,8 +1,8 @@
 package lan.chaos.mybatisplus.encrypt;
 
 import lan.chaos.mybatisplus.common.util.AesUtil;
-import lan.chaos.mybatisplus.entity.Member;
-import lan.chaos.mybatisplus.mapper.MemberMapper;
+import lan.chaos.mybatisplus.common.model.Member;
+import lan.chaos.mybatisplus.common.mapper.MemberMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

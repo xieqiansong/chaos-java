@@ -1,11 +1,11 @@
-package lan.chaos.mybatisplus.mapper;
+package lan.chaos.mybatisplus.common.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
-import lan.chaos.mybatisplus.entity.Order;
-import lan.chaos.mybatisplus.page.OrderUserVO;
+import lan.chaos.mybatisplus.common.model.Order;
+import lan.chaos.mybatisplus.common.model.OrderUserVO;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 

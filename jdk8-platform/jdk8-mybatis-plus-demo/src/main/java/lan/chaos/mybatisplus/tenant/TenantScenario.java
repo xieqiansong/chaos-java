@@ -1,8 +1,8 @@
 package lan.chaos.mybatisplus.tenant;
 
 import lan.chaos.mybatisplus.common.context.TenantContext;
-import lan.chaos.mybatisplus.entity.TenantData;
-import lan.chaos.mybatisplus.mapper.TenantDataMapper;
+import lan.chaos.mybatisplus.common.model.TenantData;
+import lan.chaos.mybatisplus.common.mapper.TenantDataMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

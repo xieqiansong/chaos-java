@@ -2,8 +2,8 @@ package lan.chaos.mybatisplus.wrapper;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import lan.chaos.mybatisplus.entity.User;
-import lan.chaos.mybatisplus.mapper.UserMapper;
+import lan.chaos.mybatisplus.common.model.User;
+import lan.chaos.mybatisplus.common.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

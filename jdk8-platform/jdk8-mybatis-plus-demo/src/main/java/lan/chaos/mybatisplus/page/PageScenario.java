@@ -3,9 +3,10 @@ package lan.chaos.mybatisplus.page;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import lan.chaos.mybatisplus.entity.User;
-import lan.chaos.mybatisplus.mapper.OrderMapper;
-import lan.chaos.mybatisplus.mapper.UserMapper;
+import lan.chaos.mybatisplus.common.model.User;
+import lan.chaos.mybatisplus.common.mapper.OrderMapper;
+import lan.chaos.mybatisplus.common.mapper.UserMapper;
+import lan.chaos.mybatisplus.common.model.OrderUserVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

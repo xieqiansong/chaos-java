@@ -1,7 +1,7 @@
-package lan.chaos.mybatisplus.mapper;
+package lan.chaos.mybatisplus.common.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import lan.chaos.mybatisplus.entity.Member;
+import lan.chaos.mybatisplus.common.model.Member;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 

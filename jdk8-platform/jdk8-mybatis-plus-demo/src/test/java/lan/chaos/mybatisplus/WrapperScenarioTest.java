@@ -1,6 +1,6 @@
 package lan.chaos.mybatisplus;
 
-import lan.chaos.mybatisplus.entity.User;
+import lan.chaos.mybatisplus.common.model.User;
 import lan.chaos.mybatisplus.wrapper.WrapperScenario;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

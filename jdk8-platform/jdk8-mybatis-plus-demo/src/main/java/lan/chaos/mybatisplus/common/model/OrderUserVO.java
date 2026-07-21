@@ -1,4 +1,4 @@
-package lan.chaos.mybatisplus.page;
+package lan.chaos.mybatisplus.common.model;
 
 import lombok.Data;
 

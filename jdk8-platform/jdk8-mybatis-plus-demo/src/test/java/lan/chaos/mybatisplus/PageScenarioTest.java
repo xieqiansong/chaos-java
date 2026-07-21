@@ -1,8 +1,8 @@
 package lan.chaos.mybatisplus;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import lan.chaos.mybatisplus.entity.User;
-import lan.chaos.mybatisplus.page.OrderUserVO;
+import lan.chaos.mybatisplus.common.model.User;
+import lan.chaos.mybatisplus.common.model.OrderUserVO;
 import lan.chaos.mybatisplus.page.PageScenario;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

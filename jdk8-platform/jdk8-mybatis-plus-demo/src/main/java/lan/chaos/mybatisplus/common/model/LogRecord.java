@@ -1,24 +1,22 @@
-package lan.chaos.mybatisplus.entity;
+package lan.chaos.mybatisplus.common.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 订单实体，用于分页 / 联表分页演示。
- * 表名用 t_order（order 是 SQL 保留字，避免歧义）。
+ * 日志实体，用于动态表名演示。
+ * 逻辑表名 log_record，运行时由动态表名插件映射到 log_record_2024 / log_record_2025。
  */
 @Data
-@TableName("t_order")
-public class Order {
+@TableName("log_record")
+public class LogRecord {
 
     @TableId(type = IdType.AUTO)
     private Long id;
-    private Long userId;
-    private BigDecimal amount;
+    private String content;
     private LocalDateTime createTime;
 }

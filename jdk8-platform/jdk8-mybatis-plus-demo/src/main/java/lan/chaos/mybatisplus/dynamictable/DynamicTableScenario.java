@@ -1,8 +1,8 @@
 package lan.chaos.mybatisplus.dynamictable;
 
 import lan.chaos.mybatisplus.common.context.DynamicTableContext;
-import lan.chaos.mybatisplus.entity.LogRecord;
-import lan.chaos.mybatisplus.mapper.LogRecordMapper;
+import lan.chaos.mybatisplus.common.model.LogRecord;
+import lan.chaos.mybatisplus.common.mapper.LogRecordMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
