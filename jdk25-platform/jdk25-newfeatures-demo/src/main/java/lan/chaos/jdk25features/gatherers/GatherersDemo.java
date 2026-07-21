@@ -33,7 +33,7 @@ public class GatherersDemo {
 
     /** 自定义 Gatherer：把 (a,b) -> b-a 的差值依次发射，首元素无前驱则跳过。 */
     static Gatherer<Integer, ?, Integer> adjacentDelta() {
-        return Gatherer.of(
+        return Gatherer.ofSequential(
                 AtomicReference<Integer>::new,                       // 状态：上一个元素
                 (AtomicReference<Integer> state, Integer element, Gatherer.Downstream<? super Integer> downstream) -> {
                     Integer prev = state.get();
