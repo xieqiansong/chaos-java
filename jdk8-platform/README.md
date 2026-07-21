@@ -22,7 +22,7 @@
 
 | 重要度 | 模块 | 状态 | 说明 |
 |--------|------|------|------|
-| 1 | `jdk8-base` | ✅ 完成 | Java 基础内功：分布式 ID/Paxos、IO/NIO/Netty/SPI/JUC 并发、JVM/类加载/迷你 Servlet 容器/JMH/Java Agent 字节码增强（106 个可运行小例子） |
+| 1 | `jdk8-base` | ✅ 完成 | Java 基础内功：分布式 ID/Paxos、IO/NIO/Netty/SPI/JUC 并发、JVM/类加载/迷你 Servlet 容器/JMH/Java Agent 字节码增强；JDK8 新特性：Lambda/Stream/Optional/方法引用/默认方法/日期时间/Base64/StringJoiner/CompletableFuture（106 个可运行小例子+新特性场景） |
 | 2 | `jdk8-redis-demo` | ✅ 完成 | Redis 全场景：缓存、Hash/List/Set、ZSet 排行榜、计数、分布式锁、Lua 限流/扣库存、Pipeline、PubSub |
 | 3 | `jdk8-localcache-demo` | ✅ 完成 ★ 标杆 | 本地缓存（Caffeine）：基础读写 / 写入过期 / 容量淘汰 / 声明式 @Cacheable，纯内存零外部依赖。**后续 A 类 demo 模板** |
 | 4 | `jdk8-mybatis-plus-demo` | ✅ 完成 | MyBatis-Plus 高阶：条件构造器 / 分页（单表+联表）/ 逻辑删除+乐观锁+自动填充 / 多租户隔离 / 动态表名分表 / 字段透明加密（AES），以单元测试为核心验证，H2 内存库零外部依赖 |
@@ -39,11 +39,11 @@
 
 ## 模块详情（同按重要程度排序）
 
-- **jdk8-base**：Java 基础与杂项知识点合集，由 old 四份模块（`java-guide-demos` + `tech-pdai-java-demos` + `chaos-test` + `javaagent`）合并而来，共 106 个可运行小例子。覆盖分布式 ID（UUID/Snowflake/Redis-INCR/Leaf/TinyId）、最小 Basic Paxos、反射/异常/SPI、BIO/NIO/AIO/Netty/零拷贝/Reactor 多路复用、JUC 并发全家桶（AQS/锁/阻塞队列/Fork-Join/线程池/Phaser）、JVM 类加载/CGLib 代理、手写迷你 Servlet 容器、JMH 微基准、Java Agent（Premain/Agent-Class 字节码增强）。包名保持原样，无 Web 外壳，多数类自带 `main` 直接运行。
+- **jdk8-base**：Java 基础与杂项知识点合集，由 old 四份模块 + `jdk8-base-features-demo` 合并而来，共 106 个可运行小例子 + JDK8 新特性场景。覆盖分布式 ID（UUID/Snowflake/Redis-INCR/Leaf/TinyId）、最小 Basic Paxos、反射/异常/SPI、BIO/NIO/AIO/Netty/零拷贝/Reactor 多路复用、JUC 并发全家桶（AQS/锁/阻塞队列/Fork-Join/线程池/Phaser）、JVM 类加载/CGLib 代理、手写迷你 Servlet 容器、JMH 微基准、Java Agent（Premain/Agent-Class 字节码增强）；JDK8 新特性：Lambda/Stream/Optional/方法引用/默认方法/日期时间 API（LocalDate/LocalTime/Instant/ZoneId）、Base64、StringJoiner、CompletableFuture 异步编排。包名保持原样，无 Web 外壳，多数类自带 `main` 或单元测试直接运行。
 - **jdk8-redis-demo**：基于 Spring Data Redis + Lettuce，按能力分包（cache/collection/rank/counter/lock/ratelimit/stock/pipeline/pubsub），以单元测试为核心验证手段。
 - **jdk8-localcache-demo** ★ 标杆模板：基于 Spring Boot 2.7 + Caffeine 2.9.3，纯内存零外部依赖；按能力分包（basic 基础读写 / expire 写入过期 / eviction 容量淘汰 / cacheaside 声明式 @Cacheable），以单元测试为核心验证，控制台入口 `DemoApp.main` 一键打印各场景「输入 → 输出」。**后续新增 A 类 demo 均以它为模板**（见根 `AGENTS.md`）。
 - **jdk8-mybatis-plus-demo**：基于 Spring Boot 2.7 + MyBatis-Plus 3.5.3.2 + H2 内存库，按能力分包（wrapper / page / audit / tenant / dynamictable / encrypt），以单元测试为核心验证手段，控制台入口 `DemoApp.main` 可一键打印各场景「输入 → 输出」。
-- **jdk8-nacos-demo**：基于 Spring Cloud Alibaba，演示 Provider 注册、`@LoadBalanced` RestTemplate / OpenFeign 消费、配置中心 `@RefreshScope` 动态刷新与编程式 `ConfigService.addListener` 监听。
+- **jdk8-nacos-demo**：基于 Spring Cloud Alibaba，演示 Provider 注册、`@LoadBalanced` RestTemplate / OpenFeign 消费、配置中心 `@RefreshScope` 动态刷新与编程式 `ConfigService.addListener` 监听。采用**形态二（多模块）**：Nacos 的价值在于「服务注册 → 被发现 → 跨进程调用 → 配置动态刷新」的完整链路，按 provider / consumer / config 拆成可各自独立启动的进程，才能真实还原这一过程（单模块模拟不出跨进程效果）。
 - **jdk8-rocketmq-demo**：使用原生 RocketMQ Client，以独立类演示各类消息模型与生产消费模式，并包含幂等、重试、死信、事务、ACL、故障容错、消息轨迹等进阶能力。
 - **jdk8-kafka-demo**：基于 Spring Kafka 2.8.x，覆盖基础收发、批量发送/消费、分区有序、Exactly-Once 事务、重试/死信、Header 消息过滤，@EmbeddedKafka 自包含测试无需外部 Broker。
 - **jdk8-sentinel-demo**：基于 Sentinel 1.8.6 + Spring Cloud Alibaba，覆盖 QPS 直接/关联/WarmUp 流控、异常数/异常比例/慢调用比例熔断、热点参数限流、@SentinelResource 注解（blockHandler/fallback），SphU.entry() 程序化方式核心稳定，包含 Dashboard docker-compose。
@@ -84,7 +84,7 @@
 | 12 | 🔴 高 | 分布式锁（Redis / ZooKeeper） | 🟡 部分 | `jdk8-redis-demo` / `jdk8-seckill-demo` |
 | 13 | 🔴 高 | 分布式 ID（Snowflake / Leaf / TinyId） | ✅ | `jdk8-base` |
 | 14 | 🔴 高 | 构建工具（Maven） | ✅ | 本工程 |
-| 15 | 🟡 中 | Java 8+ 新特性（Lambda / Stream / Optional） | ❌ 待补 | 建议补 demo |
+| 15 | 🟡 中 | Java 8+ 新特性（Lambda / Stream / Optional） | ✅ | `jdk8-base` |
 | 16 | 🟡 中 | 字节码与 Java Agent（ASM / ByteBuddy） | 🟡 部分 | `jdk8-base`（Premain/Agent-Class，缺 ASM） |
 | 17 | 🟡 中 | Spring MVC / WebFlux（响应式） | 🟡 / ❌ | MVC 间接覆盖；WebFlux 待补 |
 | 18 | 🟡 中 | 数据库连接池（Druid / HikariCP） | ✅ | 依赖已引入 |
@@ -119,7 +119,7 @@
 - 🔴 高 并发编程 JUC（线程池 / 锁 / AQS / 并发容器 / Fork-Join / Phaser） — ✅ `jdk8-base`
 - 🔴 高 JVM（内存模型 / 类加载 / GC / 调优工具 arthas·jstack·jmap） — 🟡 部分（`jdk8-base` 含类加载/CGLib/HeapOOM，缺调优实战）
 - 🔴 高 I/O 与网络（BIO / NIO / AIO / Netty / 零拷贝 / Reactor） — ✅ `jdk8-base`
-- 🟡 中 Java 8+ 新特性（Lambda / Stream / Optional / 日期 API） — ❌ 建议补
+- 🟡 中 Java 8+ 新特性（Lambda / Stream / Optional / 日期 API） — ✅ `jdk8-base`
 - 🟡 中 字节码与 Java Agent（instrument / ASM / ByteBuddy） — 🟡 部分（`jdk8-base` 含 Premain/Agent-Class，缺 ASM/ByteBuddy）
 
 #### 二、Web 与框架

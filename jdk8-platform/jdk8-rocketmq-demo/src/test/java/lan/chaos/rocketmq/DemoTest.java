@@ -21,6 +21,7 @@ import lan.chaos.rocketmq.throttle.ThrottleProducer;
 import lan.chaos.rocketmq.trace.TraceProducer;
 import lan.chaos.rocketmq.transaction.TransactionProducer;
 import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,7 +47,7 @@ import java.net.Socket;
  * 需要可用的 RocketMQ：先用 {@code docker-compose up -d} 起 NameServer + Broker（见本目录 docker-compose.yml）。
  * NameServer 地址与 application.yml 保持一致（默认 REDACTED:9876，可用 {@code -Drocketmq.namesrv.addr=HOST:PORT} 覆盖）。
  */
-@SpringBootTest(classes = App.class)
+@SpringBootTest(classes = RocketMqApplication.class)
 @Execution(ExecutionMode.CONCURRENT)
 @ExtendWith(BrokerReachableCondition.class)
 class DemoTest {

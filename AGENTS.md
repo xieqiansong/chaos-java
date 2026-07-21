@@ -1,30 +1,35 @@
-# AGENTS.md — A 类 Demo 生成规范（硬约束）
+# AGENTS.md — Demo 生成规范（硬约束 + 形态适配）
 
-本仓库只把 **A 类「单技术点 Demo」** 作为核心交付物，用本规范约束 AI 生成的每一个 demo。
-**B 类「综合实战 Demo」**（如 `jdk8-seckill-demo` / `jdk8-short-link-demo`）仅为面试/落地演示，**不受本规范约束、不投入额外设计，少量保留即可**。
+本仓库以 **「单技术点 Demo」** 为核心交付物，用本规范约束 AI 生成的每一个 demo。
+另有少量 **「综合实战 Demo」**（如 `jdk8-seckill-demo` / `jdk8-short-link-demo`）作为面试/落地演示，可保留，但**不新增**，除非用户明确要求。
 
-> 新生成的 A 类 demo 必须以本仓库的 **`jdk8-localcache-demo`（Caffeine 本地缓存）为模板**：目录结构、注释风格、测试形态、README 七段式全部照抄。
+> 新生成的单技术点 demo，优先参考本仓库的 **`jdk8-localcache-demo`（Caffeine 本地缓存）** 的注释风格、测试形态与 README 七段式；但其**单模块目录结构只是形态之一**，当技术点天然多进程时，按本规范第二节选择多模块形态（见 Nacos / Seata 等）。
 
 ---
 
-## 一、A 类 Demo 的定位
+## 一、Demo 的定位
 
 - **一个 Demo = 一个技术组件 / 一个技术点**（Redis、RocketMQ、MapStruct、本地缓存…）。
 - 目标只有一条：**让看的人以最少噪音、最快速度抓住该技术点的关键机制**。
 - 不是「能跑的小项目」，不是「微服务骨架」，不是「完整业务系统」。
+- **形态因技术点而异**：技术点本身是单进程库，就用单模块；技术点本身是分布式/多进程基础设施（注册中心、配置中心、消息队列 broker、分布式事务 server…），就**拆成多个可独立启动的进程**来演示——后者不是特例豁免，而是还原该技术点的真实运行方式。
 
-## 二、目录与分包（强制）
+## 二、展示形态与目录结构（强制约束 + 形态适配）
 
+**硬约束（与技术点形态无关，所有 demo 必须满足）：**
 - **根包固定为 `lan.chaos.<tech>`**（如 `lan.chaos.redis`、`lan.chaos.localcache`）。**禁止** `lan.chaos.demo.<tech>` 这种带 `demo` 层的写法。
-- **能力即顶层包**：`lan.chaos.<tech>.<capability>`，每个 capability 聚焦一类知识点、一个场景一个类。
-  - 正面：`cache/basic`、`cache/expire`、`cache/eviction`、`lock`、`simple`、`order`、`basic`、`collection`…
-  - 反面：`controller`、`service`、`repository`、`dao`、`dto` 占顶层包——**一律禁止**，这些只是触发外壳或支撑，收进 `common/`。
-- **支撑与触发统一收进 `common/`**：
-  - `common/constant/`：topic / key / 缓存名 / 端口等公共常量，杜绝魔法值。
-  - `common/config/`：Spring 配置类（如 `CacheConfig`）。
-  - `common/model/`：样例数据模型（如 `User`）。
-  - `common/trigger/`（可选）：HTTP 端点等「触发外壳」，仅当需要用 curl/Postman 交互式把玩时才加，**非必须**。
-- 启动类命名 `<Tech>Application`（如 `LocalCacheApplication`），放在 `lan.chaos.<tech>` 根下。
+- 启动类命名 `<Tech>Application`（如 `LocalCacheApplication`、`NacosApplication`），放在该技术点根包下。
+- 公共支撑统一收进 `common/`：`common/constant/`（topic / key / 缓存名 / 端口等常量，杜绝魔法值）、`common/config/`（Spring 配置类）、`common/model/`（样例数据模型）、`common/util/` 等；样例数据用 `sampleXxx()` 工厂。
+
+**按技术点形态选择目录骨架：**
+
+- **形态一 · 单模块（单进程库/组件）**：能力即顶层包，`lan.chaos.<tech>.<capability>`，每个 capability 聚焦一类知识点、一个场景一个类。
+  - 正面：`cache/basic`、`cache/expire`、`lock`、`simple`、`order`、`basic`、`collection`…
+  - `controller` / `service` / `repository` / `dao` / `dto` **不占顶层包**——它们只是触发外壳或支撑，收进 `common/` 或 `common/trigger/`（HTTP 端点等触发外壳仅当需 curl/Postman 交互式把玩时加，且不含知识点）。
+- **形态二 · 多模块（天然多进程的基础设施）**：按「部署/角色单元」拆 Maven/Gradle 模块，顶层包名即部署单元名。
+  - 例：Nacos 拆 `provider` / `consumer` / `config`，Seata 拆 `account` / `order` / `storage` + 独立 TC。
+  - 此时 `controller` 是某部署单元对外暴露能力的入口，**允许占该模块的顶层**，因为多进程才是该技术点的真实形态；但**模块内部仍按能力分包**，公共支撑仍收进各模块的 `common/`。
+  - 每个模块一个启动类（`<Role>Application`），整体共用根包 `lan.chaos.<tech>`。
 
 ## 三、场景代码规范（强制）
 
@@ -56,20 +61,21 @@
 
 完成后把所在平台 `README.md` 的「已完成学习记录」表对应状态更新为 ✅。
 
-## 六、B 类综合实战（仅记录，不约束）
+## 六、综合实战 Demo（可选，记录不强制）
 
-- 允许分层（controller/service/repository/dto/config），但**不要求**对齐上述 A 类规则。
-- 在平台 `README.md` 中单独归类为「综合实战（锦上添花）」，明确标注「可选、不强制统一规则」。
-- 不新增 B 类 demo，除非用户明确要求。
+- 综合实战 = 把多个技术点组合进一个带业务外壳的 demo（如 `jdk8-seckill-demo` / `jdk8-short-link-demo`）。
+- 允许业务分层（controller/service/repository/dto/config），**不要求**对齐单模块 A 类的分包规则；但其中**每个被演示的技术点仍应满足本规范第三节的硬约束**（一个类讲清一个点、WHY 注释、可观察输出、可断言测试）。
+- 在平台 `README.md` 中单独归类为「综合实战（锦上添花）」，标注「可选」。
+- 不新增综合实战 demo，除非用户明确要求。
 
 ---
 
-## ⛳ AI 生成 A 类 Demo 自检清单（生成后逐条核对）
+## ⛳ AI 生成 Demo 自检清单（生成后逐条核对）
 
-新建或生成 A 类 demo 后，必须全部满足，否则视为不合格：
+新建或生成 demo 后，必须满足以下**通用硬约束**，再按所选形态核对专项项：
 
+**通用硬约束（必满足）：**
 - [ ] 根包为 `lan.chaos.<tech>`，无 `demo` 中间层
-- [ ] 能力是顶层包（`<tech>.<capability>`），`controller/service/repository/dto` 未占顶层
 - [ ] 公共常量在 `common/constant`，配置在 `common/config`，样例模型在 `common/model`
 - [ ] 每个能力一个类，命名见名知意，且含 `sampleXxx()` 样例数据
 - [ ] 每个能力类有 WHY 注释（痛点 / 关键 API / 生产坑）
@@ -77,4 +83,14 @@
 - [ ] 至少一条可断言的 `*Test`；无外部依赖直接跑，有依赖用 `Assumptions` 跳过；**无** `@Disabled`+`sleep` 当入口
 - [ ] 非必要不引真实中间件；必须引时附 `docker-compose.yml` + README 说明
 - [ ] README 含七段式，且平台总表状态置 ✅
-- [ ] 已参考 `jdk8-localcache-demo` 的目录与风格（不得自创一套）
+
+**单模块形态专项（形态一）：**
+- [ ] 能力是顶层包（`<tech>.<capability>`），`controller/service/repository/dto` 未占顶层
+- [ ] 启动类 `<Tech>Application` 在根包下
+
+**多模块形态专项（形态二，天然多进程技术点）：**
+- [ ] 按部署/角色单元拆模块，顶层包即部署单元名
+- [ ] 模块内部仍按能力分包，公共支撑收进各模块 `common/`
+- [ ] 每个独立进程有启动类（`<Role>Application`）
+
+> 形态选择原则：技术点本身是单进程库 → 形态一；技术点本身是分布式/多进程基础设施 → 形态二（多进程才能真实演示，是正选而非例外）。

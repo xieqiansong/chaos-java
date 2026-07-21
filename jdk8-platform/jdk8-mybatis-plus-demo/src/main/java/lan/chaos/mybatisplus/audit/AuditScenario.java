@@ -1,6 +1,6 @@
 package lan.chaos.mybatisplus.audit;
 
-import lan.chaos.mybatisplus.enums.UserStatusEnum;
+import lan.chaos.mybatisplus.common.enums.UserStatusEnum;
 import lan.chaos.mybatisplus.common.model.User;
 import lan.chaos.mybatisplus.common.mapper.UserMapper;
 import org.springframework.stereotype.Service;

@@ -23,7 +23,6 @@
         <module>jdk8-seckill-demo</module>
         <module>jdk8-short-link-demo</module>
         <module>jdk8-base</module>
-        <module>jdk8-base-features-demo</module>
     </modules>
 
     <properties>

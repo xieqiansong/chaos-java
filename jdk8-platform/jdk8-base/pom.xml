@@ -13,7 +13,7 @@
     <artifactId>jdk8-base</artifactId>
     <packaging>jar</packaging>
     <name>jdk8-base</name>
-    <description>Java 基础与杂项 demo 合集：分布式 ID/Paxos、IO/NIO/Netty/SPI/JUC、JVM/类加载/迷你 Servlet 容器/JMH 基准</description>
+    <description>Java 基础与杂项 demo 合集：分布式 ID/Paxos、IO/NIO/Netty/SPI/JUC、JVM/类加载/迷你 Servlet 容器/JMH 基准；JDK8 新特性：Lambda、Stream、Optional、方法引用、默认方法、日期时间、Base64、StringJoiner、CompletableFuture</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -91,6 +91,13 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- JDK8 新特性测试：JUnit 5 (Vintage 引擎兼容 JUnit 4) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

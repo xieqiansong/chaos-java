@@ -13,17 +13,17 @@ MyBatis-Plus 高阶用法速查 Demo（学习向）。覆盖日常项目里最�
 ```
 src/main/java/lan/chaos/mybatisplus/
 ├── DemoApp.java                  # 运行入口：main() 启动后逐场景打印结果（非 @Bean CommandLineRunner）
-├── config/
-│   ├── MybatisPlusConfig         # 插件链装配：分页 / 多租户 / 动态表名 / 防全表更新
-│   ├── MyTenantLineHandler       # 多租户：哪些表忽略、租户 ID 从哪来
-│   ├── MyDynamicTableNameHandler # 动态表名：log_record → log_record_${year}
-│   ├── SchemaInit                # 上下文启动时执行 schema.sql + data.sql 初始化 H2
-│   └── MetaHandler               # 自动填充审计字段（createTime / updateTime / operator）
 ├── common/
 │   ├── constant/                 # 公共常量（租户键、动态表名上下文键等）
 │   ├── context/                  # TenantContext / DynamicTableContext（ThreadLocal 传参）
 │   ├── handler/AesTypeHandler    # 字段级 AES 加解密 TypeHandler
-│   └── util/AesUtil              # AES 工具（与 AesTypeHandler 共用，保证可反向解密校验）
+│   ├── util/AesUtil              # AES 工具（与 AesTypeHandler 共用，保证可反向解密校验）
+│   ├── config/                   # Spring 配置类（统一收进 common）
+│   │   ├── MybatisPlusConfig         # 插件链装配：分页 / 多租户 / 动态表名 / 防全表更新
+│   │   ├── MyTenantLineHandler       # 多租户：哪些表忽略、租户 ID 从哪来
+│   │   ├── MyDynamicTableNameHandler # 动态表名：log_record → log_record_${year}
+│   │   └── SchemaInit                # 上下文启动时执行 schema.sql + data.sql 初始化 H2
+│   └── enums/UserStatusEnum      # 用户状态枚举（@EnumValue 标记存库值）
 ├── wrapper/   WrapperScenario   # ① 条件构造器：LambdaQueryWrapper + 自定义 SQL 拼接 Wrapper
 ├── page/     PageScenario       # ② 分页：单表 selectPage + 联表自定义 SQL 分页
 ├── audit/    AuditScenario      # ③ 逻辑删除 + 乐观锁 + 自动填充

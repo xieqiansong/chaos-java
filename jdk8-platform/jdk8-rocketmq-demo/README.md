@@ -15,13 +15,13 @@ RocketMQ 常用场景演示模块，按功能子包分层，以 `DemoTest` 为�
 
 ```
 rocketmq-demo/src/main/java/lan/chaos/rocketmq/
-├── App.java                          # 应用入口
-├── common/                           # ◆ 公共抽象（幂等去重 / 本地事务存储接口+内存实现）
-│   ├── MessageIdStore.java
-│   └── InMemoryMessageIdStore.java
-├── message/                          # ◆ 统一消息信封（时间戳|正文 封装/解析）
-│   ├── Message.java
-│   └── MessageUtils.java
+├── RocketMqApplication.java            # 应用入口
+├── common/                            # ◆ 公共抽象（幂等去重 / 本地事务存储接口+内存实现）
+│   ├── idempotent/                    # 消费幂等去重（收进子包，不在 common 顶层）
+│   │   ├── MessageIdStore.java        # 去重存储抽象
+│   │   └── InMemoryMessageIdStore.java # 内存实现（生产换 Redis/DB 唯一键）
+│   ├── model/Message.java            # 统一消息信封
+│   └── util/MessageUtils.java        # 信封封装/解析工具
 ├── simple/                           # 基础收发 + 幂等消费 ★★★
 │   ├── SimpleProducer.java
 │   └── IdempotentConsumer.java

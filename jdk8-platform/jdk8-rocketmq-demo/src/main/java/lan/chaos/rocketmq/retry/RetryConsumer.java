@@ -1,6 +1,6 @@
 package lan.chaos.rocketmq.retry;
 
-import lan.chaos.rocketmq.common.MessageIdStore;
+import lan.chaos.rocketmq.common.idempotent.MessageIdStore;
 import lan.chaos.rocketmq.common.model.Message;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;

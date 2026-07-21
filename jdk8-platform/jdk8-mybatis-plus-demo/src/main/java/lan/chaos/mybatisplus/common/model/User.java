@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.Version;
-import lan.chaos.mybatisplus.enums.UserStatusEnum;
+import lan.chaos.mybatisplus.common.enums.UserStatusEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;

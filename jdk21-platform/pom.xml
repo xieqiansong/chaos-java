@@ -10,7 +10,7 @@
   <packaging>pom</packaging>
     <modules>
         <module>jdk21-common</module>
-        <module>jdk21-base-features-demo</module>
+        <module>jdk21-base</module>
     </modules>
 
   <properties>
