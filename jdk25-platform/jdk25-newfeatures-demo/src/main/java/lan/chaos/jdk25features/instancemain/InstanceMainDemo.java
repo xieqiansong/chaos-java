@@ -9,7 +9,8 @@ package lan.chaos.jdk25features.instancemain;
  */
 public class InstanceMainDemo {
 
-    void main() {
+    // 实例 main 特性允许非 static；此处用 public 以便被同项目其他包（NewFeaturesApp）调用演示
+    public void main() {
         System.out.println("实例 main()：无需 static、无需 String[] args，java 启动器会自动实例化调用");
     }
 }
