@@ -10,9 +10,9 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jdk11-newfeatures-demo</artifactId>
+    <artifactId>jdk11-base-features-demo</artifactId>
     <packaging>jar</packaging>
-    <name>jdk11-newfeatures-demo</name>
+    <name>jdk11-base-features-demo</name>
     <description>JDK11 新特性学习模块（相对 JDK8，含 JDK9/10 引入的部分）：var(lambda)、HttpClient、String 新方法、Files.readString/writeString、Optional 增强、Stream takeWhile/dropWhile、Predicate.not、Collection.toArray</description>
 
     <properties>

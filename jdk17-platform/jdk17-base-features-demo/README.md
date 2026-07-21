@@ -17,13 +17,13 @@
 ```bash
 cd jdk17-platform
 # 编译 + 跑全部单元测试（离线）
-mvn -o -pl jdk17-newfeatures-demo test
+mvn -o -pl jdk17-base-features-demo test
 
 # 仅跑单个特性测试
-mvn -o -pl jdk17-newfeatures-demo test -Dtest=RecordDemoTest
+mvn -o -pl jdk17-base-features-demo test -Dtest=RecordDemoTest
 
 # 控制台分节打印所有特性演示
-mvn -o -pl jdk17-newfeatures-demo compile exec:java -Dexec.mainClass=lan.chaos.jdk17features.NewFeaturesApp
+mvn -o -pl jdk17-base-features-demo compile exec:java -Dexec.mainClass=lan.chaos.jdk17features.NewFeaturesApp
 ```
 
 预期：9 个测试全绿；控制台依次打印 9 个特性的输入与输出（含精确 NPE 的真实异常信息）。

@@ -7,18 +7,26 @@
     <file url="file://$APPLICATION_HOME_DIR$/bin/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk11-platform/jdk11-common/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk11-platform/jdk11-common/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk11-platform/jdk11-newfeatures-demo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk11-platform/jdk11-newfeatures-demo/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk11-platform/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk11-platform/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk17-platform/jdk17-common/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk17-platform/jdk17-common/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk17-platform/jdk17-newfeatures-demo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk17-platform/jdk17-newfeatures-demo/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk17-platform/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk17-platform/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk21-platform/jdk21-common/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk21-platform/jdk21-common/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk21-platform/jdk21-newfeatures-demo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk21-platform/jdk21-newfeatures-demo/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk21-platform/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk21-platform/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk25-platform/jdk25-common/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk25-platform/jdk25-common/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk25-platform/jdk25-newfeatures-demo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk25-platform/jdk25-newfeatures-demo/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk25-platform/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk25-platform/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-base/src/main/java" charset="UTF-8" />
@@ -47,6 +55,8 @@
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-nacos-demo/jdk8-nacos-server/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-nacos-demo/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-nacos-demo/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-newfeatures-demo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-newfeatures-demo/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-redis-demo/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-redis-demo/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-rocketmq-demo/src/main/java" charset="UTF-8" />

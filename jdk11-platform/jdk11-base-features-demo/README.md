@@ -17,13 +17,13 @@
 ```bash
 cd jdk11-platform
 # 编译 + 跑全部单元测试（离线）
-mvn -o -pl jdk11-newfeatures-demo test
+mvn -o -pl jdk11-base-features-demo test
 
 # 仅跑单个特性测试
-mvn -o -pl jdk11-newfeatures-demo test -Dtest=HttpClientDemoTest
+mvn -o -pl jdk11-base-features-demo test -Dtest=HttpClientDemoTest
 
 # 控制台分节打印所有特性演示
-mvn -o -pl jdk11-newfeatures-demo compile exec:java -Dexec.mainClass=lan.chaos.jdk11features.NewFeaturesApp
+mvn -o -pl jdk11-base-features-demo compile exec:java -Dexec.mainClass=lan.chaos.jdk11features.NewFeaturesApp
 ```
 
 预期：8 个测试全绿（其中 HttpClientDemoTest 用 JDK 内置 HttpServer 做本地真实收发，无需外网）；控制台依次打印 8 个特性的输入与输出。

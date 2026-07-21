@@ -6,14 +6,14 @@
 
     <parent>
         <groupId>lan.chaos</groupId>
-        <artifactId>jdk17-platform</artifactId>
+        <artifactId>jdk21-platform</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jdk17-newfeatures-demo</artifactId>
+    <artifactId>jdk21-base-features-demo</artifactId>
     <packaging>jar</packaging>
-    <name>jdk17-newfeatures-demo</name>
-    <description>JDK17 新特性学习模块（相对 JDK11）：文本块、Record、密封类、instanceof 模式匹配、Switch 表达式、精确 NPE、Stream.toList/mapMulti、HexFormat、RandomGenerator 工厂</description>
+    <name>jdk21-base-features-demo</name>
+    <description>JDK21 新特性学习模块（相对 JDK17）：虚拟线程、SequencedCollection/SequencedMap、模式匹配 switch、Record 模式。预览特性（字符串模板、未命名变量、结构化并发、ScopedValue）见 README</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

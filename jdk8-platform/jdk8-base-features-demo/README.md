@@ -19,13 +19,13 @@
 ```bash
 # 编译 + 跑全部单元测试（离线）
 cd jdk8-platform
-mvn -o -pl jdk8-newfeatures-demo test
+mvn -o -pl jdk8-base-features-demo test
 
 # 仅跑单个特性测试
-mvn -o -pl jdk8-newfeatures-demo test -Dtest=StreamDemoTest
+mvn -o -pl jdk8-base-features-demo test -Dtest=StreamDemoTest
 
 # 控制台分节打印所有特性演示
-mvn -o -pl jdk8-newfeatures-demo compile exec:java -Dexec.mainClass=lan.chaos.jdk8features.NewFeaturesApp
+mvn -o -pl jdk8-base-features-demo compile exec:java -Dexec.mainClass=lan.chaos.jdk8features.NewFeaturesApp
 ```
 
 预期：9 个测试全绿；控制台依次打印 Lambda / Stream / Optional / java.time / 接口默认方法 / 方法引用 / CompletableFuture / Base64 / StringJoiner 的输入与输出。

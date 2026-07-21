@@ -12,6 +12,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="jdk8-nacos-config" />
+        <module name="jdk8-short-link-demo" />
         <module name="jdk8-kafka-demo" />
         <module name="jdk8-common" />
         <module name="jdk11-common" />
@@ -19,13 +20,14 @@
         <module name="jdk8-nacos-consumer" />
         <module name="jdk8-nacos-provider" />
         <module name="jdk8-base" />
+        <module name="jdk8-seckill-demo" />
+        <module name="jdk11-newfeatures-demo" />
         <module name="jdk8-localcache-demo" />
         <module name="jdk8-redis-demo" />
-        <module name="demo-seckill" />
         <module name="jdk8-rocketmq-demo" />
         <module name="jdk8-sentinel-demo" />
         <module name="jdk8-elasticsearch-demo" />
-        <module name="demo-short-link" />
+        <module name="jdk8-newfeatures-demo" />
         <module name="jdk8-seata-demo" />
       </profile>
       <profile name="Annotation profile for jdk25-platform" enabled="true">
@@ -36,9 +38,8 @@
           <entry name="$PROJECT_DIR$/../../../Users/$$USERNAME$$/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
           <entry name="$PROJECT_DIR$/../../../Users/$$USERNAME$$/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
-        <module name="jdk21-common" />
+        <module name="jdk25-newfeatures-demo" />
         <module name="jdk17-common" />
-        <module name="jdk25-common" />
       </profile>
       <profile name="Annotation profile for jdk8-mybatis-plus-demo" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -48,6 +49,16 @@
           <entry name="$PROJECT_DIR$/../../../Users/$$USERNAME$$/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
         <module name="jdk8-mybatis-plus-demo" />
+      </profile>
+      <profile name="Annotation profile for jdk21-platform" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../../Users/$$USERNAME$$/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="jdk17-newfeatures-demo" />
+        <module name="jdk21-common" />
       </profile>
       <profile name="Annotation profile for jdk8-platform" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -60,6 +71,20 @@
         </processorPath>
         <module name="jdk8-mapstruct-demo" />
       </profile>
+      <profile name="Annotation profile for jdk25-common" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../../Users/$$USERNAME$$/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="jdk25-common" />
+      </profile>
     </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="jdk25-newfeatures-demo" options="--enable-preview" />
+    </option>
   </component>
 </project>

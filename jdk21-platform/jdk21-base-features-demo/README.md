@@ -17,13 +17,13 @@
 ```bash
 cd jdk21-platform
 # 编译 + 跑全部单元测试（离线）
-mvn -o -pl jdk21-newfeatures-demo test
+mvn -o -pl jdk21-base-features-demo test
 
 # 仅跑单个特性测试
-mvn -o -pl jdk21-newfeatures-demo test -Dtest=VirtualThreadDemoTest
+mvn -o -pl jdk21-base-features-demo test -Dtest=VirtualThreadDemoTest
 
 # 控制台分节打印所有特性演示
-mvn -o -pl jdk21-newfeatures-demo compile exec:java -Dexec.mainClass=lan.chaos.jdk21features.NewFeaturesApp
+mvn -o -pl jdk21-base-features-demo compile exec:java -Dexec.mainClass=lan.chaos.jdk21features.NewFeaturesApp
 ```
 
 预期：全部测试全绿（虚拟线程演示会提交 10000 个任务并全部完成）；控制台依次打印 5 个特性的输入与输出。

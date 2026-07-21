@@ -6,21 +6,20 @@
 
     <parent>
         <groupId>lan.chaos</groupId>
-        <artifactId>jdk8-platform</artifactId>
+        <artifactId>jdk25-platform</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jdk8-newfeatures-demo</artifactId>
+    <artifactId>jdk25-base-features-demo</artifactId>
     <packaging>jar</packaging>
-    <name>jdk8-newfeatures-demo</name>
-    <description>JDK8 新特性学习模块（相对 JDK7）：Lambda、Stream、Optional、java.time、接口默认方法、方法引用、CompletableFuture、Base64、StringJoiner</description>
+    <name>jdk25-base-features-demo</name>
+    <description>JDK25 新特性学习模块（相对 JDK21，覆盖 JDK22~25）：模块导入声明、灵活构造器体、隐式声明类/实例main、Stream Gatherers、原始类型模式。文字说明见 README</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
-        <!-- 测试：JUnit 5（由父 POM 的 spring-boot-dependencies BOM 管理版本），仅测试作用域 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -33,10 +32,19 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <!-- 原始类型模式（JEP 488）在 JDK25 仍是预览特性 -->
+                    <compilerArgs>
+                        <arg>--enable-preview</arg>
+                    </compilerArgs>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>--enable-preview</argLine>
+                </configuration>
             </plugin>
         </plugins>
     </build>

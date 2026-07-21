@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>jdk11-common</module>
-        <module>jdk11-newfeatures-demo</module>
+        <module>jdk11-base-features-demo</module>
         <!-- 可根据需要添加更多子模块 -->
     </modules>
 
