@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>jdk25-common</module>
+        <module>jdk25-newfeatures-demo</module>
     </modules>
 
     <properties>
