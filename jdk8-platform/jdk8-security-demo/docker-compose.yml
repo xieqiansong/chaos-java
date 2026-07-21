@@ -1,0 +1,23 @@
+# 可选：OAuth2 资源服务器演示用的外部授权服务器（Keycloak）。
+# 默认 demo 不依赖它；要演示「OAuth2 资源服务器」模式时再起。
+#
+# 启动：docker compose up -d
+# 管理台：http://localhost:8080  (admin / admin)
+# 然后建 realm=chaos、client=security-demo（启用授权码+PKCE）、用户 alice，
+# 在本 demo 的 application.yml 配置：
+#   spring:
+#     security:
+#       oauth2:
+#         resourceserver:
+#           jwt:
+#             jwk-set-uri: http://localhost:8080/realms/chaos/protocol/openid-connect/certs
+version: "3.8"
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.3
+    command: ["start-dev"]
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"

@@ -8,6 +8,13 @@ spring:
     # DB_CLOSE_DELAY=-1：H2 内存库在最后一个连接关闭后不丢弃数据，
     # 保证 SchemaInit 初始化后、业务 Mapper 取到的连接仍看得到表。
 
+  # 启动时执行 db/schema.sql + db/data.sql 建表/插数（H2 内存库每次 JVM 重建，必须重建表）
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/schema.sql
+      data-locations: classpath:db/data.sql
+
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true

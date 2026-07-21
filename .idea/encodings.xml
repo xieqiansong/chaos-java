@@ -47,6 +47,8 @@
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-base/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-common/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-common/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-crypto-demo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-crypto-demo/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-elasticsearch-demo/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-elasticsearch-demo/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-kafka-demo/src/main/java" charset="UTF-8" />
@@ -75,14 +77,24 @@
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-redis-demo/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-rocketmq-demo/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-rocketmq-demo/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-scheduler-demo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-scheduler-demo/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-seata-demo/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-seata-demo/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-seckill-demo/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-seckill-demo/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-security-demo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-security-demo/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-sentinel-demo/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-sentinel-demo/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-serialization-demo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-serialization-demo/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-short-link-demo/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-short-link-demo/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-testing-demo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-testing-demo/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-zookeeper-demo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-zookeeper-demo/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/src/main/resources" charset="UTF-8" />
   </component>

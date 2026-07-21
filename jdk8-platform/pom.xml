@@ -23,6 +23,12 @@
         <module>jdk8-seckill-demo</module>
         <module>jdk8-short-link-demo</module>
         <module>jdk8-base</module>
+        <module>jdk8-testing-demo</module>
+        <module>jdk8-serialization-demo</module>
+        <module>jdk8-scheduler-demo</module>
+        <module>jdk8-crypto-demo</module>
+        <module>jdk8-security-demo</module>
+        <module>jdk8-zookeeper-demo</module>
     </modules>
 
     <properties>
@@ -139,6 +145,13 @@
                         <source>${maven.compiler.source}</source>
                         <target>${maven.compiler.target}</target>
                         <encoding>${project.build.sourceEncoding}</encoding>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>${lombok.version}</version>
+                            </path>
+                        </annotationProcessorPaths>
                     </configuration>
                 </plugin>
 

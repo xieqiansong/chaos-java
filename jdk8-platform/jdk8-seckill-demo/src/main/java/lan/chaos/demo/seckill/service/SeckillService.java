@@ -86,6 +86,9 @@ public class SeckillService {
             return SeckillResponse.soldOut();
         }
 
+        // 6.5 同步标记用户已购（幂等），保证限购检查确定性，不依赖异步下单时序
+        orderService.markUserBought(productId, request.getUserId());
+
         // 7. 生成唯一令牌
         String token = UUID.randomUUID().toString().replace("-", "");
 

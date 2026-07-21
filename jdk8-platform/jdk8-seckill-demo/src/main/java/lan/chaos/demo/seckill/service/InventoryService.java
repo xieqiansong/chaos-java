@@ -107,9 +107,10 @@ public class InventoryService {
      * @return 扣减成功的桶索引（从 1 开始），-1=已售罄
      */
     public int deductBucketStock(Long productId, int quantity, int bucketCount) {
-        // 构建 keys: [soldOutKey, bucketKey0, bucketKey1, ...]
+        // 构建 keys: [soldOutKey, stockKey(总库存对账), bucketKey0, bucketKey1, ...]
         List<String> keys = new ArrayList<>();
         keys.add(soldOutKey(productId));
+        keys.add(stockKey(productId));
         for (int i = 0; i < bucketCount; i++) {
             keys.add(bucketKey(productId, i));
         }
