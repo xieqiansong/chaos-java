@@ -11,8 +11,8 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="jdk11-common" />
         <module name="jdk11-base" />
+        <module name="jdk11-common" />
       </profile>
       <profile name="Annotation profile for jdk25-platform" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -51,7 +51,6 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$PROJECT_DIR$/../../../Users/$$USERNAME$$/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-          <entry name="$PROJECT_DIR$/../../../Users/$$USERNAME$$/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
         <module name="jdk8-mybatis-plus-demo" />
       </profile>
@@ -60,6 +59,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../../Users/$$USERNAME$$/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
           <entry name="$PROJECT_DIR$/../../../Users/$$USERNAME$$/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
         <module name="jdk8-base" />

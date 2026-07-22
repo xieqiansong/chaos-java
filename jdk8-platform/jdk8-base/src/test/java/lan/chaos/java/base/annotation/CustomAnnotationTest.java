@@ -1,16 +1,18 @@
 package lan.chaos.java.base.annotation;
 
-import org.junit.Test;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.Assert.assertTrue;
+
 
 /**
  * 自定义注解 + 运行时反射处理测试。
  */
-public class CustomAnnotationTest {
+class CustomAnnotationTest {
 
     @Test
-    public void auditable_shouldReadClassLevelAnnotation() {
+    void auditable_shouldReadClassLevelAnnotation() {
         CustomAnnotationDemo demo = new CustomAnnotationDemo();
         String result = demo.processAuditable(CustomAnnotationDemo.User.class);
         assertTrue("应读取审核人 admin", result.contains("admin"));
@@ -19,14 +21,14 @@ public class CustomAnnotationTest {
     }
 
     @Test
-    public void auditable_noAnnotation_shouldReturnDefaultMessage() {
+    void auditable_noAnnotation_shouldReturnDefaultMessage() {
         CustomAnnotationDemo demo = new CustomAnnotationDemo();
         String result = demo.processAuditable(String.class);
         assertTrue("无注解应有提示", result.contains("无需审核"));
     }
 
     @Test
-    public void sensitive_shouldMaskPhoneAndEmail() throws Exception {
+    void sensitive_shouldMaskPhoneAndEmail() throws Exception {
         CustomAnnotationDemo demo = new CustomAnnotationDemo();
         CustomAnnotationDemo.User user = new CustomAnnotationDemo.User("张三", "13812345678", "zhangsan@company.com");
         String result = demo.processSensitive(user);
