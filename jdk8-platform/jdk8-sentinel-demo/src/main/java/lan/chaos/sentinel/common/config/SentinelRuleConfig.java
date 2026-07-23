@@ -10,11 +10,11 @@ import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRuleManager;
 import lan.chaos.sentinel.common.constant.SentinelConstants;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,11 +22,17 @@ import java.util.List;
  * Sentinel 规则初始化 — 所有规则以编程方式加载，无需 Dashboard。
  * <p>Dashboard 是可选的监控可视化工具（见 docker-compose.yml）。</p>
  *
+ * <p><b>与 Nacos 的关系（关键）</b>：本类与 {@link NacosRuleDataSourceConfig} 不能重复灌规则。
+ * 两者都用 {@code @PostConstruct}，执行顺序不确定，会互相 {@code loadRules / register2Property} 覆盖，
+ * 导致"到底哪份规则生效"无法验证。因此这里规定：<b>仅当 Nacos 持久化关闭时，才用代码初始化规则</b>；
+ * Nacos 开启后，规则唯一来源就是 Nacos，本类自动让位，避免冲突。</p>
+ *
  * <p>生产环境应通过 {@code ReadableDataSource} 对接 Nacos/Apollo 等配置中心实现规则持久化，
  * 否则应用重启后规则全部丢失。</p>
  */
 @Slf4j
 @Configuration
+@ConditionalOnProperty(name = "sentinel.nacos.enabled", havingValue = "false", matchIfMissing = true)
 public class SentinelRuleConfig {
 
     @PostConstruct

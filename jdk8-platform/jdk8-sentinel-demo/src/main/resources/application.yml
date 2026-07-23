@@ -6,10 +6,35 @@ spring:
     sentinel:
       transport:
         # Sentinel Dashboard 地址（Docker 启动后可用，非必须）
-        dashboard: 127.0.0.1:8080
+        dashboard: REDACTED:8858
         port: 8719
+        clientIp: REDACTED
       # 关闭懒加载，启动即初始化 Sentinel 客户端（确保规则立即可用）
       eager: true
+
+# ============================================================
+# Sentinel 规则 Nacos 持久化（预留填写，默认关闭，不影响单元测试）
+# 你已部署 Nacos 后：把 enabled 改为 true，并填好 addr / namespace 即可。
+# 重要：本块必须是「顶层 sentinel 命名空间」，键为 sentinel.nacos.*，不要缩进到 spring: 下面，
+#       否则键会变成 spring.sentinel.nacos.*，与代码里的 @ConditionalOnProperty/@Value 不匹配而永远不生效。
+# 生效行为（拉模式）：应用启动自动从 Nacos 拉取规则；Dashboard 改规则不会写回 Nacos
+#       （写回需额外 WritableDataSource，本 demo 未实现）。Nacos 不可达时不阻断启动。
+# 各 dataId 按应用名区分，避免不同 demo 的规则互相覆盖。
+# ============================================================
+sentinel:
+  nacos:
+    enabled: true                                   # ← 改为 true 启用 Nacos 持久化
+    addr: ${NACOS_ADDR:REDACTED:8848}               # Nacos 服务地址，例如 nacos.example.com:8848
+    namespace: ${NACOS_NAMESPACE:}                   # 命名空间 ID，public 命名空间留空
+    username: ${NACOS_USERNAME:}                     # 仅当 Nacos 开启鉴权(authEnabled=true)才需要
+    password: ${NACOS_PASSWORD:}
+    group: ${NACOS_GROUP:SENTINEL_GROUP}
+    data-id:
+      flow: ${spring.application.name}-flow-rules
+      degrade: ${spring.application.name}-degrade-rules
+      param-flow: ${spring.application.name}-param-flow-rules
+      system: ${spring.application.name}-system-rules
+      authority: ${spring.application.name}-authority-rules
 
 logging:
   level:

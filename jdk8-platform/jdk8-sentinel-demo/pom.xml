@@ -18,13 +18,24 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <!-- Sentinel 核心 + Spring Cloud Alibaba 集成（含注解 AOP 支持） -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+        </dependency>
+
+        <!-- Sentinel 规则 Nacos 持久化（生产必选，默认关闭，配置见 application.yml）
+             说明：本仓库当前为离线构建，官方 sentinel-datasource-nacos 适配包未被缓存，
+             故复用已就绪的 sentinel-core 的 datasource SPI + 已缓存的 nacos-client，
+             自行实现轻量 NacosDataSource（见 common/config/NacosRuleDataSource）。
+             联网环境可直接改回官方依赖：com.alibaba.csp.sentinel:sentinel-datasource-nacos:1.8.6 -->
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>nacos-client</artifactId>
+            <version>1.4.2</version>
         </dependency>
 
         <!-- Lombok -->

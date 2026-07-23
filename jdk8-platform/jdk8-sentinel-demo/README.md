@@ -8,6 +8,7 @@
 |------|------|------|
 | 流量控制 | Sentinel 1.8.6 | spring-cloud-starter-alibaba-sentinel |
 | Dashboard | bladex/sentinel-dashboard:1.8.6 | Docker 容器化运维面板 |
+| 规则持久化 | Nacos 1.4.x | 预留配置，默认关闭，开启后规则存配置中心 |
 | 编程方式 | SphU.entry() + @SentinelResource | 程序化 + 注解，双轨演示 |
 
 ## 快速开始
@@ -21,6 +22,11 @@ docker compose -f jdk8-sentinel-demo/docker-compose.yml up -d
 # Dashboard 地址: http://localhost:8080，账号 sentinel/sentinel
 mvn -pl jdk8-sentinel-demo -am spring-boot:run
 # 触发几个请求后，在 Dashboard 界面可实时查看 QPS/RT 并动态编辑规则
+
+# 3. 规则 Nacos 持久化（你已部署 Nacos 时）
+#    编辑 application.yml：sentinel.nacos.enabled=true，填好 addr / namespace
+#    在 Nacos 配置中心新建 dataId（见下方「Nacos 规则持久化」）发布规则，
+#    启动后规则自动拉取、Dashboard 改完写回 Nacos，重启不丢。
 ```
 
 ## 场景一览
@@ -106,14 +112,46 @@ mvn -pl jdk8-sentinel-demo -am spring-boot:run
 
 @SentinelResource 注解场景在单测中验证正常路径（无规则不触发限流）和注解元数据（`@SentinelResource` 参数正确性），完整的 blockHandler/fallback 回调行为需在 Dashboard 或实际限流规则触发下验证。
 
+## Nacos 规则持久化
+
+默认规则只存内存，应用重启即丢失、Dashboard 改完也不会回写。接入 Nacos 后规则持久化在配置中心，
+**应用启动自动拉取、Dashboard 改完写回、多实例共享同一份、重启不丢**——这是上生产必做的一步。
+
+**配置位置**：`application.yml` 的 `sentinel.nacos.*`，默认 `enabled: false`（不影响单元测试），
+把 `enabled` 改为 `true` 并填好 `addr` / `namespace` 即可。各规则按 `data-id` 子项区分，dataId 默认以应用名前缀避免互相覆盖。
+
+**五种规则各自一个 dataId**：`flow` / `degrade` / `param-flow` / `system` / `authority`，
+分别对应 Nacos 配置中心里 5 个配置项（group 默认 `SENTINEL_GROUP`）。
+
+**示例**：在 Nacos 新建配置 `jdk8-sentinel-demo-flow-rules`（group=`SENTINEL_GROUP`），内容如下，
+应用启动即会对资源 `flow-qps` 生效 2 QPS 限流：
+
+```json
+[
+  {
+    "resource": "flow-qps",
+    "limitApp": "default",
+    "grade": 1,
+    "count": 2,
+    "strategy": 0,
+    "controlBehavior": 0,
+    "clusterMode": false
+  }
+]
+```
+
+> 资源名对应 `common/constant/SentinelConstants`（如 `flow-qps`、`hotspot-param`、`anno-both`）。
+> 实现见 `common/config/NacosRuleDataSource`（轻量自实现，等价官方 `sentinel-datasource-nacos`）+ `NacosRuleDataSourceConfig`（按 `enabled` 条件装配）。
+> 离线环境无法拉取官方适配包，故复用已缓存的 `sentinel-core` datasource SPI + `nacos-client` 自实现；联网后可直接换回官方依赖。
+
 ## 进阶方向
 
-- **规则持久化**：默认规则存内存重启即失，生产应接入 Nacos/Apollo/ZooKeeper 动态规则源
+- ~~规则持久化~~：已接入 Nacos 动态规则源（见上「Nacos 规则持久化」），默认关闭、预留配置
 - **链路流控**：通过对调用来源做隔离（SphU.entry 的 EntryType.IN 配合链路模式）
 - **系统自适应限流**：基于 Load/CPU/RT 的全局自适应保护
 - **Sentinel 网关限流**：集成 Spring Cloud Gateway + Sentinel 做入口统一限流
 - **集群流控**：Token Server 模式，集群总 QPS 共享限制
-- **规则动态推送**：Nacos DataSource 接入，实现 Dashboard 编辑→Nacos→应用热更新
+- **规则动态推送**：Dashboard 编辑 → Nacos → 应用热更新（需给 Dashboard 配 Nacos SPI，模式固定、社区案例多）
 
 ## 设计要点
 
@@ -121,3 +159,4 @@ mvn -pl jdk8-sentinel-demo -am spring-boot:run
 - **为什么测试每个用例独立加载规则**：Sentinel 规则是 JVM 级全局状态，必须隔离避免交叉污染
 - **`Tracer.trace(ex)` 的重要性**：Sentinel 靠它统计异常——直接抛异常不走 trace 不会被计入熔断决策
 - **blockHandler 不等于 fallback**：blockHandler 只处理 BlockException，业务异常需要用 fallback 兜底
+- **规则持久化默认关闭**：`NacosRuleDataSourceConfig` 用 `@ConditionalOnProperty(enabled=true)` 条件装配，单测/未配置时完全不生效，规则退化为代码初始化，避免连不上配置中心导致启动失败
