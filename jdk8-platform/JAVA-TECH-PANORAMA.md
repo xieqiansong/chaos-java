@@ -16,7 +16,7 @@
 | 4 | 🔴 高 | I/O 与网络（BIO / NIO / Netty / 零拷贝 / Reactor） | ✅ 完成 | `jdk8-base` |
 | 5 | 🔴 高 | Spring / Spring Boot（IOC / AOP / 自动装配） | ✅ 完成 | 全工程基础 |
 | 6 | 🔴 高 | Servlet / Filter / Listener（手写容器） | ✅ 完成 | `jdk8-base` 迷你 Servlet 容器 |
-| 7 | 🔴 高 | MyBatis / MyBatis-Plus（ORM 持久层） | ✅ 完成 | `jdk8-mybatis-plus-demo`（条件构造器/分页/逻辑删除+乐观锁/多租户/动态表名/字段加密） |
+| 7 | 🔴 高 | MyBatis / MyBatis-Plus（ORM 持久层） | ✅ 完成 | `jdk11-mybatis-plus-demo`（条件构造器/分页/逻辑删除+乐观锁/多租户/动态表名/字段加密，自 jdk8 迁移至 jdk11-platform） |
 | 8 | 🔴 高 | Redis（缓存 / 分布式锁 / Lua） | ✅ 完成 | `jdk8-redis-demo` |
 | 9 | 🔴 高 | 单元测试（JUnit5 / Mockito） | ✅ 完成 | `jdk8-testing-demo`：Mockito `@Mock/@Spy/@InjectMocks`、参数匹配与行为验证（`argThat`/`verify`）、BDD 风格（given/when/then）、Spring Boot 切片测试（`@WebMvcTest`），各场景均含可断言 `*Test` |
 | 10 | 🔴 高 | 注册 / 配置中心（Nacos） | ✅ 完成 | `jdk8-nacos-demo` |
@@ -66,7 +66,7 @@
 - 🔴 高 Servlet / Filter / Listener / 手写容器 — ✅ `jdk8-base` 迷你 Servlet 容器
 - 🔴 高 Spring / Spring Boot（IOC / AOP / 自动装配） — ✅ 全工程基础
 - 🟡 中 Spring MVC / **WebFlux（响应式）** — 🟡 MVC 间接覆盖 / ❌ WebFlux 待补
-- 🔴 高 MyBatis / MyBatis-Plus（ORM） — ✅ `jdk8-mybatis-plus-demo`（条件构造器/分页/逻辑删除+乐观锁/多租户/动态表名/字段加密）
+- 🔴 高 MyBatis / MyBatis-Plus（ORM） — ✅ `jdk11-mybatis-plus-demo`（条件构造器/分页/逻辑删除+乐观锁/多租户/动态表名/字段加密，自 jdk8 迁移至 jdk11-platform）
 - ⚪ 低 JPA / Hibernate（ORM） — ❌ 待补
 
 #### 三、数据持久层与缓存

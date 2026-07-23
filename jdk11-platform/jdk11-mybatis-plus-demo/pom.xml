@@ -3,19 +3,22 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>lan.chaos</groupId>
-        <artifactId>jdk8-platform</artifactId>
+        <artifactId>jdk11-platform</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jdk8-mybatis-plus-demo</artifactId>
+    <artifactId>jdk11-mybatis-plus-demo</artifactId>
     <packaging>jar</packaging>
-    <name>jdk8-mybatis-plus</name>
+    <name>jdk11-mybatis-plus</name>
     <url>http://maven.apache.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- JDK8推荐3.5.7 -->
-        <mybatis-plus.version>3.5.7</mybatis-plus.version>
+        <!-- 3.5.16：分页 / 多租户拦截器自 3.5.9+ 起从 mybatis-plus-extension 迁移到独立的
+             mybatis-plus-jsqlparser 模块，故需单独引入该模块（见下）。
+             该版本依赖的字节码为 JDK 11+，无法在 JDK 8 上编译/运行，因此本 demo 从
+             jdk8-platform 迁移到 jdk11-platform。 -->
+        <mybatis-plus.version>3.5.16</mybatis-plus.version>
     </properties>
 
     <dependencies>
@@ -24,10 +27,17 @@
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
-        <!-- MyBatis-Plus：显式声明版本覆盖父 POM dependencyManagement 的 3.5.17 -->
+        <!-- MyBatis-Plus：显式声明版本覆盖父 POM dependencyManagement 的 3.5.5 -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis-plus.version}</version>
+        </dependency>
+
+        <!-- 分页 / 多租户 拦截器（3.5.9+ 起从 extension 迁移到独立模块，需 JDK 11+，故放在 jdk11-platform） -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-jsqlparser</artifactId>
             <version>${mybatis-plus.version}</version>
         </dependency>
 
@@ -56,11 +66,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
                 <configuration>
-                    <!-- 显式按 Java 8 语义（release=8）编译：在高版本 JDK（11+）上按 Java 8 视图解析依赖 jar，
-                         避免 mybatis-plus 等依赖在 JDK9+ 视图下类不可见导致编译失败 -->
-                    <release>8</release>
+                    <!-- 按 JDK 11 语义编译：父 pluginManagement 已设 release=11，这里仅显式补充 Lombok 注解处理器 -->
+                    <release>11</release>
                     <!-- 显式声明 Lombok 注解处理器，确保 @Data 等生成 getter/setter -->
                     <annotationProcessorPaths>
                         <path>
@@ -77,7 +85,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.7.18</version>
+                <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>lan.chaos.mybatisplus.DemoApp</mainClass>
                 </configuration>

@@ -11,6 +11,7 @@
     <modules>
         <module>jdk11-common</module>
         <module>jdk11-base</module>
+        <module>jdk11-mybatis-plus-demo</module>
         <!-- 可根据需要添加更多子模块 -->
     </modules>
 
