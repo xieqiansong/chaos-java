@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.pull;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
@@ -18,12 +19,10 @@ public class PullProducer {
     @Resource
     private RocketMQTemplate rocketMQTemplate;
 
-    private static final String TOPIC = "demo-pull-topic";
-
     public void send() {
         for (int i = 1; i <= 3; i++) {
-            rocketMQTemplate.syncSend(TOPIC, MessageUtils.pack("pull-msg-" + i));
+            rocketMQTemplate.syncSend(MqConstant.TOPIC_PULL, MessageUtils.pack("pull-msg-" + i));
         }
-        log.info("主动拉取：已发送 3 条到 {}", TOPIC);
+        log.info("主动拉取：已发送 3 条到 {}", MqConstant.TOPIC_PULL);
     }
 }

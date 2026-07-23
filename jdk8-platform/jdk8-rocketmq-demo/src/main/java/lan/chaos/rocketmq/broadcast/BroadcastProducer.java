@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.broadcast;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
@@ -19,10 +20,8 @@ public class BroadcastProducer {
     @Resource
     private RocketMQTemplate rocketMQTemplate;
 
-    private static final String TOPIC = "demo-broadcast-topic";
-
     public void send(String body) {
-        rocketMQTemplate.syncSend(TOPIC, MessageUtils.pack(body));
+        rocketMQTemplate.syncSend(MqConstant.TOPIC_BROADCAST, MessageUtils.pack(body));
         log.info("广播消息已发送: {}", body);
     }
 }

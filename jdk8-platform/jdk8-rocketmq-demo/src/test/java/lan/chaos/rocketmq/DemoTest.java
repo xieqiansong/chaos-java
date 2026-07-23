@@ -21,16 +21,11 @@ import lan.chaos.rocketmq.throttle.ThrottleProducer;
 import lan.chaos.rocketmq.trace.TraceProducer;
 import lan.chaos.rocketmq.transaction.TransactionProducer;
 import org.junit.jupiter.api.Assertions;
-
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.net.InetSocketAddress;
-import java.net.Socket;
 
 /**
  * RocketMQ 场景统一触发入口。
@@ -49,31 +44,11 @@ import java.net.Socket;
  */
 @SpringBootTest(classes = RocketMqApplication.class)
 @Execution(ExecutionMode.CONCURRENT)
-@ExtendWith(BrokerReachableCondition.class)
 class DemoTest {
-
     static int WAIT_CONSUME_MS = 2000;
-    static final String NAMESRV = System.getProperty("rocketmq.namesrv.addr", "REDACTED:9876");
-
-    /** TCP 探测 NameServer 是否可达；不可达则后续 @Test 全部跳过 */
-    static boolean brokerReachable() {
-        String[] hp = NAMESRV.split(":");
-        try (Socket s = new Socket()) {
-            s.connect(new InetSocketAddress(hp[0], Integer.parseInt(hp[1])), 1000);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    private void assumeBroker() {
-        Assumptions.assumeTrue(brokerReachable(),
-                "RocketMQ NameServer 不可达(" + NAMESRV + ")，跳过（请先 `docker-compose up -d` 起 broker）");
-    }
 
     @Test
     void sync() {
-        assumeBroker();
         Assertions.assertDoesNotThrow(() ->
                 SpringUtil.getBean(SimpleProducer.class).sendSync("测试同步消息"));
         ThreadUtil.sleep(WAIT_CONSUME_MS);
@@ -81,7 +56,6 @@ class DemoTest {
 
     @Test
     void async() {
-        assumeBroker();
         Assertions.assertDoesNotThrow(() ->
                 SpringUtil.getBean(SimpleProducer.class).sendAsync("测试异步消息"));
         ThreadUtil.sleep(WAIT_CONSUME_MS);
@@ -89,7 +63,6 @@ class DemoTest {
 
     @Test
     void oneWay() {
-        assumeBroker();
         Assertions.assertDoesNotThrow(() ->
                 SpringUtil.getBean(SimpleProducer.class).sendOneWay("测试单向消息"));
         ThreadUtil.sleep(WAIT_CONSUME_MS);
@@ -97,7 +70,6 @@ class DemoTest {
 
     @Test
     void order() {
-        assumeBroker();
         Assertions.assertDoesNotThrow(() ->
                 SpringUtil.getBean(OrderedProducer.class).sendOrderLifecycle("ORDER_001"));
         ThreadUtil.sleep(WAIT_CONSUME_MS);
@@ -105,7 +77,6 @@ class DemoTest {
 
     @Test
     void retry() {
-        assumeBroker();
         Assertions.assertDoesNotThrow(() ->
                 SpringUtil.getBean(RetryProducer.class).send("user_error_" + System.currentTimeMillis()));
         ThreadUtil.sleep(WAIT_CONSUME_MS);
@@ -113,7 +84,6 @@ class DemoTest {
 
     @Test
     void tx() {
-        assumeBroker();
         Assertions.assertDoesNotThrow(() ->
                 SpringUtil.getBean(TransactionProducer.class).sendOrderTransactionMsg("ORDER_" + System.currentTimeMillis()));
         ThreadUtil.sleep(WAIT_CONSUME_MS);
@@ -121,7 +91,6 @@ class DemoTest {
 
     @Test
     void delay() {
-        assumeBroker();
         Assertions.assertDoesNotThrow(() ->
                 SpringUtil.getBean(DelayProducer.class).sendDelay("delay-test", 1));
         ThreadUtil.sleep(WAIT_CONSUME_MS);
@@ -129,7 +98,6 @@ class DemoTest {
 
     @Test
     void batch() {
-        assumeBroker();
         Assertions.assertDoesNotThrow(() ->
                 SpringUtil.getBean(BatchProducer.class).sendBatch());
         ThreadUtil.sleep(WAIT_CONSUME_MS);
@@ -137,7 +105,6 @@ class DemoTest {
 
     @Test
     void filter() {
-        assumeBroker();
         Assertions.assertDoesNotThrow(() ->
                 SpringUtil.getBean(FilterProducer.class).send());
         ThreadUtil.sleep(WAIT_CONSUME_MS);
@@ -145,7 +112,6 @@ class DemoTest {
 
     @Test
     void broadcast() {
-        assumeBroker();
         Assertions.assertDoesNotThrow(() ->
                 SpringUtil.getBean(BroadcastProducer.class).send("广播模式消息"));
         ThreadUtil.sleep(WAIT_CONSUME_MS);
@@ -153,7 +119,6 @@ class DemoTest {
 
     @Test
     void requestReply() {
-        assumeBroker();
         Assertions.assertDoesNotThrow(() ->
                 SpringUtil.getBean(RequestReplyProducer.class).send());
         ThreadUtil.sleep(WAIT_CONSUME_MS);
@@ -161,7 +126,6 @@ class DemoTest {
 
     @Test
     void pull() {
-        assumeBroker();
         Assertions.assertDoesNotThrow(() -> {
             SpringUtil.getBean(PullProducer.class).send();
             SpringUtil.getBean(PullConsumer.class).demo();
@@ -171,7 +135,6 @@ class DemoTest {
 
     @Test
     void globalOrder() {
-        assumeBroker();
         Assertions.assertDoesNotThrow(() ->
                 SpringUtil.getBean(GlobalOrderProducer.class).send());
         ThreadUtil.sleep(WAIT_CONSUME_MS);
@@ -179,7 +142,6 @@ class DemoTest {
 
     @Test
     void keyQuery() {
-        assumeBroker();
         Assertions.assertDoesNotThrow(() -> {
             String key = "order-1001";
             SpringUtil.getBean(KeyQueryProducer.class).sendWithKey(key, "订单创建消息");
@@ -190,7 +152,6 @@ class DemoTest {
 
     @Test
     void faultTolerant() {
-        assumeBroker();
         Assertions.assertDoesNotThrow(() ->
                 SpringUtil.getBean(FaultTolerantProducer.class).send("发送侧容错参数演示"));
         ThreadUtil.sleep(WAIT_CONSUME_MS);
@@ -198,7 +159,6 @@ class DemoTest {
 
     @Test
     void trace() {
-        assumeBroker();
         Assertions.assertDoesNotThrow(() ->
                 SpringUtil.getBean(TraceProducer.class).send("消息轨迹演示"));
         ThreadUtil.sleep(WAIT_CONSUME_MS);
@@ -206,7 +166,6 @@ class DemoTest {
 
     @Test
     void acl() {
-        assumeBroker();
         Assertions.assertDoesNotThrow(() ->
                 SpringUtil.getBean(AclProducer.class).send("ACL 鉴权演示"));
         ThreadUtil.sleep(WAIT_CONSUME_MS);
@@ -214,7 +173,6 @@ class DemoTest {
 
     @Test
     void throttle() {
-        assumeBroker();
         Assertions.assertDoesNotThrow(() ->
                 SpringUtil.getBean(ThrottleProducer.class).sendBatch(20));
         ThreadUtil.sleep(WAIT_CONSUME_MS);
@@ -222,7 +180,6 @@ class DemoTest {
 
     @Test
     void broadcastNoRetry() {
-        assumeBroker();
         Assertions.assertDoesNotThrow(() ->
                 SpringUtil.getBean(BroadcastNoRetryProducer.class).send());
         ThreadUtil.sleep(WAIT_CONSUME_MS);

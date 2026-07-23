@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.throttle;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.model.Message;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +23,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RocketMQMessageListener(
-        topic = "demo-throttle-topic",
-        consumerGroup = "demo-throttle-group",
+        topic = MqConstant.TOPIC_THROTTLE,
+        consumerGroup = MqConstant.GROUP_THROTTLE,
         consumeThreadNumber = 4,
         maxReconsumeTimes = 3,
         consumeTimeout = 1L)

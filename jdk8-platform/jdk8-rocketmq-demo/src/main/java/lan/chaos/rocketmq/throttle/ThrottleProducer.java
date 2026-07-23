@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.throttle;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
@@ -18,12 +19,10 @@ public class ThrottleProducer {
     @Resource
     private RocketMQTemplate rocketMQTemplate;
 
-    private static final String TOPIC = "demo-throttle-topic";
-
     public void sendBatch(int count) {
         for (int i = 0; i < count; i++) {
-            rocketMQTemplate.syncSend(TOPIC, MessageUtils.pack("throttle-" + i));
+            rocketMQTemplate.syncSend(MqConstant.TOPIC_THROTTLE, MessageUtils.pack("throttle-" + i));
         }
-        log.info("【限流调优】已发送 {} 条消息到 {}", count, TOPIC);
+        log.info("【限流调优】已发送 {} 条消息到 {}", count, MqConstant.TOPIC_THROTTLE);
     }
 }

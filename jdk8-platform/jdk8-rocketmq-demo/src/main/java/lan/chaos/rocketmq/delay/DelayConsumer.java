@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.delay;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.model.Message;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-@RocketMQMessageListener(topic = "demo-delay-topic", consumerGroup = "demo-delay-consumer-group")
+@RocketMQMessageListener(topic = MqConstant.TOPIC_DELAY, consumerGroup = MqConstant.GROUP_DELAY)
 public class DelayConsumer implements RocketMQListener<String> {
 
     @Override

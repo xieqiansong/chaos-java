@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.filter;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
@@ -27,8 +28,6 @@ public class FilterProducer {
     @Resource
     private RocketMQTemplate rocketMQTemplate;
 
-    private static final String TOPIC = "demo-filter-topic";
-
     public void send() {
         Message<String> a = MessageBuilder.withPayload(MessageUtils.pack("TagA消息 score=90"))
                 .setHeader("score", 90).build();
@@ -37,9 +36,9 @@ public class FilterProducer {
         Message<String> c = MessageBuilder.withPayload(MessageUtils.pack("TagA消息 score=95"))
                 .setHeader("score", 95).build();
 
-        rocketMQTemplate.syncSend(TOPIC + ":TagA", a);
-        rocketMQTemplate.syncSend(TOPIC + ":TagB", b);
-        rocketMQTemplate.syncSend(TOPIC + ":TagA", c);
+        rocketMQTemplate.syncSend(MqConstant.TOPIC_FILTER + ":TagA", a);
+        rocketMQTemplate.syncSend(MqConstant.TOPIC_FILTER + ":TagB", b);
+        rocketMQTemplate.syncSend(MqConstant.TOPIC_FILTER + ":TagA", c);
         log.info("过滤演示消息已发送（TagA×2 / TagB×1，含 score 属性）");
     }
 }

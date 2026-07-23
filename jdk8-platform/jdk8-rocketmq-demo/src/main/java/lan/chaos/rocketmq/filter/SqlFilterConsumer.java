@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.filter;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.model.Message;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +18,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RocketMQMessageListener(
-        topic = "demo-filter-topic",
-        consumerGroup = "demo-filter-score-group",
+        topic = MqConstant.TOPIC_FILTER,
+        consumerGroup = MqConstant.GROUP_FILTER_SCORE,
         selectorType = SelectorType.SQL92,
         selectorExpression = "score > 80")
 public class SqlFilterConsumer implements RocketMQListener<String> {

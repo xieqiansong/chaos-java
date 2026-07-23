@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.pull;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.model.Message;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -27,19 +28,16 @@ public class PullConsumer {
     private final String nameServer;
     private DefaultLitePullConsumer litePullConsumer;
 
-    private static final String TOPIC = "demo-pull-topic";
-    private static final String GROUP = "demo-pull-group";
-
     public PullConsumer(@Value("${rocketmq.name-server}") String nameServer) {
         this.nameServer = nameServer;
     }
 
     @PostConstruct
     public void init() throws Exception {
-        litePullConsumer = new DefaultLitePullConsumer(GROUP);
+        litePullConsumer = new DefaultLitePullConsumer(MqConstant.GROUP_PULL);
         litePullConsumer.setNamesrvAddr(nameServer);
         litePullConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
-        litePullConsumer.subscribe(TOPIC, "*");
+        litePullConsumer.subscribe(MqConstant.TOPIC_PULL, "*");
         litePullConsumer.start();
     }
 

@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.broadcast;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
@@ -18,11 +19,9 @@ public class BroadcastNoRetryProducer {
     @Resource
     private RocketMQTemplate rocketMQTemplate;
 
-    private static final String TOPIC = "demo-broadcast-noretry-topic";
-
     public void send() {
-        rocketMQTemplate.syncSend(TOPIC, MessageUtils.pack("ok"));
-        rocketMQTemplate.syncSend(TOPIC, MessageUtils.pack("fail"));
-        log.info("【广播-不重试】已发送 ok / fail 两条消息到 {}", TOPIC);
+        rocketMQTemplate.syncSend(MqConstant.TOPIC_BROADCAST_NO_RETRY, MessageUtils.pack("ok"));
+        rocketMQTemplate.syncSend(MqConstant.TOPIC_BROADCAST_NO_RETRY, MessageUtils.pack("fail"));
+        log.info("【广播-不重试】已发送 ok / fail 两条消息到 {}", MqConstant.TOPIC_BROADCAST_NO_RETRY);
     }
 }

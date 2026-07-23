@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.transaction;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
@@ -20,15 +21,13 @@ public class TransactionProducer {
     @Resource
     private RocketMQTemplate rocketMQTemplate;
 
-    private static final String TOPIC = "demo-tx-topic";
-
     public void sendOrderTransactionMsg(String orderId) {
         String payload = MessageUtils.pack("订单创建: " + orderId);
         Message<String> msg = MessageBuilder
                 .withPayload(payload)
                 .setHeader("orderId", orderId)
                 .build();
-        rocketMQTemplate.sendMessageInTransaction(TOPIC, msg, orderId);
+        rocketMQTemplate.sendMessageInTransaction(MqConstant.TOPIC_TX, msg, orderId);
         log.info("事务半消息已发送 | orderId={}", orderId);
     }
 }

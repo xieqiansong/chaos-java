@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.trace;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
@@ -29,23 +30,19 @@ public class TraceProducer {
     @Value("${rocketmq.name-server}")
     private String nameServer;
 
-    private static final String TOPIC = "demo-trace-topic";
-    private static final String GROUP = "demo-trace-group";
-    private static final String TRACE_TOPIC = "RMQ_SYS_TRACE_TOPIC";
-
     private DefaultMQProducer producer;
 
     @PostConstruct
     public void init() throws Exception {
         // 第 3 个参数 enableTrace=true 开启轨迹，第 4 个参数为轨迹上报的 topic
-        producer = new DefaultMQProducer(GROUP, null, true, TRACE_TOPIC);
+        producer = new DefaultMQProducer(MqConstant.GROUP_TRACE, null, true, MqConstant.TRACE_TOPIC);
         producer.setNamesrvAddr(nameServer);
         producer.start();
     }
 
     public String send(String body) {
         try {
-            SendResult result = producer.send(new Message(TOPIC, MessageUtils.pack(body).getBytes()));
+            SendResult result = producer.send(new Message(MqConstant.TOPIC_TRACE, MessageUtils.pack(body).getBytes()));
             log.info("【消息轨迹】发送完成 | msgId={}（可在 Broker/控制台按 trace 查看链路）", result.getMsgId());
             return result.getMsgId();
         } catch (Exception e) {

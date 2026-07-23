@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.keyquery;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.QueryResult;
@@ -26,15 +27,13 @@ public class KeyQueryProducer {
     @Resource
     private RocketMQTemplate rocketMQTemplate;
 
-    private static final String TOPIC = "demo-keyquery-topic";
-
     /** 发送并打上业务 key（如 orderId），返回发送结果 */
     public String sendWithKey(String bizKey, String body) {
         org.springframework.messaging.Message<String> msg = MessageBuilder
                 .withPayload(MessageUtils.pack(body))
                 .setHeader(RocketMQHeaders.KEYS, bizKey)
                 .build();
-        String msgId = rocketMQTemplate.syncSend(TOPIC, msg).getMsgId();
+        String msgId = rocketMQTemplate.syncSend(MqConstant.TOPIC_KEYQUERY, msg).getMsgId();
         log.info("【按Key发送】key={} | msgId={}", bizKey, msgId);
         return msgId;
     }
@@ -43,7 +42,7 @@ public class KeyQueryProducer {
     public void queryByKey(String bizKey) {
         try {
             QueryResult qr = rocketMQTemplate.getProducer()
-                    .queryMessage(TOPIC, bizKey, 10, 0L, System.currentTimeMillis());
+                    .queryMessage(MqConstant.TOPIC_KEYQUERY, bizKey, 10, 0L, System.currentTimeMillis());
             if (qr == null || qr.getMessageList() == null || qr.getMessageList().isEmpty()) {
                 log.info("【按Key检索】key={} | 未检索到消息（索引未就绪或已关闭）", bizKey);
                 return;

@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.retry;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.idempotent.MessageIdStore;
 import lan.chaos.rocketmq.common.model.Message;
 import lan.chaos.rocketmq.common.util.MessageUtils;
@@ -25,8 +26,8 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 @Component
 @RocketMQMessageListener(
-        topic = "demo-retry-topic",
-        consumerGroup = "demo-retry-consumer-group",
+        topic = MqConstant.TOPIC_RETRY,
+        consumerGroup = MqConstant.GROUP_RETRY,
         maxReconsumeTimes = 3)
 public class RetryConsumer implements RocketMQListener<MessageExt> {
 

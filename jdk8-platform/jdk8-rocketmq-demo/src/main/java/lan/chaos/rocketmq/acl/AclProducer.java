@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.acl;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.acl.common.AclClientRPCHook;
@@ -35,23 +36,20 @@ public class AclProducer {
     @Value("${rocketmq.acl.secret-key:12345678}")
     private String secretKey;
 
-    private static final String TOPIC = "demo-acl-topic";
-    private static final String GROUP = "demo-acl-group";
-
     private DefaultMQProducer producer;
 
     @PostConstruct
     public void init() throws Exception {
         SessionCredentials credentials = new SessionCredentials(accessKey, secretKey);
         // 用 RPCHook 注入签名逻辑
-        producer = new DefaultMQProducer(GROUP, new AclClientRPCHook(credentials));
+        producer = new DefaultMQProducer(MqConstant.GROUP_ACL, new AclClientRPCHook(credentials));
         producer.setNamesrvAddr(nameServer);
         producer.start();
     }
 
     public String send(String body) {
         try {
-            SendResult result = producer.send(new Message(TOPIC, MessageUtils.pack(body).getBytes()));
+            SendResult result = producer.send(new Message(MqConstant.TOPIC_ACL, MessageUtils.pack(body).getBytes()));
             log.info("【ACL】发送完成 | msgId={}", result.getMsgId());
             return result.getMsgId();
         } catch (Exception e) {

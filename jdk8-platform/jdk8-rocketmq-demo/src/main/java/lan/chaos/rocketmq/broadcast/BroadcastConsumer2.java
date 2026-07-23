@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.broadcast;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.model.Message;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +16,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RocketMQMessageListener(
-        topic = "demo-broadcast-topic",
-        consumerGroup = "demo-broadcast-group-2",
+        topic = MqConstant.TOPIC_BROADCAST,
+        consumerGroup = MqConstant.GROUP_BROADCAST_2,
         messageModel = MessageModel.BROADCASTING)
 public class BroadcastConsumer2 implements RocketMQListener<String> {
 

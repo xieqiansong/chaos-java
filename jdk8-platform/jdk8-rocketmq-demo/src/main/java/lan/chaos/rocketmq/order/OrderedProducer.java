@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.order;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.producer.SendResult;
@@ -26,8 +27,6 @@ public class OrderedProducer {
     @Resource
     private RocketMQTemplate rocketMQTemplate;
 
-    private static final String TOPIC = "demo-order-topic";
-
     public void sendOrderLifecycle(String orderId) {
         for (String status : new String[]{"CREATED", "PAID", "SHIPPED"}) {
             String payload = MessageUtils.pack(String.format("订单:%s, 状态:%s", orderId, status));
@@ -35,7 +34,7 @@ public class OrderedProducer {
                     .withPayload(payload)
                     .setHeader("orderId", orderId)
                     .build();
-            SendResult r = rocketMQTemplate.syncSendOrderly(TOPIC, msg, orderId);
+            SendResult r = rocketMQTemplate.syncSendOrderly(MqConstant.TOPIC_ORDER, msg, orderId);
             log.info("发送顺序消息 | orderId={}, status={}, queueId={}",
                     orderId, status, r.getMessageQueue().getQueueId());
         }

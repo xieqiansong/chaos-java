@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.requestreply;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQReplyListener;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-@RocketMQMessageListener(topic = "demo-rr-topic", consumerGroup = "demo-rr-group")
+@RocketMQMessageListener(topic = MqConstant.TOPIC_RR, consumerGroup = MqConstant.GROUP_RR)
 public class RequestReplyConsumer implements RocketMQReplyListener<String, String> {
 
     @Override

@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.simple;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.idempotent.MessageIdStore;
 import lan.chaos.rocketmq.common.model.Message;
 import lan.chaos.rocketmq.common.util.MessageUtils;
@@ -24,7 +25,7 @@ import java.nio.charset.StandardCharsets;
  */
 @Slf4j
 @Component
-@RocketMQMessageListener(topic = "demo-basic-topic", consumerGroup = "demo-basic-consumer-group")
+@RocketMQMessageListener(topic = MqConstant.TOPIC_BASIC, consumerGroup = MqConstant.GROUP_BASIC)
 public class IdempotentConsumer implements RocketMQListener<MessageExt> {
 
     @Resource

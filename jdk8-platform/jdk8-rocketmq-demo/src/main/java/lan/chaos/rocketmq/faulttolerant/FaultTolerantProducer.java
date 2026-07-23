@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.faulttolerant;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
@@ -29,8 +30,6 @@ public class FaultTolerantProducer {
     @Resource
     private RocketMQTemplate rocketMQTemplate;
 
-    private static final String TOPIC = "demo-fault-topic";
-
     public String send(String body) {
         DefaultMQProducer producer = rocketMQTemplate.getProducer();
         producer.setRetryTimesWhenSendFailed(3);
@@ -43,7 +42,7 @@ public class FaultTolerantProducer {
                 producer.getSendMsgTimeout(),
                 producer.isSendLatencyFaultEnable());
 
-        SendResult result = rocketMQTemplate.syncSend(TOPIC, MessageUtils.pack(body));
+        SendResult result = rocketMQTemplate.syncSend(MqConstant.TOPIC_FAULT, MessageUtils.pack(body));
         log.info("【发送容错】发送完成 | msgId={}", result.getMsgId());
         return result.getMsgId();
     }

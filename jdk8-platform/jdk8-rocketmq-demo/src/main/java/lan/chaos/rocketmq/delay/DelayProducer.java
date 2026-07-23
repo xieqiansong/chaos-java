@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.delay;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
@@ -23,11 +24,9 @@ public class DelayProducer {
     @Resource
     private RocketMQTemplate rocketMQTemplate;
 
-    private static final String TOPIC = "demo-delay-topic";
-
     public void sendDelay(String body, int delayLevel) {
         Message<String> msg = MessageBuilder.withPayload(MessageUtils.pack(body)).build();
-        rocketMQTemplate.syncSend(TOPIC, msg, 3000, delayLevel);
+        rocketMQTemplate.syncSend(MqConstant.TOPIC_DELAY, msg, 3000, delayLevel);
         log.info("延迟消息已发送 | delayLevel={}, body={}", delayLevel, body);
     }
 }

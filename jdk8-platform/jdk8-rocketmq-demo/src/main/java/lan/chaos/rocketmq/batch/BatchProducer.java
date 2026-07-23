@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.batch;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.producer.SendResult;
@@ -30,14 +31,12 @@ public class BatchProducer {
     @Resource
     private RocketMQTemplate rocketMQTemplate;
 
-    private static final String TOPIC = "demo-batch-topic";
-
     public SendResult sendBatch() {
         List<Message<String>> batch = new ArrayList<>();
         for (int i = 1; i <= 5; i++) {
             batch.add(MessageBuilder.withPayload(MessageUtils.pack("批量消息-" + i)).build());
         }
-        SendResult r = rocketMQTemplate.syncSend(TOPIC, batch);
+        SendResult r = rocketMQTemplate.syncSend(MqConstant.TOPIC_BATCH, batch);
         log.info("批量发送完成 | msgId={}, 条数={}", r.getMsgId(), batch.size());
         return r;
     }

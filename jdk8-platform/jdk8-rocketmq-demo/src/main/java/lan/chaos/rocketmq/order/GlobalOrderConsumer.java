@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.order;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.model.Message;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +17,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RocketMQMessageListener(
-        topic = "demo-global-order-topic",
-        consumerGroup = "demo-global-order-group",
+        topic = MqConstant.TOPIC_GLOBAL_ORDER,
+        consumerGroup = MqConstant.GROUP_GLOBAL_ORDER,
         consumeMode = ConsumeMode.ORDERLY)
 public class GlobalOrderConsumer implements RocketMQListener<String> {
 

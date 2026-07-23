@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.order;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
@@ -24,13 +25,11 @@ public class GlobalOrderProducer {
     @Resource
     private RocketMQTemplate rocketMQTemplate;
 
-    private static final String TOPIC = "demo-global-order-topic";
-
     /** 用固定 hashKey 把 step-1..step-5 全部发到同一 Queue */
     public void send() {
         for (int i = 1; i <= 5; i++) {
             Message<String> msg = MessageBuilder.withPayload(MessageUtils.pack("step-" + i)).build();
-            rocketMQTemplate.syncSendOrderly(TOPIC, msg, "GLOBAL");
+            rocketMQTemplate.syncSendOrderly(MqConstant.TOPIC_GLOBAL_ORDER, msg, "GLOBAL");
         }
         log.info("全局顺序：已按顺序发送 step-1~step-5 到同一 Queue");
     }

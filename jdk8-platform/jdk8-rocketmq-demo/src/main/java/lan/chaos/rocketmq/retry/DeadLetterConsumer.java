@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.retry;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.model.Message;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +18,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RocketMQMessageListener(
-        topic = "%DLQ%demo-retry-consumer-group",
-        consumerGroup = "demo-dlq-handler-group")
+        topic = MqConstant.DLQ_TOPIC_RETRY,
+        consumerGroup = MqConstant.GROUP_DLQ_HANDLER)
 public class DeadLetterConsumer implements RocketMQListener<String> {
 
     @Override

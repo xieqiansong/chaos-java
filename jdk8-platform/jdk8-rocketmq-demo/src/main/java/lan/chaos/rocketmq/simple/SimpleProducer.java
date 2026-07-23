@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.simple;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.producer.SendCallback;
@@ -26,13 +27,11 @@ public class SimpleProducer {
     @Resource
     private RocketMQTemplate rocketMQTemplate;
 
-    private static final String TOPIC = "demo-basic-topic";
-
     /** 同步：阻塞等待 Broker 确认，可靠性最高，务必处理异常 */
     public SendResult sendSync(String body) {
         String payload = MessageUtils.pack(body);
         try {
-            return rocketMQTemplate.syncSend(TOPIC, payload);
+            return rocketMQTemplate.syncSend(MqConstant.TOPIC_BASIC, payload);
         } catch (Exception e) {
             log.error("同步发送失败: {}", body, e);
             throw e;
@@ -42,7 +41,7 @@ public class SimpleProducer {
     /** 异步：不阻塞主线程，回调中处理结果 */
     public void sendAsync(String body) {
         String payload = MessageUtils.pack(body);
-        rocketMQTemplate.asyncSend(TOPIC, payload, new SendCallback() {
+        rocketMQTemplate.asyncSend(MqConstant.TOPIC_BASIC, payload, new SendCallback() {
             @Override
             public void onSuccess(SendResult result) {
                 log.info("异步发送成功 | msgId={}, body={}", result.getMsgId(), body);
@@ -57,6 +56,6 @@ public class SimpleProducer {
 
     /** 单向：只发不收，吞吐最大，适合日志等可丢场景 */
     public void sendOneWay(String body) {
-        rocketMQTemplate.sendOneWay(TOPIC, MessageUtils.pack(body));
+        rocketMQTemplate.sendOneWay(MqConstant.TOPIC_BASIC, MessageUtils.pack(body));
     }
 }

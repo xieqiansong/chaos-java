@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.requestreply;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.stereotype.Service;
@@ -20,12 +21,10 @@ public class RequestReplyProducer {
     @Resource
     private RocketMQTemplate rocketMQTemplate;
 
-    private static final String TOPIC = "demo-rr-topic";
-
     /** 发送请求并等待回复（超时 5s） */
     public void send() {
         String body = "request-" + System.currentTimeMillis();
-        String reply = rocketMQTemplate.sendAndReceive(TOPIC, body, String.class, 5000);
+        String reply = rocketMQTemplate.sendAndReceive(MqConstant.TOPIC_RR, body, String.class, 5000);
         log.info("【请求应答】发送={} | 收到回复={}", body, reply);
     }
 }

@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.broadcast;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.model.Message;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +25,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RocketMQMessageListener(
-        topic = "demo-broadcast-noretry-topic",
-        consumerGroup = "demo-broadcast-noretry-group",
+        topic = MqConstant.TOPIC_BROADCAST_NO_RETRY,
+        consumerGroup = MqConstant.GROUP_BROADCAST_NO_RETRY,
         messageModel = MessageModel.BROADCASTING)
 public class BroadcastNoRetryConsumer implements RocketMQListener<String> {
 

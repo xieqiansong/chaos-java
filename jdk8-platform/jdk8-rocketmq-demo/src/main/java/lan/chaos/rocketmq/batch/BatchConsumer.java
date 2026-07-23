@@ -1,5 +1,6 @@
 package lan.chaos.rocketmq.batch;
 
+import lan.chaos.rocketmq.common.constant.MqConstant;
 import lan.chaos.rocketmq.common.model.Message;
 import lan.chaos.rocketmq.common.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-@RocketMQMessageListener(topic = "demo-batch-topic", consumerGroup = "demo-batch-consumer-group")
+@RocketMQMessageListener(topic = MqConstant.TOPIC_BATCH, consumerGroup = MqConstant.GROUP_BATCH)
 public class BatchConsumer implements RocketMQListener<String> {
 
     @Override
