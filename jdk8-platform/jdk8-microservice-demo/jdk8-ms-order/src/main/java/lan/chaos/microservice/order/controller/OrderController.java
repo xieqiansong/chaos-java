@@ -2,6 +2,9 @@ package lan.chaos.microservice.order.controller;
 
 import lan.chaos.microservice.common.core.result.R;
 import lan.chaos.microservice.common.core.result.ResultCode;
+import lan.chaos.microservice.common.security.annotation.RequiresPermission;
+import lan.chaos.microservice.common.security.context.LoginUserContext;
+import lan.chaos.microservice.common.security.model.LoginUser;
 import lan.chaos.microservice.order.model.Order;
 import lan.chaos.microservice.order.service.OrderService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +32,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    @RequiresPermission("order:write")
     @PostMapping
     public R<Order> create(@RequestParam Long userId,
                            @RequestParam(required = false, defaultValue = "9.90") BigDecimal amount) {
@@ -41,12 +45,14 @@ public class OrderController {
      * <p>正常：返回创建的订单；余额不足（user 返回 409）或 user 不可用时，全局事务回滚，
      * 响应 {@code 409 BALANCE_NOT_ENOUGH}（订单、账户两库都回到事务前状态）。</p>
      */
+    @RequiresPermission("order:write")
     @PostMapping("/tx")
     public R<Order> createWithTx(@RequestParam Long userId,
                                  @RequestParam(required = false, defaultValue = "9.90") BigDecimal amount) {
         return R.ok(orderService.createWithTx(userId, amount));
     }
 
+    @RequiresPermission("order:read")
     @GetMapping("/{id}")
     public R<Order> get(@PathVariable Long id) {
         Order order = orderService.get(id);
@@ -54,5 +60,17 @@ public class OrderController {
             return R.fail(ResultCode.NOT_FOUND);
         }
         return R.ok(order);
+    }
+
+    /**
+     * P4 细粒度授权演示：返回当前登录用户身份（与 user 的 {@code /users/me} 同源）。
+     *
+     * <p>打 {@code @RequiresPermission("order:read")}。证明网关验过的身份能一路透传到订单服务，
+     * 订单服务无需查库即可知道「是谁在下单」。</p>
+     */
+    @RequiresPermission("order:read")
+    @GetMapping("/me")
+    public R<LoginUser> me() {
+        return R.ok(LoginUserContext.get());
     }
 }

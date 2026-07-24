@@ -11,7 +11,7 @@
     <artifactId>jdk8-ms-auth</artifactId>
     <packaging>jar</packaging>
     <name>jdk8-ms-auth</name>
-    <description>认证服务：登录签发 JWT、token 刷新、凭证校验（P4 落地，依赖 Redis）</description>
+    <description>P4 鉴权服务：登录签发 JWT（access+refresh）、刷新、登出吊销（refresh 存 Redis 可吊销）</description>
 
     <dependencies>
         <dependency>
@@ -22,21 +22,35 @@
             <groupId>lan.chaos</groupId>
             <artifactId>jdk8-ms-common-log</artifactId>
         </dependency>
-        <dependency>
-            <groupId>lan.chaos</groupId>
-            <artifactId>jdk8-ms-common-web</artifactId>
-        </dependency>
+        <!-- P4 安全基座：JwtProvider / LoginUser / SecurityConstants -->
         <dependency>
             <groupId>lan.chaos</groupId>
             <artifactId>jdk8-ms-common-security</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <!-- 参数校验 @Valid / @NotBlank -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <!-- Redis：存刷新令牌（可吊销）；缺省用内存实现兜底，demo 也能跑 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

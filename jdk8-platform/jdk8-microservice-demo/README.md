@@ -44,7 +44,7 @@
 | `common-core` | 统一响应体 `R<T>`、业务异常 `BizException`、错误码、常量、分页对象、通用工具 |
 | `common-log` | MDC `traceId` 工具、访问日志切面、logback 约定 |
 | `common-web` | `@RestControllerAdvice` 全局异常、参数校验、`R` 响应包装、跨域 |
-| `common-security` | JWT 工具、`LoginUser` 上下文、`@RequiresPermission` 权限注解 + 拦截器、资源服务器配置 |
+| `common-security` | JWT 工具（签发/校验）、`LoginUser` 上下文、`@RequiresPermission` 方法级权限注解 + 拦截器（网关与服务共用） |
 | `common-feign` | Feign 自动配置：拦截器透传 `traceId`/`Authorization`、统一降级兜底 |
 | `common-test` | 测试基类、Testcontainers 配置、H2 / 嵌入式中间件约定、造数工厂 |
 
@@ -52,7 +52,7 @@
 | 模块 | 端口 | 职责 |
 |------|------|------|
 | `ms-gateway` | 8080 | 路由转发、集中鉴权、限流、链路起点 |
-| `ms-auth` | 8090 | 登录签发 JWT、token 刷新、凭证校验（依赖 Redis） |
+| `ms-auth` | 8083 | 登录签发 JWT（双令牌）、token 刷新、登出吊销（refreshToken 存 Redis，依赖 Redis） |
 | `ms-user` | 8081 | 用户服务：注册 / 查询（主数据源 PostgreSQL） |
 | `ms-order` | 8082 | 订单服务：创建 / 查询，Feign 编排调 user（演示跨服务 + Seata） |
 
@@ -62,7 +62,7 @@
 
 - **多数据源（PostgreSQL 主 + MySQL 副）**：用 `dynamic-datasource-spring-boot-starter`，`@DS` 注解切换；默认 PostgreSQL，MySQL 命名为 `mysql`。每个业务服务配双数据源，Pg 承载主业务表，MySQL 演示异构数据源共存与事务边界。
 - **可观测**：网关在请求入口生成 `X-Trace-Id` 写入 MDC；经 Feign 调用由 `common-feign` 透传；下游续接 MDC，保证一条请求跨进程同一 traceId。
-- **安全**：`ms-auth` 签发 JWT（Redis 存 refreshToken）；`ms-gateway` 的 `AuthFilter` 集中校验；下游还原 `LoginUser` 支持 `@RequiresPermission` 方法级校验。
+- **安全**：`ms-auth` 登录签发**双令牌**（access 无状态短命 + refresh 存 Redis 可吊销）；`ms-gateway` 的 `AuthGlobalFilter` 用共享密钥本地验签、集中拦未认证请求；下游经 `PermissionInterceptor` 还原 `LoginUser` 并支持 `@RequiresPermission` 方法级校验。access/refresh 类型相互隔离，防越权。
 - **熔断限流（Sentinel，优先）**：接入网关路由与 Feign 调用，做流控 / 熔断 / 降级，统一 `Fallback` 兜底防雪崩。
 - **分布式事务（Seata AT，优先）**：`@GlobalTransactional` 跨服务，各库 `undo_log` 自动补偿；优先用「最终一致性」思路教学，Seata 作为强一致选项演示。
 - **测试**：多 profile（dev/test/prod）；单测 JUnit5 + Mockito 无中间件 CI 必跑；集成测试 Testcontainers 起真实 PG/MySQL/Nacos；需中间件的用 `Assumptions` 探测可达性，不可达时优雅跳过。
@@ -91,4 +91,4 @@
 
 ---
 
-> 平台 `README.md` 学习记录表中本模块状态：**🚧 P1/P2 完成，P3 进行中（企业级规划已定，按 P0→P6 落地）**。
+> 平台 `README.md` 学习记录表中本模块状态：**✅ P1/P2/P3/P4 已完成（企业级微服务骨架：多数据源 + 可观测 + 限流熔断 + 分布式事务 + 安全认证 全部落地）**。

@@ -1,12 +1,29 @@
 spring:
   application:
     name: ms-auth
+  config:
+    import: classpath:application-common.yml
+  redis:
+    # 与 docker-compose 的 redis 服务一致（host 默认 localhost:6379，密码 redis123）
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PWD:redis123}
+    database: ${REDIS_DB:0}
   cloud:
     nacos:
       discovery:
         server-addr: ${NACOS_ADDR:localhost:8848}
-  config:
-    import: classpath:application-common.yml
 
 server:
-  port: 8090
+  port: 8083
+
+ms:
+  security:
+    # 与网关/下游必须一致（共享密钥才能互相验签）；生产走配置中心/环境变量
+    jwt:
+      secret: ${JWT_SECRET:REDACTED-abcdefghijklmnop}
+      # access 30 分钟（毫秒），refresh 7 天
+      access-token-ttl: 1800000
+      refresh-token-ttl: 604800000
+    # refresh 令牌存储：redis（可吊销，生产推荐）｜ memory（无 Redis 也能跑，重启即清空）
+    refresh-store: ${REFRESH_STORE:redis}

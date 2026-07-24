@@ -43,6 +43,12 @@
             <artifactId>spring-cloud-alibaba-sentinel-gateway</artifactId>
         </dependency>
 
+        <!-- P4 网关集中鉴权：复用 common-security 的 JwtProvider 本地验签（provided 作用域，不传递 webmvc，避免与 WebFlux 冲突） -->
+        <dependency>
+            <groupId>lan.chaos</groupId>
+            <artifactId>jdk8-ms-common-security</artifactId>
+        </dependency>
+
         <!-- 路由 lb://ms-user 需要的客户端负载均衡 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>

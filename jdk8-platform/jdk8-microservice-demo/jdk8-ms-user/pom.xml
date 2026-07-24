@@ -26,6 +26,11 @@
             <groupId>lan.chaos</groupId>
             <artifactId>jdk8-ms-common-web</artifactId>
         </dependency>
+        <!-- P4 方法级权限：@RequiresPermission + PermissionInterceptor（JwtProvider 由 common-security 自动配置提供） -->
+        <dependency>
+            <groupId>lan.chaos</groupId>
+            <artifactId>jdk8-ms-common-security</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

@@ -12,20 +12,67 @@
     <artifactId>jdk8-ms-common-security</artifactId>
     <packaging>jar</packaging>
     <name>jdk8-ms-common-security</name>
-    <description>认证授权：JWT 工具、LoginUser 上下文、@RequiresPermission 权限注解与拦截器（P4 落地）</description>
+    <description>P4 安全基座：JWT 签发校验 + 登录态上下文 + 方法级权限注解/拦截器（网关与服务共用）</description>
 
     <dependencies>
+        <!-- 公共响应体/异常码（拦截器写 401/403 时复用统一 R 形状） -->
         <dependency>
             <groupId>lan.chaos</groupId>
             <artifactId>jdk8-ms-common-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>lan.chaos</groupId>
-            <artifactId>jdk8-ms-common-log</artifactId>
-        </dependency>
+
+        <!-- Spring 上下文（@Configuration / @ConfigurationProperties / @ConditionalOnXxx） -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- JWT（jjwt 0.11.x：api + impl + jackson 序列化）。版本由父工程 dependencyManagement 管控 -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!--
+          Spring MVC 拦截器（HandlerInterceptor）只在「Servlet 服务」里用。
+          这里用 provided 作用域：编译需要，但不向依赖方（如 WebFlux 网关）传递，
+          避免 spring-webmvc 与网关的 WebFlux 冲突。网关会扫到 PermissionInterceptor 类，
+          但它在 @ConditionalOnWebApplication(SERVLET) 下不会加载，故不会触发类加载。
+        -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Servlet API：spring-webmvc 以 provided 引入，不会把 javax.servlet 透传给编译期，这里显式补上（同样 provided，不传递） -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- 单元测试：JWT 签发/校验往返、过期、篡改断言 -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

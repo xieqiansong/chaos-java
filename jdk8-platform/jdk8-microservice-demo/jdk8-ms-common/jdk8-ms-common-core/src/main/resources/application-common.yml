@@ -34,9 +34,10 @@ spring:
 
 # ---------- Redis（token 存储 / 限流计数 / 缓存） ----------
 # 连接信息用环境变量覆盖（REDIS_ADDR / REDIS_PWD / REDIS_DB）。
+# 与 docker-compose 的 redis 服务保持一致（宿主机映射 6379，密码 redis123）。
 redis:
-  addr: ${REDIS_ADDR:localhost:30102}
-  password: ${REDIS_PWD:REDACTED}
+  addr: ${REDIS_ADDR:localhost:6379}
+  password: ${REDIS_PWD:redis123}
   database: ${REDIS_DB:0}
 
 # ---------- 链路追踪 ID 头名（网关生成，Feign 透传，下游续接 MDC） ----------
