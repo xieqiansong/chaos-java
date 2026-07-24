@@ -1,0 +1,22 @@
+# 测试专用配置：用 H2 内存库替代真实 PG/MySQL，并关闭 Nacos 注册，使测试离线可跑。
+# 多数据源结构（pg / mysql 两个命名库）与线上一致，验证 @DS 路由逻辑。
+spring:
+  cloud:
+    nacos:
+      discovery:
+        enabled: false
+  datasource:
+    dynamic:
+      primary: pg
+      strict: false
+      datasource:
+        pg:
+          url: jdbc:h2:mem:pg;DB_CLOSE_DELAY=-1
+          username: sa
+          password:
+          driver-class-name: org.h2.Driver
+        mysql:
+          url: jdbc:h2:mem:mysql;DB_CLOSE_DELAY=-1
+          username: sa
+          password:
+          driver-class-name: org.h2.Driver

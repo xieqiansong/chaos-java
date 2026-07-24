@@ -8,5 +8,24 @@ spring:
   config:
     import: classpath:application-common.yml
 
+  # MyBatis-Plus 全局配置（多数据源连接信息在 application-common.yml 的 spring.datasource.dynamic 下）
+  mybatis-plus:
+    global-config:
+      db-config:
+        # 逻辑删除：实体基类 BaseEntity 的 deleted 字段，0=未删 1=已删，查询自动过滤已删
+        logic-delete-field: deleted
+        logic-delete-value: 1
+        logic-not-delete-value: 0
+    configuration:
+      map-underscore-to-camel-case: true
+      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+  # Java 8 时间类型（LocalDateTime）序列化为可读字符串，而非默认数组
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    serialization:
+      write-dates-as-timestamps: false
+
 server:
   port: 8081

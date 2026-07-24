@@ -13,4 +13,19 @@
     <packaging>jar</packaging>
     <name>jdk8-ms-common-core</name>
     <description>跨服务基础契约：统一响应体 R、业务异常、错误码、常量、分页、通用工具</description>
+
+    <dependencies>
+        <!-- Jackson 注解（@JsonIgnore 等），让 BaseEntity 可安全序列化而不依赖 web 模块 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+
+        <!-- 测试 -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
