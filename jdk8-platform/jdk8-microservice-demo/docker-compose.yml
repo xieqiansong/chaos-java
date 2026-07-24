@@ -81,6 +81,22 @@ services:
       timeout: 5s
       retries: 10
 
+  # Seata Server：P3 分布式事务（AT 模式）的事务协调器 TC，file 注册中心，免 Nacos。
+  # 版本 1.6.1 与 SCA 2021.0.6.2 内置的 seata 1.6.1 对齐；事务端口 8091（客户端经宿主机映射连接）。
+  # 访问控制台：http://localhost:7091 （如需开启可在环境变量加 SEATA_CONSOLE_PORT=7091）。
+  seata:
+    image: seataio/seata-server:1.6.1
+    container_name: ms-seata
+    ports:
+      - "8091:8091"
+    volumes:
+      # 用本仓库内置的 registry.conf / file.conf 覆盖镜像默认配置，确保 vgroup 与客户端一致
+      - ./seata/registry.conf:/seata-server/resources/registry.conf:ro
+      - ./seata/file.conf:/seata-server/resources/file.conf:ro
+    restart: unless-stopped
+    depends_on:
+      - nacos
+
 volumes:
   ms-pg-data:
   ms-mysql-data:

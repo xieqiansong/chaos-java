@@ -4,6 +4,7 @@ import lan.chaos.microservice.user.entity.User;
 import lan.chaos.microservice.user.entity.UserTag;
 import lan.chaos.microservice.user.model.AddTagRequest;
 import lan.chaos.microservice.user.model.CreateUserRequest;
+import lan.chaos.microservice.user.service.AccountService;
 import lan.chaos.microservice.user.service.UserService;
 import lan.chaos.microservice.user.service.UserTagService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,10 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -32,6 +35,9 @@ public class UserController {
 
     @Resource
     private UserTagService userTagService;
+
+    @Resource
+    private AccountService accountService;
 
     @PostMapping
     public User create(@RequestBody @Valid CreateUserRequest req) {
@@ -56,5 +62,16 @@ public class UserController {
     @GetMapping("/{id}/tags")
     public List<UserTag> listTags(@PathVariable Long id) {
         return userTagService.listTags(id);
+    }
+
+    /**
+     * 扣减账户余额（Seata 全局事务的「用户侧分支资源」）。
+     *
+     * <p>通常只被订单服务在 {@code @GlobalTransactional} 内通过 Feign 调用；xid 由 Seata 自动透传。
+     * 也可单独 curl 演示：余额不足时返回 {@code 409}（BALANCE_NOT_ENOUGH）。</p>
+     */
+    @PostMapping("/{id}/account/deduct")
+    public void deductAccount(@PathVariable("id") Long id, @RequestParam("amount") BigDecimal amount) {
+        accountService.deduct(id, amount);
     }
 }

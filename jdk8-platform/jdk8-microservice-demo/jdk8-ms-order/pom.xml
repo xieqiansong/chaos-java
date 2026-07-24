@@ -63,6 +63,22 @@
             <artifactId>feign-hystrix</artifactId>
         </dependency>
 
+        <!-- P3：订单写 MySQL，用 MyBatis-Plus 操作 t_order -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+        </dependency>
+
+        <!-- P3：Seata 分布式事务（AT 模式）。order 是单数据源，用 seata 自动数据源代理 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+        </dependency>
+
         <!-- 单元测试（P2 Feign 降级断言），order 是 WebMVC 无 WebFlux 冲突 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

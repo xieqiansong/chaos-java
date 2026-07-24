@@ -35,6 +35,18 @@ public class OrderController {
         return R.ok(orderService.create(userId, amount));
     }
 
+    /**
+     * P3 分布式事务：创建订单（写 MySQL）+ 扣账户（写 PG），串成 Seata 全局事务。
+     *
+     * <p>正常：返回创建的订单；余额不足（user 返回 409）或 user 不可用时，全局事务回滚，
+     * 响应 {@code 409 BALANCE_NOT_ENOUGH}（订单、账户两库都回到事务前状态）。</p>
+     */
+    @PostMapping("/tx")
+    public R<Order> createWithTx(@RequestParam Long userId,
+                                 @RequestParam(required = false, defaultValue = "9.90") BigDecimal amount) {
+        return R.ok(orderService.createWithTx(userId, amount));
+    }
+
     @GetMapping("/{id}")
     public R<Order> get(@PathVariable Long id) {
         Order order = orderService.get(id);

@@ -5,6 +5,11 @@ spring:
     nacos:
       discovery:
         server-addr: ${NACOS_ADDR:localhost:8848}
+  datasource:
+    dynamic:
+      # 关键：把 dynamic-datasource 管理的数据源交给 Seata 代理，
+      # AT 模式的每个本地分支才能被 Seata 接管、记录 undo_log（与订单服务的事务分组联动）。
+      seata: true
   config:
     import: classpath:application-common.yml
 
@@ -26,6 +31,24 @@ spring:
     time-zone: GMT+8
     serialization:
       write-dates-as-timestamps: false
+
+# ------------------------------------------------------------
+# Seata 分布式事务（AT 模式）
+# ms-user 是多数据源服务，用 dynamic-datasource 原生 seata 集成（dynamic.seata=true），
+# 因此“不”开启 seata 的自动数据源代理，避免与 dynamic 的代理冲突。
+# 注册中心/配置统一走 classpath 上的 registry.conf + file.conf（见 common-core）。
+# ------------------------------------------------------------
+seata:
+  enabled: true
+  application-id: ${spring.application.name}
+  # 事务分组名，必须与 Seata Server 端、订单服务保持一致
+  tx-service-group: my_test_tx_group
+  registry:
+    type: file
+  config:
+    type: file
+  # user 走 dynamic-datasource 代理，关闭自动代理避免重复包装
+  enable-auto-data-source-proxy: false
 
 server:
   port: 8081

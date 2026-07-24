@@ -54,6 +54,12 @@
             <artifactId>mysql-connector-j</artifactId>
         </dependency>
 
+        <!-- Seata：分布式事务（AT 模式）。与 dynamic-datasource 配合由 spring.datasource.dynamic.seata=true 接管数据源代理 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+        </dependency>
+
         <!-- 测试 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

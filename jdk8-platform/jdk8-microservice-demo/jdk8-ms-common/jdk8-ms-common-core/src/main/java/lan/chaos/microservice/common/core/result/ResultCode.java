@@ -17,6 +17,7 @@ public enum ResultCode {
     UNAUTHORIZED(401, "未认证，请先登录"),
     FORBIDDEN(403, "无权限访问该资源"),
     NOT_FOUND(404, "资源不存在"),
+    BALANCE_NOT_ENOUGH(409, "账户余额不足"),
     ERROR(500, "服务器内部错误"),
     GATEWAY_BLOCKED(429, "请求过于频繁，已被限流"),
     SERVICE_DEGRADED(503, "下游服务暂时不可用，已降级");

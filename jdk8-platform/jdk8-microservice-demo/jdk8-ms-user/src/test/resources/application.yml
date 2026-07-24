@@ -9,6 +9,8 @@ spring:
     dynamic:
       primary: pg
       strict: false
+      # 测试环境不需要 Seata TC，关掉数据源代理，避免离线连不到 localhost:8091
+      seata: false
       datasource:
         pg:
           url: jdbc:h2:mem:pg;DB_CLOSE_DELAY=-1
@@ -20,3 +22,7 @@ spring:
           username: sa
           password:
           driver-class-name: org.h2.Driver
+
+# 测试专用：禁用 Seata 自动配置（不连 TC），只验证多数据源路由等业务逻辑
+seata:
+  enabled: false

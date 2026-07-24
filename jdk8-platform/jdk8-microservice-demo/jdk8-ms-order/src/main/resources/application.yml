@@ -10,6 +10,13 @@ spring:
       transport:
         dashboard: ${SENTINEL_DASHBOARD:localhost:8858}
         port: 8729
+  # P3：订单服务单数据源（MySQL），承载 t_order 与 undo_log。
+  # 用 Seata 自动数据源代理（enable-auto-data-source-proxy=true）接管，AT 模式事务由此接管。
+  datasource:
+    url: ${MYSQL_URL:jdbc:mysql://localhost:30100/demo_ms_mysql?useSSL=false&serverTimezone=UTC&characterEncoding=utf8}
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PWD:REDACTED}
+    driver-class-name: com.mysql.cj.jdbc.Driver
   config:
     import: classpath:application-common.yml
 
@@ -20,3 +27,21 @@ server:
 feign:
   sentinel:
     enabled: true
+
+# ------------------------------------------------------------
+# Seata 分布式事务（AT 模式）
+# order 是单数据源服务，用 Seata 的「自动数据源代理」接管 spring.datasource，
+# 与 user 的 dynamic-datasource 集成形成对照（两种接入姿势都演示到）。
+# 注册中心/配置走 classpath 上的 registry.conf + file.conf（见 common-core）。
+# ------------------------------------------------------------
+seata:
+  enabled: true
+  application-id: ${spring.application.name}
+  # 事务分组名，必须与 Seata Server 端、用户服务保持一致
+  tx-service-group: my_test_tx_group
+  registry:
+    type: file
+  config:
+    type: file
+  # 单数据源：开启自动代理，由 Seata 包装 DataSource 以记录 undo_log
+  enable-auto-data-source-proxy: true

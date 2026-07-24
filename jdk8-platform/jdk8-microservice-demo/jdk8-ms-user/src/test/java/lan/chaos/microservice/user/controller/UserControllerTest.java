@@ -6,9 +6,11 @@ import lan.chaos.microservice.common.core.result.ResultCode;
 import lan.chaos.microservice.common.web.advice.GlobalExceptionHandler;
 import lan.chaos.microservice.common.web.advice.ResponseAdvice;
 import lan.chaos.microservice.user.entity.User;
+import lan.chaos.microservice.user.mapper.AccountMapper;
 import lan.chaos.microservice.user.mapper.UserMapper;
 import lan.chaos.microservice.user.mapper.UserTagMapper;
 import lan.chaos.microservice.user.model.CreateUserRequest;
+import lan.chaos.microservice.user.service.AccountService;
 import lan.chaos.microservice.user.service.UserService;
 import lan.chaos.microservice.user.service.UserTagService;
 import org.junit.jupiter.api.Test;
@@ -52,10 +54,16 @@ class UserControllerTest {
     private UserTagService userTagService;
 
     @MockBean
+    private AccountService accountService;
+
+    @MockBean
     private UserMapper userMapper;
 
     @MockBean
     private UserTagMapper userTagMapper;
+
+    @MockBean
+    private AccountMapper accountMapper;
 
     @Test
     void createUser_shouldWrapDomainIntoR() throws Exception {
