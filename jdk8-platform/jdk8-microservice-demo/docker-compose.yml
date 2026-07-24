@@ -68,6 +68,19 @@ services:
       timeout: 5s
       retries: 10
 
+  # Sentinel Dashboard：P2 熔断限流可视化。版本需与 SCA 2021.0.6.2 内置的 Sentinel 1.8.6 对齐。
+  # 启动后用 http://localhost:8858 访问（默认账号/密码 sentinel/sentinel）。
+  sentinel:
+    image: bladex/sentinel-dashboard:1.8.6
+    container_name: ms-sentinel
+    ports:
+      - "8858:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
 volumes:
   ms-pg-data:
   ms-mysql-data:

@@ -6,8 +6,23 @@ spring:
       discovery:
         server-addr: ${NACOS_ADDR:localhost:8848}
     gateway:
-      # 路由规则在 P1/P2 阶段补充；先留空，保证 P0 可启动
-      routes: []
+      discovery:
+        locator:
+          enabled: false
+      routes:
+        - id: ms-user-route
+          uri: lb://ms-user
+          predicates:
+            - Path=/users/**
+        - id: ms-order-route
+          uri: lb://ms-order
+          predicates:
+            - Path=/orders/**
+    sentinel:
+      enabled: true
+      transport:
+        dashboard: ${SENTINEL_DASHBOARD:localhost:8858}
+        port: 8719
   config:
     import: classpath:application-common.yml
 

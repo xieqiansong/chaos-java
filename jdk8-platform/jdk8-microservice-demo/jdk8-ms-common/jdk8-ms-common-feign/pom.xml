@@ -12,24 +12,48 @@
     <artifactId>jdk8-ms-common-feign</artifactId>
     <packaging>jar</packaging>
     <name>jdk8-ms-common-feign</name>
-    <description>服务调用增强：Feign 自动配置、traceId/Authorization 透传、统一降级兜底（P1/P2 落地）</description>
+    <description>Feign 公共支撑：Sentinel 熔断降级工厂基类、traceId/Authorization 透传拦截器</description>
 
     <dependencies>
         <dependency>
             <groupId>lan.chaos</groupId>
             <artifactId>jdk8-ms-common-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>lan.chaos</groupId>
-            <artifactId>jdk8-ms-common-log</artifactId>
-        </dependency>
+
+        <!-- OpenFeign：声明式 HTTP 客户端 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
+
+        <!-- Sentinel：feign.sentinel.enabled=true 后接管 Feign，提供熔断/降级 -->
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+        </dependency>
+
+        <!-- FallbackFactory 接口所在包（OpenFeign 降级兜底需要，Hystrix 运行时本身不启用） -->
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-hystrix</artifactId>
+        </dependency>
+
+        <!-- 透传入口请求的 Authorization 头需要 Servlet API 与 Spring WebMVC 的 ServletRequestAttributes -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

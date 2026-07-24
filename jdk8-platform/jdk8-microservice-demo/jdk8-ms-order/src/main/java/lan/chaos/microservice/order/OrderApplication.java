@@ -4,14 +4,19 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
- * 订单服务启动类。创建 / 查询订单，Feign 编排调 user（P1 落地），跨服务事务接 Seata（P3）。
- * basePackages 覆盖 common-feign 中的 Feign 客户端与配置。
+ * 订单服务入口。
+ *
+ * <p>{@code @EnableFeignClients} 扫描 {@code lan.chaos.microservice} 下所有 {@code @FeignClient}（如 {@link lan.chaos.microservice.order.client.UserClient}）。
+ * {@code @ComponentScan("lan.chaos.microservice")} 同时纳管 common 包里的配置
+ * （common-feign 的透传拦截器、common-log 的 TraceIdFilter 等），避免每个服务手动引一遍。</p>
  */
-@EnableDiscoveryClient
-@EnableFeignClients(basePackages = "lan.chaos.microservice.common.feign")
 @SpringBootApplication
+@EnableDiscoveryClient
+@EnableFeignClients(basePackages = "lan.chaos.microservice")
+@ComponentScan("lan.chaos.microservice")
 public class OrderApplication {
 
     public static void main(String[] args) {

@@ -3,14 +3,17 @@ package lan.chaos.microservice.gateway;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
- * 网关启动类。
- * WebFlux 体系，不能与 spring-boot-starter-web 共存；本模块仅依赖 common-core / common-log（无 Servlet）。
- * 路由、鉴权、限流在后续阶段（P1/P2/P4）补充。
+ * 网关入口（WebFlux，不依赖 spring-boot-starter-web）。
+ *
+ * <p>{@code @ComponentScan("lan.chaos.microservice")} 纳管 common 包配置（common-log 的日志配置等）。
+ * 网关本身不写业务 Controller，只做路由转发 + Sentinel 流控（见 {@code config/SentinelGatewayConfig}）。</p>
  */
-@EnableDiscoveryClient
 @SpringBootApplication
+@EnableDiscoveryClient
+@ComponentScan("lan.chaos.microservice")
 public class GatewayApplication {
 
     public static void main(String[] args) {

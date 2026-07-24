@@ -5,12 +5,18 @@ spring:
     nacos:
       discovery:
         server-addr: ${NACOS_ADDR:localhost:8848}
-    openfeign:
-      # Feign 调用在 P1 阶段启用；loadbalancer 已由 common-feign 引入
-      client:
-        default-config: default
+    sentinel:
+      enabled: true
+      transport:
+        dashboard: ${SENTINEL_DASHBOARD:localhost:8858}
+        port: 8729
   config:
     import: classpath:application-common.yml
 
 server:
   port: 8082
+
+# 开启 Feign 的 Sentinel 熔断/降级（关键开关：没有它 fallbackFactory 不会生效）
+feign:
+  sentinel:
+    enabled: true
