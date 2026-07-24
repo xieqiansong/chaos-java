@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>lan.chaos</groupId>
+        <artifactId>jdk8-platform</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>jdk8-microservice-demo</artifactId>
+    <packaging>pom</packaging>
+    <name>jdk8-microservice-demo</name>
+
+    <description>
+        企业级 Spring Cloud Alibaba 微服务学习项目（形态二：多进程）。
+        覆盖模块分层、统一日志、安全认证、统一响应/异常、配置中心、服务调用、限流熔断与分层测试等企业级能力。
+    </description>
+
+    <!--
+      模块结构（已在开发计划中规划）：
+      common 层（非部署，纯依赖库，嵌套于 jdk8-ms-common/）：common-core / common-log / common-web / common-security / common-feign / common-test
+      业务服务（可独立部署进程）：  jdk8-ms-gateway / jdk8-ms-auth / jdk8-ms-user / jdk8-ms-order
+    -->
+    <modules>
+        <module>jdk8-ms-common/jdk8-ms-common-core</module>
+        <module>jdk8-ms-common/jdk8-ms-common-log</module>
+        <module>jdk8-ms-common/jdk8-ms-common-web</module>
+        <module>jdk8-ms-common/jdk8-ms-common-security</module>
+        <module>jdk8-ms-common/jdk8-ms-common-feign</module>
+        <module>jdk8-ms-common/jdk8-ms-common-test</module>
+        <module>jdk8-ms-gateway</module>
+        <module>jdk8-ms-auth</module>
+        <module>jdk8-ms-user</module>
+        <module>jdk8-ms-order</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- 与父工程 jdk8-platform 保持一致的 SCA 版本（Spring Boot 2.7.18 线） -->
+        <spring.boot.version>2.7.18</spring.boot.version>
+        <spring.cloud.version>2021.0.9</spring.cloud.version>
+        <spring.cloud.alibaba.version>2021.0.6.2</spring.cloud.alibaba.version>
+        <!-- 以下版本为后续阶段（安全/测试/数据层）统一管理，P0 仅声明不强制使用 -->
+        <jjwt.version>0.11.5</jjwt.version>
+        <testcontainers.version>1.19.3</testcontainers.version>
+        <mybatis-plus.version>3.5.5</mybatis-plus.version>
+        <dynamic.datasource.version>3.5.2</dynamic.datasource.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring.cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring.cloud.alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>${testcontainers.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- JWT（common-security，P4 使用） -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+
+            <!-- 数据层（P1 多数据源使用） -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+                <version>${dynamic.datasource.version}</version>
+            </dependency>
+
+            <!-- 内部 common 模块版本管理（共享父工程版本，避免子模块逐个写 version） -->
+            <dependency>
+                <groupId>lan.chaos</groupId>
+                <artifactId>jdk8-ms-common-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>lan.chaos</groupId>
+                <artifactId>jdk8-ms-common-log</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>lan.chaos</groupId>
+                <artifactId>jdk8-ms-common-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>lan.chaos</groupId>
+                <artifactId>jdk8-ms-common-security</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>lan.chaos</groupId>
+                <artifactId>jdk8-ms-common-feign</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>lan.chaos</groupId>
+                <artifactId>jdk8-ms-common-test</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>2.7.18</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

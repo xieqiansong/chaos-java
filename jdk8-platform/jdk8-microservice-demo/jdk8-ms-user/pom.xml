@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>lan.chaos</groupId>
+        <artifactId>jdk8-microservice-demo</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>jdk8-ms-user</artifactId>
+    <packaging>jar</packaging>
+    <name>jdk8-ms-user</name>
+    <description>用户服务：注册 / 查询（主数据源 PostgreSQL，P1 落地）</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>lan.chaos</groupId>
+            <artifactId>jdk8-ms-common-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>lan.chaos</groupId>
+            <artifactId>jdk8-ms-common-log</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>lan.chaos</groupId>
+            <artifactId>jdk8-ms-common-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

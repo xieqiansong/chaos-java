@@ -28,20 +28,21 @@
 | 4 | `jdk11-mybatis-plus-demo`（自 jdk8 迁移） | ✅ 完成 | MyBatis-Plus 高阶：条件构造器 / 分页（单表+联表）/ 逻辑删除+乐观锁+自动填充 / 多租户隔离 / 动态表名分表 / 字段透明加密（AES）；因依赖的 MyBatis-Plus 3.5.16 拦截器模块需 JDK 11+，已迁移至 `jdk11-platform`，以单元测试为核心验证，H2 内存库零外部依赖 |
 | 5 | `jdk8-testing-demo` | ✅ 完成 | 单元测试专项：JUnit5 + Mockito `@Mock/@Spy/@InjectMocks`、参数匹配与行为验证（`argThat`/`verify`）、BDD 风格（given/when/then）、Spring Boot 切片测试（`@WebMvcTest`），各场景均含可断言 `*Test` |
 | 6 | `jdk8-nacos-demo` | ✅ 完成 | Nacos 服务注册发现 + 配置中心 |
-| 7 | `jdk8-rocketmq-demo` | ✅ 完成 | RocketMQ 全场景：simple / batch / broadcast / delay / filter / order / pull / requestreply / retry / transaction / trace / throttle / acl / faulttolerant |
-| 8 | `jdk8-kafka-demo` | ✅ 完成 | Kafka 全场景：基础收发、批量、分区有序、Exactly-Once 事务、重试/死信、Header 过滤 |
-| 9 | `jdk8-sentinel-demo` | ✅ 完成 | Sentinel 流控/熔断/热点参数/@SentinelResource |
-| 10 | `jdk8-seata-demo` | ✅ 完成 | Seata 分布式事务：AT 自动补偿 + TCC |
-| 11 | `jdk8-elasticsearch-demo` | ✅ 完成 | Elasticsearch 索引/文档/搜索/聚合 |
-| 12 | `jdk8-zookeeper-demo` | ✅ 完成 | ZooKeeper 协调：Curator 客户端、InterProcessMutex 临时顺序节点分布式锁、LeaderSelector 选主、NodeCache 配置中心 + Watcher 监听，含 docker-compose，无 ZK 时测试优雅跳过 |
-| 13 | `jdk8-security-demo` | ✅ 完成 | Spring Security 过滤器链（白名单/Basic/无状态）+ jjwt 签发校验 JWT 过滤器 + OAuth2 资源服务器（条件化启用，附 Keycloak docker-compose） |
-| 14 | `jdk8-crypto-demo` | ✅ 完成 | 加密与签名：AES(CBC/GCM)/RSA(加密+SHA256withRSA 签名)/SHA-256/国密 SM2-SM3-SM4（BouncyCastle），含篡改检测断言 |
-| 15 | `jdk8-serialization-demo` | ✅ 完成 | 序列化对比：Jackson 文本 / Kryo 二进制 / JDK 原生三方案同模型对比（往返正确性、体积、健壮性、反序列化安全坑） |
-| 16 | `jdk8-scheduler-demo` | ✅ 完成 | 定时任务：@Scheduled 三种触发模型 / Quartz 内存 RAMJobStore / XXL-JOB 执行端+分片处理器（admin 条件化启用） |
-| 17 | `jdk8-mapstruct-demo` | ✅ 完成 | MapStruct 对象映射：basic / collection / custom / nested |
-| 18 | `jdk8-seckill-demo` | ✅ 完成 | 秒杀综合实战：Redis 分桶库存 + Lua 扣减 + Redisson 锁 + Kafka 异步下单 + 令牌桶限流 |
-| 19 | `jdk8-short-link-demo` | ✅ 完成 | 短链综合实战：Snowflake+Base62 短码 + 布隆过滤器防穿透 + Redis 缓存 + PG 持久化 |
-| 20 | `jdk8-common` | 🟡 占位 | 公共基础模块占位，承载跨 demo 的公共工具/实体 |
+| 7 | `jdk8-microservice-demo` | 🚧 重构中 | **企业级 Spring Cloud Alibaba 微服务学习项目（形态二：多进程）**：在最小骨架（user/order/gateway）基础上，重构为模块分明、可观测（统一日志+链路追踪）、有安全认证（JWT+网关鉴权）、有分层测试环境（多 profile + Testcontainers）的企业级工程。规划与开发计划见 `jdk8-microservice-demo/开发计划.md`，代码待分阶段落地（P0→P6） |
+| 8 | `jdk8-rocketmq-demo` | ✅ 完成 | RocketMQ 全场景：simple / batch / broadcast / delay / filter / order / pull / requestreply / retry / transaction / trace / throttle / acl / faulttolerant |
+| 9 | `jdk8-kafka-demo` | ✅ 完成 | Kafka 全场景：基础收发、批量、分区有序、Exactly-Once 事务、重试/死信、Header 过滤 |
+| 10 | `jdk8-sentinel-demo` | ✅ 完成 | Sentinel 流控/熔断/热点参数/@SentinelResource |
+| 11 | `jdk8-seata-demo` | ✅ 完成 | Seata 分布式事务：AT 自动补偿 + TCC |
+| 12 | `jdk8-elasticsearch-demo` | ✅ 完成 | Elasticsearch 索引/文档/搜索/聚合 |
+| 13 | `jdk8-zookeeper-demo` | ✅ 完成 | ZooKeeper 协调：Curator 客户端、InterProcessMutex 临时顺序节点分布式锁、LeaderSelector 选主、NodeCache 配置中心 + Watcher 监听，含 docker-compose，无 ZK 时测试优雅跳过 |
+| 14 | `jdk8-security-demo` | ✅ 完成 | Spring Security 过滤器链（白名单/Basic/无状态）+ jjwt 签发校验 JWT 过滤器 + OAuth2 资源服务器（条件化启用，附 Keycloak docker-compose） |
+| 15 | `jdk8-crypto-demo` | ✅ 完成 | 加密与签名：AES(CBC/GCM)/RSA(加密+SHA256withRSA 签名)/SHA-256/国密 SM2-SM3-SM4（BouncyCastle），含篡改检测断言 |
+| 16 | `jdk8-serialization-demo` | ✅ 完成 | 序列化对比：Jackson 文本 / Kryo 二进制 / JDK 原生三方案同模型对比（往返正确性、体积、健壮性、反序列化安全坑） |
+| 17 | `jdk8-scheduler-demo` | ✅ 完成 | 定时任务：@Scheduled 三种触发模型 / Quartz 内存 RAMJobStore / XXL-JOB 执行端+分片处理器（admin 条件化启用） |
+| 18 | `jdk8-mapstruct-demo` | ✅ 完成 | MapStruct 对象映射：basic / collection / custom / nested |
+| 19 | `jdk8-seckill-demo` | ✅ 完成 | 秒杀综合实战：Redis 分桶库存 + Lua 扣减 + Redisson 锁 + Kafka 异步下单 + 令牌桶限流 |
+| 20 | `jdk8-short-link-demo` | ✅ 完成 | 短链综合实战：Snowflake+Base62 短码 + 布隆过滤器防穿透 + Redis 缓存 + PG 持久化 |
+| 21 | `jdk8-common` | 🟡 占位 | 公共基础模块占位，承载跨 demo 的公共工具/实体 |
 
 ## 模块详情（同按重要程度排序）
 
@@ -50,6 +51,7 @@
 - **jdk8-localcache-demo** ★ 标杆模板：基于 Spring Boot 2.7 + Caffeine 2.9.3，纯内存零外部依赖；按能力分包（basic 基础读写 / expire 写入过期 / eviction 容量淘汰 / cacheaside 声明式 @Cacheable），以单元测试为核心验证，控制台入口 `DemoApp.main` 一键打印各场景「输入 → 输出」。**后续新增 A 类 demo 均以它为模板**（见根 `AGENTS.md`）。
 - **jdk11-mybatis-plus-demo**（原 `jdk8-mybatis-plus-demo`，已迁移）：基于 Spring Boot 2.7 + MyBatis-Plus 3.5.16 + H2 内存库，按能力分包（wrapper / page / audit / tenant / dynamictable / encrypt）。因 MyBatis-Plus 自 3.5.9 起把分页/多租户等拦截器拆分到独立模块 `mybatis-plus-jsqlparser`（要求 JDK 11+ 字节码），无法在 JDK 8 上编译，故整体迁至 `jdk11-platform`；以单元测试为核心验证手段，控制台入口 `DemoApp.main` 可一键打印各场景「输入 → 输出」。详见 `../jdk11-platform/jdk11-mybatis-plus-demo/README.md`。
 - **jdk8-nacos-demo**：基于 Spring Cloud Alibaba，演示 Provider 注册、`@LoadBalanced` RestTemplate / OpenFeign 消费、配置中心 `@RefreshScope` 动态刷新与编程式 `ConfigService.addListener` 监听。采用**形态二（多模块）**：Nacos 的价值在于「服务注册 → 被发现 → 跨进程调用 → 配置动态刷新」的完整链路，按 provider / consumer / config 拆成可各自独立启动的进程，才能真实还原这一过程（单模块模拟不出跨进程效果）。
+- **jdk8-microservice-demo**：企业级 Spring Cloud Alibaba 微服务学习项目（**形态二：多进程**），正在重构。目标骨架：common 层（common-core / common-log / common-web / common-security / common-feign / common-test）+ 业务服务（ms-gateway / ms-auth / ms-user / ms-order），补齐统一日志、链路追踪、JWT 安全认证、网关鉴权、统一响应异常、分层测试等企业级能力。当前子模块已清空、父 pom 为空壳聚合，开发计划见 `jdk8-microservice-demo/开发计划.md`，代码按 P0→P6 路线图分阶段落地。
 - **jdk8-rocketmq-demo**：使用原生 RocketMQ Client，以独立类演示各类消息模型与生产消费模式，并包含幂等、重试、死信、事务、ACL、故障容错、消息轨迹等进阶能力。
 - **jdk8-kafka-demo**：基于 Spring Kafka 2.8.x，覆盖基础收发、批量发送/消费、分区有序、Exactly-Once 事务、重试/死信、Header 消息过滤，@EmbeddedKafka 自包含测试无需外部 Broker。
 - **jdk8-sentinel-demo**：基于 Sentinel 1.8.6 + Spring Cloud Alibaba，覆盖 QPS 直接/关联/WarmUp 流控、异常数/异常比例/慢调用比例熔断、热点参数限流、@SentinelResource 注解（blockHandler/fallback），SphU.entry() 程序化方式核心稳定，包含 Dashboard docker-compose。

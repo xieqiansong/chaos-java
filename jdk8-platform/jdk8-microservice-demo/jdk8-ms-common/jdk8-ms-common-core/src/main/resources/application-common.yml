@@ -1,0 +1,44 @@
+# ============================================================
+# 公共配置占位（common-core）
+# ------------------------------------------------------------
+# 这里集中放各服务共享的连接信息占位，由你按本地实际填写。
+# 各业务服务通过 application.yml 中的
+#   spring.config.import: classpath:application-common.yml
+# 引入本文件；可用环境变量覆盖（NACOS_ADDR / PG_URL / MYSQL_URL / REDIS_ADDR 等）。
+# 默认值与 docker-compose.yml 中的端口/账号保持一致。
+# ============================================================
+
+# ---------- Nacos 注册发现地址 ----------
+nacos:
+  addr: ${NACOS_ADDR:REDACTED:8848}
+
+# ---------- 多数据源（PostgreSQL 主 / MySQL 副） ----------
+# 使用 dynamic-datasource：默认数据源为 pg，代码中用 @DS("mysql") 切换到第二数据源。
+# 此段在 P1 引入 mybatis-plus + dynamic-datasource 后才生效；P0 仅作占位，无驱动也不报错。
+spring:
+  datasource:
+    dynamic:
+      primary: pg
+      strict: false
+      datasource:
+        pg:
+          url: ${PG_URL:jdbc:postgresql://localhost:30101/demo_ms_pg}
+          username: ${PG_USER:postgres}
+          password: ${PG_PWD:REDACTED}
+          driver-class-name: org.postgresql.Driver
+        mysql:
+          url: ${MYSQL_URL:jdbc:mysql://localhost:30100/demo_ms_mysql?useSSL=false&serverTimezone=UTC&characterEncoding=utf8}
+          username: ${MYSQL_USER:root}
+          password: ${MYSQL_PWD:REDACTED}
+          driver-class-name: com.mysql.cj.jdbc.Driver
+
+# ---------- Redis（token 存储 / 限流计数 / 缓存） ----------
+# 连接信息用环境变量覆盖（REDIS_ADDR / REDIS_PWD / REDIS_DB）。
+redis:
+  addr: ${REDIS_ADDR:localhost:30102}
+  password: ${REDIS_PWD:REDACTED}
+  database: ${REDIS_DB:0}
+
+# ---------- 链路追踪 ID 头名（网关生成，Feign 透传，下游续接 MDC） ----------
+trace:
+  header: X-Trace-Id

@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: ms-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_ADDR:localhost:8848}
+    gateway:
+      # 路由规则在 P1/P2 阶段补充；先留空，保证 P0 可启动
+      routes: []
+  config:
+    import: classpath:application-common.yml
+
+server:
+  port: 8080

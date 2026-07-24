@@ -1,0 +1,73 @@
+# jdk8-microservice-demo 基础设施
+# 说明：这些服务你已运行好。此处集中记录端口与默认账号，便于统一管理。
+# 如需（重新）启动：在 jdk8-microservice-demo 目录下执行 `docker compose up -d`
+# 连接信息默认与 common-core 的 application-common.yml 占位保持一致，可按实际修改。
+version: "3.8"
+
+services:
+  nacos:
+    image: nacos/nacos-server:v2.2.3
+    container_name: ms-nacos
+    environment:
+      - MODE=standalone
+      - NACOS_AUTH_ENABLE=false
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+      - "9849:9849"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8848/nacos/health/check"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  postgres:
+    image: postgres:16
+    container_name: ms-postgres
+    environment:
+      - POSTGRES_USER=ms
+      - POSTGRES_PASSWORD=ms_pg_123
+      - POSTGRES_DB=demo_ms_pg
+    ports:
+      - "5432:5432"
+    volumes:
+      - ms-pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ms"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  mysql:
+    image: mysql:8
+    container_name: ms-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=ms_mysql_123
+      - MYSQL_DATABASE=demo_ms_mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    volumes:
+      - ms-mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pms_mysql_123"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7
+    container_name: ms-redis
+    # 与 application-common.yml 默认 REDIS_PWD 保持一致；如需其他密码/库号改这里与 yml 两处
+    command: ["redis-server", "--requirepass", "redis123", "--databases", "16"]
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "redis123", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  ms-pg-data:
+  ms-mysql-data:

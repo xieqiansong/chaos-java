@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>lan.chaos</groupId>
+        <artifactId>jdk8-microservice-demo</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>jdk8-ms-common-log</artifactId>
+    <packaging>jar</packaging>
+    <name>jdk8-ms-common-log</name>
+    <description>可观测性：MDC traceId 工具、访问日志约定、logback 配置约定</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>lan.chaos</groupId>
+            <artifactId>jdk8-ms-common-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+    </dependencies>
+</project>

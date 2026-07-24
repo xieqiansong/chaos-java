@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: ms-order
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_ADDR:localhost:8848}
+    openfeign:
+      # Feign 调用在 P1 阶段启用；loadbalancer 已由 common-feign 引入
+      client:
+        default-config: default
+  config:
+    import: classpath:application-common.yml
+
+server:
+  port: 8082

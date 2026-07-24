@@ -29,6 +29,7 @@
         <module>jdk8-crypto-demo</module>
         <module>jdk8-security-demo</module>
         <module>jdk8-zookeeper-demo</module>
+        <module>jdk8-microservice-demo</module>
     </modules>
 
     <properties>
