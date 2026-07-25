@@ -97,6 +97,41 @@ services:
     depends_on:
       - nacos
 
+  # ============================================================
+  # 可选 · SkyWalking（P5 链路可视化，默认不启用）
+  # ------------------------------------------------------------
+  # 上面是「已运行好的基础设施」。SkyWalking 属于「可观测补全」的可选项：
+  # 本项目已用 MDC traceId + 访问日志做到跨进程链路连续（无需 SkyWalking 也能演示链路），
+  # SkyWalking 只是在此之上提供「调用拓扑 / 火焰图」可视化。
+  # 如需启用：删除下面两行注释（oap / ui 的 "# " 缩进也一并去掉），
+  # 然后 `docker compose up -d skywalking-oap skywalking-ui`，
+  # 并在各业务服务启动命令加 `-javaagent:/path/to/skywalking-agent.jar -Dskywalking.agent.service_name=ms-user`（见 README）。
+  # OAP 用内置 h2 存储，零外部依赖；如要持久化可改 SW_STORAGE=elasticsearch。
+  # ============================================================
+  # skywalking-oap:
+  #   image: apache/skywalking-oap-server:9.7.0
+  #   container_name: ms-skywalking-oap
+  #   environment:
+  #     - SW_STORAGE=h2
+  #   ports:
+  #     - "11800:11800"   # gRPC 接收 agent 上报
+  #     - "12800:12800"   # HTTP 查询接口
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:12800/"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 10
+  #
+  # skywalking-ui:
+  #   image: apache/skywalking-ui:9.7.0
+  #   container_name: ms-skywalking-ui
+  #   environment:
+  #     - SW_OAP_ADDRESS=http://skywalking-oap:12800
+  #   ports:
+  #     - "8088:8080"
+  #   depends_on:
+  #     - skywalking-oap
+
 volumes:
   ms-pg-data:
   ms-mysql-data:

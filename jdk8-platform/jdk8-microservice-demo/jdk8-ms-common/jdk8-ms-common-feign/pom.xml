@@ -20,6 +20,12 @@
             <artifactId>jdk8-ms-common-core</artifactId>
         </dependency>
 
+        <!-- P5：透传 Authorization 头时复用 SecurityConstants 里的头名常量，避免与 P4 安全基座“各写一份” -->
+        <dependency>
+            <groupId>lan.chaos</groupId>
+            <artifactId>jdk8-ms-common-security</artifactId>
+        </dependency>
+
         <!-- OpenFeign：声明式 HTTP 客户端 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -53,6 +59,11 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

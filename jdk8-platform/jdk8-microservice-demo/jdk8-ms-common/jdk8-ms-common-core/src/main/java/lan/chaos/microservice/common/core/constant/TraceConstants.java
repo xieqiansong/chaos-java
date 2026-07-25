@@ -15,6 +15,19 @@ public final class TraceConstants {
     /** 跨服务透传的 HTTP Header 名 */
     public static final String TRACE_ID_HEADER = "X-Trace-Id";
 
+    /**
+     * 登录身份透传（调用增强）：网关/拦截器还原登录用户后写入 MDC，
+     * 由 {@code common-feign} 的 {@code TraceFeignInterceptor} 读取并放进请求头，
+     * 让下游在「重新解析 JWT 鉴权」之外，也能直接拿到调用方身份用于日志/上下文。
+     * 注意：身份头只是便利，不是鉴权依据（鉴权仍以 JWT 为准）。
+     */
+    public static final String USER_ID_MDC_KEY = "userId";
+    public static final String USER_NAME_MDC_KEY = "username";
+
+    /** 跨服务透传调用方身份（非鉴权，纯上下文/日志用）的 HTTP Header 名 */
+    public static final String USER_ID_HEADER = "X-User-Id";
+    public static final String USER_NAME_HEADER = "X-User-Name";
+
     private TraceConstants() {
     }
 }

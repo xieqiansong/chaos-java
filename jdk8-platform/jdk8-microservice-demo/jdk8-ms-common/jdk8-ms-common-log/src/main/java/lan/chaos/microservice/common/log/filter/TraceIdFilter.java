@@ -1,5 +1,6 @@
 package lan.chaos.microservice.common.log.filter;
 
+import lan.chaos.microservice.common.core.constant.TraceConstants;
 import org.slf4j.MDC;
 
 import javax.servlet.Filter;
@@ -37,11 +38,11 @@ public class TraceIdFilter implements Filter {
         if (traceId == null || traceId.isEmpty()) {
             traceId = UUID.randomUUID().toString().replace("-", "");
         }
-        MDC.put("traceId", traceId);
+        MDC.put(TraceConstants.TRACE_ID_MDC_KEY, traceId);
         try {
             chain.doFilter(request, response);
         } finally {
-            MDC.remove("traceId");
+            MDC.remove(TraceConstants.TRACE_ID_MDC_KEY);
         }
     }
 }

@@ -43,3 +43,10 @@ redis:
 # ---------- 链路追踪 ID 头名（网关生成，Feign 透传，下游续接 MDC） ----------
 trace:
   header: X-Trace-Id
+
+# ---------- P6 动态配置演示默认值（被 Nacos 同名配置覆盖；改 Nacos 值热更无需重启） ----------
+# 演示点：DynamicConfig（@RefreshScope）绑定 ms.config.*，在 Nacos 改 ms.config.greeting 后
+# 通过 GET /internal/config/greeting 可立即看到新值，无需重启服务。
+ms:
+  config:
+    greeting: "你好（本地默认值：未连 Nacos 或 Nacos 无此配置时生效）"

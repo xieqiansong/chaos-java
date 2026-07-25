@@ -39,6 +39,11 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
+        <!-- P6 Nacos Config：配置外置 + 多环境 namespace + 动态刷新 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
 
         <!-- 数据层：MyBatis-Plus + 多数据源（dynamic-datasource） -->
         <dependency>

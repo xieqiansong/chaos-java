@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: ms-auth
+  cloud:
+    nacos:
+      config:
+        # P6 Nacos Config：配置外置到 Nacos，多环境（namespace）+ 动态刷新（@RefreshScope）
+        server-addr: ${NACOS_ADDR:localhost:8848}
+        file-extension: yaml
+        namespace: ${NACOS_NAMESPACE:}
+        group: ${NACOS_GROUP:MICROSERVICE_GROUP}
+        refresh-enabled: true
+        # 连不上 Nacos 不致命，用本地 application*.yml 默认值启动；生产联调改 true
+        fail-fast: false
+  # SCA 2021 起 Nacos Config 走 spring.config.import 机制：必须声明从哪个 DataId 拉取。
+  # optional: 前缀表示“连不上 Nacos 就跳过”，保证本地无 Nacos 也能启动（用本地默认配置）。
+  config:
+    import: optional:nacos:${spring.application.name}.yaml

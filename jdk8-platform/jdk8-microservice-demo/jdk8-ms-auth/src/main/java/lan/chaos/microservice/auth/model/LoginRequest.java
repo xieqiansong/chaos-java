@@ -1,5 +1,6 @@
 package lan.chaos.microservice.auth.model;
 
+import lan.chaos.microservice.common.log.annotation.Sensitive;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -10,6 +11,7 @@ public class LoginRequest {
     @NotBlank(message = "用户名不能为空")
     private String username;
 
+    @Sensitive
     @NotBlank(message = "密码不能为空")
     private String password;
 

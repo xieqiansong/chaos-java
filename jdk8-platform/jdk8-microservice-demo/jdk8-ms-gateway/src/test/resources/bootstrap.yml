@@ -1,0 +1,12 @@
+# 测试环境统一关闭 Nacos Config：离线跑单测无需真实 Nacos。
+# import-check 也关掉，避免 spring-cloud 要求必须配置 spring.config.import（否则单测启动报
+# ConfigDataMissingEnvironmentPostProcessor: No spring.config.import set）
+spring:
+  cloud:
+    nacos:
+      config:
+        enabled: false
+        import-check:
+          enabled: false
+      discovery:
+        enabled: false

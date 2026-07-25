@@ -6,6 +6,8 @@ import lan.chaos.microservice.common.security.constant.SecurityConstants;
 import lan.chaos.microservice.common.security.context.LoginUserContext;
 import lan.chaos.microservice.common.security.model.LoginUser;
 import lan.chaos.microservice.common.security.util.JwtProvider;
+import lan.chaos.microservice.common.core.constant.TraceConstants;
+import org.slf4j.MDC;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -40,6 +42,11 @@ public class PermissionInterceptor implements HandlerInterceptor {
         LoginUser user = resolveUser(request);
         // 公开接口（无注解）即使无 token 也放行；有 token 则把身份放进上下文供业务取用
         LoginUserContext.set(user);
+        // 把登录身份写进 MDC：既让本进程的访问日志能带上「谁在操作」，也让 Feign 拦截器能透传给下游
+        if (user != null) {
+            MDC.put(TraceConstants.USER_ID_MDC_KEY, String.valueOf(user.getUserId()));
+            MDC.put(TraceConstants.USER_NAME_MDC_KEY, user.getUsername());
+        }
 
         if (handler instanceof HandlerMethod) {
             RequiresPermission rp = ((HandlerMethod) handler).getMethodAnnotation(RequiresPermission.class);
@@ -62,8 +69,10 @@ public class PermissionInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        // 请求结束必须清理，避免线程池复用把上一个用户的身份串到下一个请求
+        // 请求结束必须清理，避免线程池复用把上一个用户的身份/MDC 串到下一个请求
         LoginUserContext.clear();
+        MDC.remove(TraceConstants.USER_ID_MDC_KEY);
+        MDC.remove(TraceConstants.USER_NAME_MDC_KEY);
     }
 
     private LoginUser resolveUser(HttpServletRequest request) {
