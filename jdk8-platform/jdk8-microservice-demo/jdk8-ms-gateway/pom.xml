@@ -35,6 +35,12 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
+        <!-- Spring Cloud 2021.0.x 起 bootstrap 上下文默认关闭，需显式引入该 starter
+             才能加载 bootstrap.yml（Nacos Config 的经典接入方式） -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
 
         <!-- Sentinel 核心（transport 接 Dashboard） -->
         <dependency>

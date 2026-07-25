@@ -2,7 +2,13 @@
 # 多数据源结构（pg / mysql 两个命名库）与线上一致，验证 @DS 路由逻辑。
 spring:
   cloud:
+    # 关掉 spring-cloud-config 客户端，跳过 spring-cloud-commons 对 spring.config.import 的硬性校验
+    # （P6 用的是 Nacos Config，不是 spring-cloud-config server；测试离线跑无需该校验）
+    config:
+      enabled: false
     nacos:
+      config:
+        enabled: false
       discovery:
         enabled: false
   datasource:

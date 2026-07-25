@@ -1,7 +1,15 @@
 # 测试环境统一关闭 Nacos Config：离线跑单测无需真实 Nacos。
-# import-check 也关掉，避免 spring-cloud 要求必须配置 spring.config.import
+# 1) spring.cloud.nacos.*.enabled=false：不连 Nacos（离线可跑）
+# 2) spring.cloud.config.import-check.enabled=false：关掉 spring-cloud-commons 的
+#    ConfigDataMissingEnvironmentPostProcessor 校验（否则未配置 spring.config.import 会抛异常）
 spring:
+  application:
+    name: ms-user
   cloud:
+    config:
+      # 关掉 spring-cloud-commons 的 ConfigDataMissingEnvironmentPostProcessor 校验
+      import-check:
+        enabled: false
     nacos:
       config:
         enabled: false
@@ -9,3 +17,8 @@ spring:
           enabled: false
       discovery:
         enabled: false
+  # 声明 import（nacos 已 disabled，optional: 前缀确保连不上也不致命），
+  # 满足 spring-cloud 对 spring.config.import 的硬性要求，避免单测启动报
+  # “No spring.config.import set”
+  config:
+    import: optional:nacos:ms-user.yaml

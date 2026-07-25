@@ -65,6 +65,7 @@
 - **安全**：`ms-auth` 登录签发**双令牌**（access 无状态短命 + refresh 存 Redis 可吊销）；`ms-gateway` 的 `AuthGlobalFilter` 用共享密钥本地验签、集中拦未认证请求；下游经 `PermissionInterceptor` 还原 `LoginUser` 并支持 `@RequiresPermission` 方法级校验。access/refresh 类型相互隔离，防越权。
 - **熔断限流（Sentinel，优先）**：接入网关路由与 Feign 调用，做流控 / 熔断 / 降级，统一 `Fallback` 兜底防雪崩。
 - **分布式事务（Seata AT，优先）**：`@GlobalTransactional` 跨服务，各库 `undo_log` 自动补偿；优先用「最终一致性」思路教学，Seata 作为强一致选项演示。
+- **配置中心（Nacos Config）**：`bootstrap.yml` 接 Nacos Config，按 namespace 做多环境隔离；关键配置 `@RefreshScope` 动态刷新，`ConfigProbeController` 暴露当前值便于 curl 观察热更；`optional:` + 本地默认值保证断 Nacos 也能跑。
 - **测试**：多 profile（dev/test/prod）；单测 JUnit5 + Mockito 无中间件 CI 必跑；集成测试 Testcontainers 起真实 PG/MySQL/Nacos；需中间件的用 `Assumptions` 探测可达性，不可达时优雅跳过。
 
 ---
@@ -92,4 +93,4 @@
 
 ---
 
-> 平台 `README.md` 学习记录表中本模块状态：**✅ P1/P2/P3/P4/P5 已完成（企业级微服务骨架：多数据源 + 可观测 + 限流熔断 + 分布式事务 + 安全认证 + 调用增强/可观测补全 全部落地）**。
+> 平台 `README.md` 学习记录表中本模块状态：**✅ P0~P6 已完成（企业级微服务骨架：多数据源 + 可观测 + 限流熔断 + 分布式事务 + 安全认证 + 调用增强/可观测补全 + Nacos Config 多环境/动态刷新 全部落地）**。
