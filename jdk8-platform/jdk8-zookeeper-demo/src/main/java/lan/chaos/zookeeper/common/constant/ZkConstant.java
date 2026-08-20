@@ -8,7 +8,7 @@ public final class ZkConstant {
     private ZkConstant() {}
 
     /** 默认连接串（docker-compose 起的单机 ZK）。 */
-    public static final String CONNECT_STRING = "localhost:2181";
+    public static final String CONNECT_STRING = "REDACTED:2181;REDACTED:2182;REDACTED:2183";
 
     /** 分布式锁根路径。 */
     public static final String LOCK_PATH = "/chaos/locks/order";

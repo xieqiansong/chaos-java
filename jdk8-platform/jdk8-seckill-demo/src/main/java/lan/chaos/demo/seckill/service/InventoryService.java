@@ -1,5 +1,6 @@
 package lan.chaos.demo.seckill.service;
 
+import org.springframework.aop.framework.AopContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -74,6 +75,7 @@ public class InventoryService {
      * @param bucketCount 分桶数量
      */
     public void initStock(Long productId, int totalStock, int bucketCount) {
+
         if (bucketCount <= 0) {
             bucketCount = 1;
         }

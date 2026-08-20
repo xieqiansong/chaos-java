@@ -41,10 +41,10 @@
         <processorPath useClasspath="false">
           <entry name="$PROJECT_DIR$/../../../Users/$$USERNAME$$/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
-        <module name="jdk17-base" />
         <module name="jdk25-base" />
-        <module name="jdk11-mybatis-plus-demo" />
         <module name="jdk21-base" />
+        <module name="jdk17-base" />
+        <module name="jdk11-mybatis-plus-demo" />
       </profile>
       <profile name="Annotation profile for jdk25-common" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -160,6 +160,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../../Users/$$USERNAME$$/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
           <entry name="$PROJECT_DIR$/../../../Users/$$USERNAME$$/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
         <module name="jdk8-redis-demo" />
