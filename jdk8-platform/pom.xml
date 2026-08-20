@@ -30,6 +30,7 @@
         <module>jdk8-security-demo</module>
         <module>jdk8-zookeeper-demo</module>
         <module>jdk8-microservice-demo</module>
+        <module>jdk8-starter-demo</module>
     </modules>
 
     <properties>

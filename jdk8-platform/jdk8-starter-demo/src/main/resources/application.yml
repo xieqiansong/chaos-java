@@ -1,0 +1,7 @@
+# Starter 使用方配置演示（前缀 token.starter，由 TokenProperties 绑定）
+token:
+  starter:
+    enabled: true      # 总开关（默认 true）；false 时 starter 不装配
+    length: 32         # 生成 token 长度
+    prefix: ""         # token 前缀
+    charset: SIMPLE    # SIMPLE=字母数字；HEX=十六进制
