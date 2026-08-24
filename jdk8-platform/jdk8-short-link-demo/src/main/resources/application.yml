@@ -9,7 +9,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:30101/demo_short_link
     username: postgres
-    password: REDACTED
+    password: ${PG_PASSWORD:postgres123}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -27,7 +27,7 @@ spring:
   redis:
     host: localhost
     port: 30102
-    password: REDACTED
+    password: ${REDIS_PASSWORD:redis123}
     database: 0
     timeout: 3000ms
     lettuce:

@@ -10,7 +10,7 @@
 
 # ---------- Nacos 注册发现地址 ----------
 nacos:
-  addr: ${NACOS_ADDR:REDACTED:8848}
+  addr: ${NACOS_ADDR:localhost:8848}
 
 # ---------- 多数据源（PostgreSQL 主 / MySQL 副） ----------
 # 使用 dynamic-datasource：默认数据源为 pg，代码中用 @DS("mysql") 切换到第二数据源。
@@ -24,12 +24,12 @@ spring:
         pg:
           url: ${PG_URL:jdbc:postgresql://localhost:30101/demo_ms_pg}
           username: ${PG_USER:postgres}
-          password: ${PG_PWD:REDACTED}
+          password: ${PG_PWD:ms_pg_123}
           driver-class-name: org.postgresql.Driver
         mysql:
           url: ${MYSQL_URL:jdbc:mysql://localhost:30100/demo_ms_mysql?useSSL=false&serverTimezone=UTC&characterEncoding=utf8}
           username: ${MYSQL_USER:root}
-          password: ${MYSQL_PWD:REDACTED}
+          password: ${MYSQL_PWD:ms_mysql_123}
           driver-class-name: com.mysql.cj.jdbc.Driver
 
 # ---------- Redis（token 存储 / 限流计数 / 缓存） ----------

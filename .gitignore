@@ -26,3 +26,6 @@ generated-sources/
 .DS_Store
 Thumbs.db
 *.log
+
+# 本地环境配置（含真实连接凭证），不提交
+**/application-local.yml

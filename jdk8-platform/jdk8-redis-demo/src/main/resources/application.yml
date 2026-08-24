@@ -6,7 +6,7 @@ spring:
     host: localhost
     port: 30102
     # 有密码时填写，学习环境一般留空
-    password: REDACTED
+    password: ${REDIS_PASSWORD:redis123}
     database: 0
     # 连接超时
     timeout: 5000ms

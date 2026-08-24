@@ -15,7 +15,7 @@ spring:
   datasource:
     url: ${MYSQL_URL:jdbc:mysql://localhost:30100/demo_ms_mysql?useSSL=false&serverTimezone=UTC&characterEncoding=utf8}
     username: ${MYSQL_USER:root}
-    password: ${MYSQL_PWD:REDACTED}
+    password: ${MYSQL_PWD:ms_mysql_123}
     driver-class-name: com.mysql.cj.jdbc.Driver
   config:
     import: classpath:application-common.yml

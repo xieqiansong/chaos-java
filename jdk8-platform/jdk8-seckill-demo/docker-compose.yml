@@ -1,8 +1,8 @@
 version: "3.8"
 
 # 端口与密码严格对齐 application.yml：
-#   PostgreSQL  -> 30101 / postgres / REDACTED / demo_seckill
-#   Redis       -> 30102 / REDACTED
+#   PostgreSQL  -> 30101 / postgres / postgres123 / demo_seckill
+#   Redis       -> 30102 / redis123
 #   Kafka       -> 30103
 # 启动后直接在 IDE 运行 SeckillApplication，或：mvn -pl jdk8-seckill-demo -am spring-boot:run
 
@@ -12,7 +12,7 @@ services:
     container_name: seckill-postgres
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: REDACTED
+      POSTGRES_PASSWORD: postgres123
       POSTGRES_DB: demo_seckill
     ports:
       - "30101:5432"
@@ -25,7 +25,7 @@ services:
   redis:
     image: redis:7-alpine
     container_name: seckill-redis
-    command: ["redis-server", "--requirepass", "REDACTED"]
+    command: ["redis-server", "--requirepass", "redis123"]
     ports:
       - "30102:6379"
 

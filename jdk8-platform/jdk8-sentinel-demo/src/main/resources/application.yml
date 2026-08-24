@@ -6,9 +6,9 @@ spring:
     sentinel:
       transport:
         # Sentinel Dashboard 地址（Docker 启动后可用，非必须）
-        dashboard: REDACTED:8858
+        dashboard: ${SENTINEL_DASHBOARD:localhost:8858}
         port: 8719
-        clientIp: REDACTED
+        clientIp: ${SENTINEL_CLIENT_IP:127.0.0.1}
       # 关闭懒加载，启动即初始化 Sentinel 客户端（确保规则立即可用）
       eager: true
 
@@ -24,7 +24,7 @@ spring:
 sentinel:
   nacos:
     enabled: true                                   # ← 改为 true 启用 Nacos 持久化
-    addr: ${NACOS_ADDR:REDACTED:8848}               # Nacos 服务地址，例如 nacos.example.com:8848
+    addr: ${NACOS_ADDR:localhost:8848}               # Nacos 服务地址，例如 nacos.example.com:8848
     namespace: ${NACOS_NAMESPACE:}                   # 命名空间 ID，public 命名空间留空
     username: ${NACOS_USERNAME:}                     # 仅当 Nacos 开启鉴权(authEnabled=true)才需要
     password: ${NACOS_PASSWORD:}
