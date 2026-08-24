@@ -24,7 +24,7 @@ class AuthDecisionTest {
     @BeforeEach
     void setUp() {
         JwtProperties props = new JwtProperties();
-        props.setSecret("REDACTED-abcdefghijklmnop");
+        props.setSecret("chaos-demo-secret-key-please-replace-32-bytes");
         props.setAccessTokenTtl(30 * 60 * 1000L);
         jwtProvider = new JwtProvider(props);
         decision = new AuthDecision(jwtProvider);
@@ -63,7 +63,7 @@ class AuthDecisionTest {
     @Test
     void unauthorized_whenExpired() {
         JwtProperties shortLived = new JwtProperties();
-        shortLived.setSecret("REDACTED-abcdefghijklmnop");
+        shortLived.setSecret("chaos-demo-secret-key-please-replace-32-bytes");
         shortLived.setAccessTokenTtl(-1000L);
         JwtProvider p = new JwtProvider(shortLived);
         LoginUser user = new LoginUser(1L, "admin", Collections.singleton("user:read"));

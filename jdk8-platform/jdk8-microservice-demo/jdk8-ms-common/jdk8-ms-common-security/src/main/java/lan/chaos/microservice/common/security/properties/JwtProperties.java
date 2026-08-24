@@ -15,7 +15,7 @@ public class JwtProperties {
      * 签名密钥。HS256 要求 >= 256 位（32 字节）。
      * 生产务必用高熵随机串并放 KMS/配置中心，泄露即任何人可伪造 token。
      */
-    private String secret = "REDACTED-abcdefghijklmnop";
+    private String secret = "chaos-demo-secret-key-please-replace-32-bytes";
 
     /** 访问令牌有效期（毫秒），默认 30 分钟——短命是为了「泄露影响面小」。 */
     private long accessTokenTtl = 30 * 60 * 1000L;

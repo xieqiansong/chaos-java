@@ -82,7 +82,7 @@ class UserControllerTest {
 
     private JwtProvider realProvider() {
         JwtProperties props = new JwtProperties();
-        props.setSecret("REDACTED-abcdefghijklmnop");
+        props.setSecret("chaos-demo-secret-key-please-replace-32-bytes");
         return new JwtProvider(props);
     }
 

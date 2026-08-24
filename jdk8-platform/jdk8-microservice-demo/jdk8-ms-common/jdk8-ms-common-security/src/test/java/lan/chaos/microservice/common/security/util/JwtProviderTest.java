@@ -21,7 +21,7 @@ class JwtProviderTest {
 
     private JwtProvider newProvider() {
         JwtProperties props = new JwtProperties();
-        props.setSecret("REDACTED-abcdefghijklmnop");
+        props.setSecret("chaos-demo-secret-key-please-replace-32-bytes");
         props.setAccessTokenTtl(30 * 60 * 1000L);
         return new JwtProvider(props);
     }
@@ -53,7 +53,7 @@ class JwtProviderTest {
         JwtProvider provider = newProvider();
         // 把过期时间设为负数 → 签发时 exp 已早于 now → 校验失败
         JwtProperties props = new JwtProperties();
-        props.setSecret("REDACTED-abcdefghijklmnop");
+        props.setSecret("chaos-demo-secret-key-please-replace-32-bytes");
         props.setAccessTokenTtl(-1000L);
         JwtProvider shortLived = new JwtProvider(props);
 

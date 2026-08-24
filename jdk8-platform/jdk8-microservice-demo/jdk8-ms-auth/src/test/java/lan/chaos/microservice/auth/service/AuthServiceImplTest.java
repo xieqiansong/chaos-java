@@ -30,7 +30,7 @@ class AuthServiceImplTest {
     @BeforeEach
     void setUp() {
         JwtProperties props = new JwtProperties();
-        props.setSecret("REDACTED-abcdefghijklmnop");
+        props.setSecret("chaos-demo-secret-key-please-replace-32-bytes");
         props.setAccessTokenTtl(30 * 60 * 1000L);
         props.setRefreshTokenTtl(7 * 24 * 60 * 60 * 1000L);
         jwtProvider = new JwtProvider(props);

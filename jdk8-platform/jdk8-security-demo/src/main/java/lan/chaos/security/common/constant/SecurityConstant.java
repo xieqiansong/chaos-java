@@ -25,5 +25,5 @@ public final class SecurityConstant {
      * JWT 签名密钥（HS256 要求 >= 256 位）。生产应放配置中心/KMS，绝硬编码。
      * 这里固定 32 字节串仅为演示，长度满足算法要求。
      */
-    public static final String JWT_SECRET = "REDACTED!!";
+    public static final String JWT_SECRET = "chaos-demo-secret-key-please-replace-32-bytes";
 }

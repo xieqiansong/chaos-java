@@ -37,7 +37,7 @@ class PermissionInterceptorOrderTest {
     @BeforeEach
     void setUp() {
         JwtProperties props = new JwtProperties();
-        props.setSecret("REDACTED-abcdefghijklmnop");
+        props.setSecret("chaos-demo-secret-key-please-replace-32-bytes");
         jwtProvider = new JwtProvider(props);
 
         OrderService orderService = mock(OrderService.class);

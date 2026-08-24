@@ -37,4 +37,4 @@ ms:
   security:
     # 与鉴权服务共享同一密钥（否则验签失败）；生产走配置中心/环境变量
     jwt:
-      secret: ${JWT_SECRET:REDACTED-abcdefghijklmnop}
+      secret: ${JWT_SECRET:chaos-demo-secret-key-please-replace-32-bytes}
