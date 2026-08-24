@@ -8,3 +8,8 @@
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/
+
+# 以下为本地/机器相关文件，不提交（其余文件均提交以保留多 JDK 与编译配置）
+/leetcode/
+*.log
+/.fleet/

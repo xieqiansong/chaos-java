@@ -10,8 +10,7 @@ target/
 target/generated-sources/
 generated-sources/
 
-# IDE
-.idea/
+# IDE（.idea 需提交以保留多 JDK / 编译配置，内部忽略规则见 .idea/.gitignore）
 *.iml
 *.ipr
 *.iws
