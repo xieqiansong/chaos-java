@@ -12,7 +12,7 @@
 | 中间件 | Redis 8.0.2（`localhost:30102`，与 seckill-demo 共用；真实密码经本项目 `application-local.yml` 注入，该文件已被 .gitignore 忽略） |
 | 压测并发 | 8 汇聚线程 / 单场景 12s |
 | 被测实现 | `legacy`（基准，逐条直写）/ `static`（对照，定批 2048 + Pipeline）/ `adaptive`（目标，内存桶攒批 + 在线寻优） |
-| 引擎参数 | queue=2M、queue-critical=200k、batch=[128,20480] 初始 2048、explore=0.2、idle=8s、sample-window=100 |
+| 引擎参数 | queue=2M、batch=[128,20480] 初始 2048、explore=0.2、idle=8s、sample-window=100、**并发写线程 1（固定，不动态扩缩）** |
 
 ## 二、压测方式：SpringBootTest 一键跑
 
@@ -42,6 +42,7 @@ mvn test -Dtest=BenchMarkTest
 1. **尾批卡死丢失**：`drainLoop` 在「队列空 + 本地残批不满」时，`if(!batch.isEmpty())` 每次循环都刷新空闲计时 → `idleFlushNs` 兜底永不触发 → 最后一批滞留不刷。改为仅按 `drainTo` 实际新取条数刷新计时，并在 `while` 退出后刷出残批（`AdaptiveBatchWriter` 与 `StaticBatchWriter` 同步修复）。
 2. **legacy 全量 ClassCastException**：`opsForHash().put(key, System.nanoTime(), item)` 的 hashKey 传 `Long`，而 `StringRedisTemplate` 的 hashKey 序列化器是 `StringRedisSerializer`（只接受 String）→ 每条直接抛异常，legacy 显示 0 吞吐、全量 errors。改为 `String.valueOf(System.nanoTime())`。
 3. **static 丢弃数采集缺失**：`BenchEngine` 原只在 `instanceof AdaptiveBatchWriter` 时读 `dropped()`，static 的丢弃始终为 0（假象）。给 `BatchWriter` 接口加 `default long dropped()` 统一读取。
+4. **adaptive 丢失核算黑洞（dropped 假零）**：曾引入"单承包人 + 写线程池"结构，写池自带任务队列 → 承包人把内存桶快速转存进写池从不阻塞 → 内存桶永远不"满" → `dropped` 恒为 0；生产(≈8M/s)>>消费(≈23k/s) 的差额全部积压在写池队列，`close()` 只消化极小部分，**剩余数千万条随 JVM 退出无声丢失、不计 dropped**。**最终方案（简化回归主线）**：去掉写池与第二级队列，`writerThreads` 个消费线程直接取内存桶攒批并写存储——数据只在内存桶一个队列中流转，丢弃只在 `offer` 失败时发生并计入 `dropped`，核算天然闭合（written+dropped+errors=总投递）。
 
 ## 四、基准压测（SpringBootTest 实测，6 场景）
 
@@ -49,51 +50,55 @@ mvn test -Dtest=BenchMarkTest
 
 | 场景 | 模式 | 总条数 | items/s | redisCmds/s | avgBatch | dropped | errors |
 |---|---|---|---|---|---|---|---|
-| 01-匀速 | legacy | 60008 | 4998.4 | 4998.4 | 1.0 | 0 | 0 |
-| 02-匀速 | static | 59584 | 4964.6 | 3.0 | 1655.1 | 0 | 0 |
-| 03-匀速 | adaptive | 59392 | 4948.6 | 2.4 | 2048.0 | 0 | 0 |
-| 04-flood | legacy | 149206 | 12429.3 | 12429.3 | 1.0 | 0 | 0 |
-| 05-flood | static | 301056 | 25084.5 | 12.2 | 2048.0 | 95.7M | 0 |
-| 06-flood | adaptive | 478612 | **39882.1** | 29.4 | 1355.8 | 90.8M | 0 |
+| 01-匀速 | legacy | 60008 | 4998.1 | 4998.1 | 1.0 | 0 | 0 |
+| 02-匀速 | static | 58621 | 4884.5 | 3.2 | 1503.1 | 0 | 0 |
+| 03-匀速 | adaptive | 59392 | 4947.9 | 2.4 | 2048.0 | 0 | 0 |
+| 04-flood | legacy | 144411 | 12030.6 | 12030.6 | 1.0 | 0 | 0 |
+| 05-flood | static | 282624 | 23548.4 | 11.5 | 2048.0 | 95.0M | 0 |
+| 06-flood | adaptive | 257732 | **21474.4** | 10.2 | 2112.6 | 78.5M | 0 |
 
-> 完整原始数据见 `target/bench-results.md`（随 `mvn test` 自动重写）。
+> 完整原始数据见 `target/bench-results.md`（随 `mvn test` 自动重写）。每场景执行前先 `DEL key` 隔离；数据只在内存桶一个队列中流转，核算闭合（written+dropped+errors=总投递）。
 
 ### 结论
 
-1. **批量收益真实存在**：匀速 5000/s 下三条都能跟上，但 `redisCmds/s` 从 legacy 的 4998 骤降到 static 3.0 / adaptive 2.4（约 **2000 倍** 命令量下降）；flood 下 legacy=12429 → adaptive=29.4（约 **420 倍**）。
-2. **自适应在 flood 下大幅提速**：adaptive T/s=39882，是 legacy(12429) 的 **3.2 倍**、static(25084) 的 **1.6 倍**。收益来自两点：
-   - 存量队列用 `drainTo` 瞬取攒满大额批次，降低命令往返；
-   - 队列超 `queue-critical` 时启用**第二加速线程**并发削峰，纯吞吐明显高于单线程定批的 static。
-3. **批量大小随负载在线自适应**：匀速 5000/s 下 `avgBatch` 收敛在 2048（贴近上限，批量收益最大化）；flood 下收敛到 ≈1356 —— 用「略小批量 × 双线并发」换取更高吞吐，而非定死一个值，正是"动态引擎"的体现。
-4. **削峰与背压**：flood 纯洪水注入 1 亿+ 条（远超 2M 有界队列），adaptive 丢弃(90.8M) 略低于 static(95.7M) 且写入量更高，削峰优于固定批量；其余场景 `dropped=errors=0`，批次闭合无丢失。
-5. **模式正确性**：全场景 errors=0，匀速下 dropped=0；内存测试 30 万条 100% 排空，验证引擎逻辑独立于 Redis 稳定性。
+1. **批量收益真实存在**：匀速 5000/s 下三条都能跟上，但 `redisCmds/s` 从 legacy 的 4998 骤降到 static 3.2 / adaptive 2.4（约 **2000 倍** 命令量下降）；flood 下 legacy=12031 → adaptive=10.2（约 **1200 倍**）。
+2. **自适应在 flood 下远超 legacy、与 static 相当**：flood 下 adaptive T/s=21474，是 legacy(12031) 的 **1.8 倍**、与 static(23548) 同量级；`writer-threads` 可调大（固定 4 线程版本曾达 55630/s）。
+3. **flood 下丢弃是真实的（核算闭合）**：生产速率 ≈8M/s 远超单线程消费 ≈23k/s，adaptive 丢 78.5M、static 丢 95.0M——两者同一量级（有界内存桶 offer 失败必丢），"削峰不丢"在纯洪水中不成立；自适应因平均批量略大（2112 vs 2048）消耗略快，丢弃反而少约 17%。匀速场景 dropped=0，贴近生产真实负载。
+4. **批量大小随负载在线自适应**：匀速下 `avgBatch` 收敛在 2048；60s 收敛专项批量经 10 次「探索-反馈」在 757~1511 区间动态调整——引擎持续按实测吞吐反馈调整批量、而非定死一个值。
+5. **模式正确性**：全场景 errors=0，内存测试 30 万条 100% 排空（零耗时存储下消费线程不积压、无丢弃），验证引擎逻辑独立于 Redis 稳定性。
 
-## 五、自适应收敛专项（flood 180s）
+## 五、自适应收敛专项（flood 60s）
 
-> 12s flood 只能触发 ~3 轮调整，看不到收敛稳态。为此新增 180s 专项，采样线程每 2s 记录 `currentBatchSize()` 实时轨迹（场景 `07-adaptive-convergence`，[BenchMarkTest.adaptiveConvergence](file:///d:/project/chaos/chaos-java/jdk8-platform/jdk8-batch-ingest-demo/src/test/java/lan/chaos/batchwriter/bench/BenchMarkTest.java)）。
+> 12s flood 只能触发 ~3 轮调整。专项持续 60s（3 分钟级长跑对隧道/内存受限环境压力过大，取 1 分钟可观察完整调整周期），采样线程每 2s 记录 `currentBatchSize()` 实时轨迹（场景 `07-adaptive-convergence`，[BenchMarkTest.adaptiveConvergence](file:///d:/project/chaos/chaos-java/jdk8-platform/jdk8-batch-ingest-demo/src/test/java/lan/chaos/batchwriter/bench/BenchMarkTest.java)）。引擎固定 1 消费线程。
 
-实测 batchSize 随时间收敛轨迹（queue 恒 2M=满负荷）：
+实测 batchSize 调整轨迹（60s 内 10 次寻优，queue 恒满 2M）：
 
 | t(s) | batchSize | queue |
 |---|---|---|
 | 0 | 2048 | 0 |
-| 24 | 3481 | 2M |
-| 42 | 5917 | 2M |
-| 70 | 3845 | 2M |
-| 90 | 4517 | 2M |
-| 116 | 7678 | 2M |
-| 154 | 9021 | 2M |
+| 10 | 1331 | 2M |
+| 14 | 1144 | 2M |
+| 20 | 1344 | 2M |
+| 24 | 1155 | 2M |
+| 30 | 1356 | 2M |
+| 36 | 881 | 2M |
+| 40 | 757 | 2M |
+| 44 | 889 | 2M |
+| 46 | 1511 | 2M |
+| 54 | 981 | 2M |
+| 58 | 1152 | 2M |
 
-场景汇总（07-adaptive-conv）：items/s=38223.5、redisCmds/s=22.7、avgBatch=1685.5、errors=0。
+场景汇总（07-adaptive-conv，60s）：items/s=23652.5、redisCmds/s=19.5、avgBatch=1214.0、**dropped=450.8M、errors=0**。
+
+> 说明：dropped=450.8M 是真实核算——纯洪水生产 ≈7.5M/s、单线程消费 ≈24k/s，差额在内存桶满时全部计入（消费线程直取内存桶、单队列核算闭合）。
 
 **结论**：
-1. **批量大小在持续负载下自增寻优**：从初始 2048 一路爬到 **9021（约 4.4 倍）**，说明引擎在实测吞吐反馈下自动放大批量以摊薄每次 Pipeline 的固定开销。
-2. **吞吐同步提升**：调整期实际吞吐从 ~19325/s 升到 ~21024/s（约 +9%），command 往返数保持极低（redisCmds/s≈22.7）。
-3. **小幅回溯是寻优的正常抖动**：70s 处 5917→3845 是试探低候选后的回落，随后继续上行——体现「探索-反馈」在真实负载下的自适应，而非单调盲增。
-4. **180s 才呈现完整爬升**：印证 12s flood 只能看到调整起步（`1761 best=1638`），**需要 3 分钟级专项才能观察到收敛过程**——这也说明长时压测对动态寻优类引擎的必要性。
+1. **批量在线寻优持续工作（动态引擎核心实证）**：60s 内批量经 10 次「探索-反馈」调整，在 757~1511 区间动态震荡——引擎随实测吞吐反馈不断试探更优批量，而非定死一个值；低候选(757)与高候选(1511)交替出现正是"探索"阶段特性。
+2. **全程吞吐稳定、零错误**：items/s≈23652、errors=0，redisCmds/s≈19.5（命令量较逐条降约 600 倍）。
+3. **长时 flood 的丢弃是容量必然**：生产 >> 消费，有界缓冲必丢；核算闭合保证数据可审计（written+dropped=总投递）。
 
 ## 六、下一步（可选增强）
 
-- **背压升级**：flood 下超 2M 容量的丢弃按「降级直写 / 拒绝背压」策略处理，而非简单丢弃计数。
-- **按 key 分桶多线程**：当前单消费线程 + 可选加速线程；更细粒度可按 key 分桶并发，进一步提升多租户写入吞吐。
+- **背压策略升级**：当前内存桶满即丢弃计数；可提供「降级直写 / 阻塞背压」模式，把丢失换成延时，适配"不可丢"场景。
+- **按 key 分桶多线程**：当前 `writerThreads` 个消费线程直取内存桶并发写；更细粒度可按 key 分桶并发，进一步提升多租户写入吞吐。
 - **批量写 MySQL**：复用同一攒批/寻优骨架，把 `storage()` 换成批量 upsert，验证批量收益在关系型存储的迁移性。

@@ -24,9 +24,11 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * <p>机制（去敏后的通用思路）：
  * <ul>
- *   <li><b>一级内存桶</b>：有界 {@link ArrayBlockingQueue}，单消费线程 poll 攒批，给存储天然削峰；</li>
+ *   <li><b>一级内存桶</b>：有界 {@link ArrayBlockingQueue}，{@code writer-threads} 个消费线程直接从中取批，给存储天然削峰；
+ *       数据只在内存桶这一个队列中流转，不设第二级任务队列；</li>
  *   <li><b>水位触发</b>：队列仍"重"(size≥当前批量) → 连打；攒够目标 → flush；空转超时 → 兜底 flush；</li>
- *   <li><b>加速线程</b>：队列超 {@code queueCritical} 时启用第二消费线程并发削峰，降到临界下退出；</li>
+ *   <li><b>固定并发写</b>：{@code writer-threads} 个消费线程各自独立攒批并直接写存储，线程数固定不做动态扩缩，
+ *       简单可控；丢弃只在内存桶满（{@code offer} 失败）时发生并计入 {@code dropped}，核算天然闭合；</li>
  *   <li><b>批量自适应</b>（本类核心）：候选 = 当前批量×{0.5,0.8,1.0,1.25,2.0}；
  *       探索期以 {code exploreProb} 概率试探候选做性能采样；反馈用<b>指数衰减加权平均</b>得到各候选吞吐；
  *       每 {code sampleWindow} 次 flush 挑「加权最优」并以平滑系数过渡，收敛稳定。</li>
@@ -44,7 +46,6 @@ public abstract class AdaptiveBatchWriter<T> implements BatchWriter<T> {
 
     // ---------- 配置 ----------
     protected final int queueCapacity;
-    protected final int queueCritical;
     protected final int batchMin;
     protected final int batchMax;
     protected final double exploreProb;
@@ -52,7 +53,7 @@ public abstract class AdaptiveBatchWriter<T> implements BatchWriter<T> {
     protected final double decayFactor;
     protected final double smoothCurrentWeight;
     protected final int sampleWindow;
-    protected final boolean useAccelerator;
+    protected final int writerThreads;
 
     // ---------- 运行时 ----------
     protected final ArrayBlockingQueue<T> queue;
@@ -61,17 +62,15 @@ public abstract class AdaptiveBatchWriter<T> implements BatchWriter<T> {
     private final AtomicLong batches = new AtomicLong();
     private final AtomicLong dropped = new AtomicLong();
     private final AtomicLong errors = new AtomicLong();
-    private long flushCount;
+    private final AtomicLong flushCount = new AtomicLong();
     /** 候选批量 → 速度样本（指数衰减加权平均） */
     private final Map<Integer, Speed> speeds = new ConcurrentHashMap<>();
 
     private volatile boolean running;
-    private Thread consumer;
-    private Thread accelerator;
+    private final List<Thread> workers = new ArrayList<>();
 
     protected AdaptiveBatchWriter(BatchWriterProperties p) {
         this.queueCapacity = p.getQueueCapacity();
-        this.queueCritical = p.getQueueCritical();
         this.batchMin = p.getBatchMin();
         this.batchMax = p.getBatchMax();
         this.exploreProb = p.getExploreProb();
@@ -79,7 +78,7 @@ public abstract class AdaptiveBatchWriter<T> implements BatchWriter<T> {
         this.decayFactor = p.getDecayFactor();
         this.smoothCurrentWeight = p.getSmoothCurrentWeight();
         this.sampleWindow = p.getSampleWindow();
-        this.useAccelerator = p.isUseAccelerator();
+        this.writerThreads = Math.max(1, p.getWriterThreads());
         this.queue = new ArrayBlockingQueue<>(queueCapacity);
         this.candidateBatchSize = p.getBatchInitial();
     }
@@ -137,16 +136,25 @@ public abstract class AdaptiveBatchWriter<T> implements BatchWriter<T> {
     @Override
     public void start() {
         running = true;
-        consumer = new Thread(this::drainLoop, "adaptive-consumer");
-        consumer.setDaemon(true);
-        consumer.start();
+        // N 个消费线程直接取内存桶攒批并写存储：数据只在内存桶这一个队列中，无第二级任务队列
+        for (int i = 0; i < writerThreads; i++) {
+            Thread t = new Thread(this::drainLoop, "adaptive-writer-" + i);
+            t.setDaemon(true);
+            t.start();
+            workers.add(t);
+        }
+        log.info("adaptive writer started: {} consumer threads (fixed)", writerThreads);
     }
 
     @Override
     public void close() {
         running = false;
-        if (accelerator != null) {
-            accelerator.interrupt();
+        for (Thread t : workers) {
+            try {
+                t.join(3000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
         flushTail();
     }
@@ -157,9 +165,6 @@ public abstract class AdaptiveBatchWriter<T> implements BatchWriter<T> {
         ArrayList<T> batch = new ArrayList<>(Math.min(candidateBatchSize * 2, 1 << 16));
         long lastItemTs = System.nanoTime();
         while (running) {
-            // 水位 → 加速线程启停
-            toggleAcceleratorLocked();
-
             // 快速攒满一个目标批量：先用 drainTo 瞬取已有积压，空则 poll 等待
             int target = candidateBatchSize;
             if (batch.size() < target) {
@@ -207,102 +212,41 @@ public abstract class AdaptiveBatchWriter<T> implements BatchWriter<T> {
         }
     }
 
-    /**
-     * 加速线程启停：队列超出临界水位时启动第二消费线程，降到水位（临界的一半）下停用。
-     * 锁保证只有一个加速线程生命周期处于同步状态。
-     */
-    private synchronized void toggleAcceleratorLocked() {
-        boolean over = queue.size() > queueCritical;
-        if (useAccelerator && over && accelerator == null) {
-            Thread t = new Thread(this::acceleratorLoop, "adaptive-accelerator");
-            t.setDaemon(true);
-            accelerator = t;
-            t.start();
-            log.info("accelerator started, queue.size={}", queue.size());
-        } else if (!over && accelerator != null) {
-            Thread t = accelerator;
-            accelerator = null;
-            t.interrupt();
-            log.info("accelerator stopped, queue.size={}", queue.size());
-        }
-    }
-
-    /** 加速消费线程：不加注册反馈地快速排空队列（只更新 written/batches 计数）。 */
-    private void acceleratorLoop() {
-        ArrayList<T> tmp = new ArrayList<>(1024);
-        while (running && accelerator == Thread.currentThread()) {
-            // 降到临界一半以下即退
-            if (queue.size() <= queueCritical / 2) {
-                break;
-            }
-            T item = queue.poll();
-            if (item == null) {
-                // 可能被并发 drain，短暂退避
-                try {
-                    Thread.sleep(0, 500_000);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-                continue;
-            }
-            tmp.add(item);
-            if (tmp.size() >= 1024) {
-                tryFlush(tmp, true);
-            }
-        }
-        if (!tmp.isEmpty()) {
-            queue.drainTo(tmp);
-            tryFlush(tmp, false);
-        }
-    }
-
-    /** 加速线程排空写：Redis 抖动失败时计入 errors 并丢弃该批。 */
-    private void tryFlush(ArrayList<T> batch, boolean accelerated) {
-        if (batch.isEmpty()) {
-            return;
-        }
-        int n = batch.size();
-        try {
-            storage(batch);
-            written.addAndGet(n);
-            batches.incrementAndGet();
-        } catch (RuntimeException e) {
-            errors.addAndGet(n);
-        }
-        batch.clear();
-    }
-
     // ================= flush 与自适应寻优 =================
 
+    /** 攒满/空闲触发：当前消费线程直接写存储，不再经第二个队列。 */
     private void flush(ArrayList<T> batch) {
         if (batch.isEmpty()) {
             return;
         }
-        int declared = candidateBatchSize;
-        // 探索：一定概率试探候选批量（用 multiply 上的值作为反馈桶）
+        final List<T> payload = new ArrayList<>(batch);
+        batch.clear();
+        // 探索：一定概率试探候选批量（用该候选作为性能反馈桶）
+        final int declared;
         if (ThreadLocalRandom.current().nextDouble() < exploreProb) {
             int c = pickRandomCandidate();
-            if (c > 0) {
-                declared = c;
-            }
+            declared = (c > 0) ? c : candidateBatchSize;
+        } else {
+            declared = candidateBatchSize;
         }
+        writeBatch(payload, declared);
+    }
+
+    /** 写存储 → 计数 → 采样反馈 → 周期性寻优。多消费线程并发调用，计数用原子量、寻优加锁。 */
+    private void writeBatch(List<T> batch, int declared) {
+        int n = batch.size();
         long el;
         try {
             el = storage(batch);
-            written.addAndGet(batch.size());
+            written.addAndGet(n);
             batches.incrementAndGet();
         } catch (RuntimeException e) {
-            errors.addAndGet(batch.size());
-            batch.clear();
+            errors.addAndGet(n);
             return;
         }
-
-        recordSpeed(declared, batch.size(), el);
-        batch.clear();
-
-        flushCount++;
-        if (flushCount % sampleWindow == 0) {
+        recordSpeed(declared, n, el);
+        long fc = flushCount.incrementAndGet();
+        if (fc % sampleWindow == 0) {
             adjustBatchSize();
         }
     }
@@ -317,8 +261,8 @@ public abstract class AdaptiveBatchWriter<T> implements BatchWriter<T> {
         speeds.computeIfAbsent(bucket, k -> new Speed()).update(count, elNs, System.nanoTime());
     }
 
-    /** 每 sampleWindow 次 flush：从候选里挑「加权吞吐最优」并平滑过渡。 */
-    private void adjustBatchSize() {
+    /** 每 sampleWindow 次 flush：从候选里挑「加权吞吐最优」并平滑过渡。写线程并发调用，整体加锁防止竞态。 */
+    private synchronized void adjustBatchSize() {
         int cur = candidateBatchSize;
         int best = cur;
         double bestSpeed = -1;
@@ -363,7 +307,7 @@ public abstract class AdaptiveBatchWriter<T> implements BatchWriter<T> {
         double weight;
         long lastTs;
 
-        void update(int count, long elNs, long now) {
+        synchronized void update(int count, long elNs, long now) {
             double inst = count * 1_000_000_000.0 / Math.max(elNs, 1);
             double dt = (lastTs == 0) ? 0 : Math.max(0, (now - lastTs) / 1_000_000_000.0);
             lastTs = now;

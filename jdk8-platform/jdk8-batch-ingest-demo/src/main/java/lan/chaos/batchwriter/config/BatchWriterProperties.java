@@ -47,6 +47,9 @@ public class BatchWriterProperties {
     /** 是否启用加速线程（突发削峰） */
     private boolean useAccelerator = true;
 
+    /** 并发写线程数（固定，不做动态扩缩；>=1） */
+    private int writerThreads = 1;
+
     public String getMode() {
         return mode;
     }
@@ -149,5 +152,13 @@ public class BatchWriterProperties {
 
     public void setUseAccelerator(boolean useAccelerator) {
         this.useAccelerator = useAccelerator;
+    }
+
+    public int getWriterThreads() {
+        return writerThreads;
+    }
+
+    public void setWriterThreads(int writerThreads) {
+        this.writerThreads = writerThreads;
     }
 }

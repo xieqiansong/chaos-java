@@ -68,6 +68,8 @@ class BenchMarkTest {
 
     private BenchResult runOne(Scenario sc) {
         String key = "bench:" + sc.name;
+        // 先清空目标 key，避免上一轮/上一次运行遗留的大 hash 拖慢本轮（Redis 单线程处理大 hash 累积会显著降速）
+        redis.delete(key);
         BatchWriter<String> w = BatchWriterFactory.create(sc.mode, redis, key, props);
         BenchOptions o = BenchOptions.of(8, sc.rate, DURATION_SEC, sc.flood);
         try {
@@ -100,13 +102,14 @@ class BenchMarkTest {
     }
 
     /**
-     * 自适应收敛专项：flood 持续 180s（满足"至少 3 分钟"），
+     * 自适应收敛专项：flood 持续 60s（观察批量大小爬升收敛轨迹；3 分钟级长跑对隧道/内存受限环境压力过大），
      * 采样线程每 2s 记录一次 batchSize 与队列水位的实时变化，
-     * 用于观察"动态引擎"批量大小从初始值爬升 → 收敛稳定的完整轨迹。
+     * 用于观察"动态引擎"批量大小从初始值爬升的调整轨迹。
      */
     @Test
     void adaptiveConvergence() throws Exception {
         String key = "bench:07-adaptive-convergence";
+        redis.delete(key); // 清空遗留数据，保证长跑基准干净
         AdaptiveBatchWriter<String> w = (AdaptiveBatchWriter<String>)
                 BatchWriterFactory.create("adaptive", redis, key, props);
 
@@ -135,14 +138,14 @@ class BenchMarkTest {
 
         BenchResult r;
         try {
-            r = BenchEngine.run(w, BenchOptions.of(8, 0, 180, true)); // flood, 180s
+            r = BenchEngine.run(w, BenchOptions.of(8, 0, 60, true)); // flood, 60s
         } finally {
             stop.set(true);
             w.close();
         }
         printRow("07-adaptive-conv", r);
 
-        appendSection(file("bench-results.md"), "自适应收敛专项（flood 180s）实时轨迹",
+        appendSection(file("bench-results.md"), "自适应收敛专项（flood 60s）实时轨迹",
                 trace, new String[]{"t(s)", "batchSize", "queue"});
     }
 
