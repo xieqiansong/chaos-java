@@ -21,6 +21,7 @@ public class StaticBatchWriter implements BatchWriter<String> {
     private final int batchSize;
     private final ArrayBlockingQueue<String> queue;
     private final long idleFlushNs;
+    private final int threads;
 
     private final AtomicLong written = new AtomicLong();
     private final AtomicLong batches = new AtomicLong();
@@ -28,14 +29,20 @@ public class StaticBatchWriter implements BatchWriter<String> {
     private final AtomicLong dropped = new AtomicLong();
 
     private volatile boolean running;
-    private Thread consumer;
+    private final List<Thread> consumers = new ArrayList<>();
 
+    /** 单消费线程构造（默认 threads=1，兼容内存测试）。 */
     public StaticBatchWriter(StringRedisTemplate redis, String key, int batchSize, int queueCapacity, long idleFlushNs) {
+        this(redis, key, batchSize, queueCapacity, idleFlushNs, 1);
+    }
+
+    public StaticBatchWriter(StringRedisTemplate redis, String key, int batchSize, int queueCapacity, long idleFlushNs, int threads) {
         this.redis = redis;
         this.key = key;
         this.batchSize = batchSize;
         this.queue = new ArrayBlockingQueue<>(queueCapacity);
         this.idleFlushNs = idleFlushNs;
+        this.threads = Math.max(1, threads);
     }
 
     @Override
@@ -70,14 +77,24 @@ public class StaticBatchWriter implements BatchWriter<String> {
     @Override
     public void start() {
         running = true;
-        consumer = new Thread(this::drainLoop, "static-consumer");
-        consumer.setDaemon(true);
-        consumer.start();
+        for (int i = 0; i < threads; i++) {
+            Thread t = new Thread(this::drainLoop, "static-consumer-" + i);
+            t.setDaemon(true);
+            t.start();
+            consumers.add(t);
+        }
     }
 
     @Override
     public void close() {
         running = false;
+        for (Thread t : consumers) {
+            try {
+                t.join(3000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
         // 刷出剩余
         flushTail();
     }

@@ -50,6 +50,9 @@ public class BatchWriterProperties {
     /** 并发写线程数（固定，不做动态扩缩；>=1） */
     private int writerThreads = 1;
 
+    /** static 实现的固定批量大小（对照用；adaptive 不读此值） */
+    private int staticBatchSize = 512;
+
     public String getMode() {
         return mode;
     }
@@ -160,5 +163,13 @@ public class BatchWriterProperties {
 
     public void setWriterThreads(int writerThreads) {
         this.writerThreads = writerThreads;
+    }
+
+    public int getStaticBatchSize() {
+        return staticBatchSize;
+    }
+
+    public void setStaticBatchSize(int staticBatchSize) {
+        this.staticBatchSize = staticBatchSize;
     }
 }

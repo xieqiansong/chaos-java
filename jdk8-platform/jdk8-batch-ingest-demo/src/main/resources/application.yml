@@ -43,9 +43,11 @@ batchingest:
   smooth-current-weight: 0.3
   # 每 N 次 flush 调整一次批量大小
   sample-window: 100
-  # 并发写线程数（固定，不做动态扩缩；>=1）。数据只在内存桶一个队列中流转，
-  # 这些线程直接从中取批并写存储，不设第二级任务队列。
-  writer-threads: 1
+  # 并发写/消费线程数（固定，不做动态扩缩；>=1）。static 与 adaptive 共用。
+  # 数据只在内存桶一个队列中流转，这些线程直接从中取批并写存储，不设第二级任务队列。
+  writer-threads: 2
+  # static 实现的固定批量大小（对照用；adaptive 不读此值，仍由 batch-initial 起步寻优）
+  static-batch-size: 512
 
   # ===== 压测参数（启动时 --batchingest.bench.enabled=true 触发）=====
   bench:

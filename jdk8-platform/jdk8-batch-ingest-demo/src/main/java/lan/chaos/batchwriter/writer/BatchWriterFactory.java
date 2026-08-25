@@ -20,7 +20,8 @@ public final class BatchWriterFactory {
             case "legacy":
                 return new LegacyRedisWriter(redis, key);
             case "static":
-                return new StaticBatchWriter(redis, key, p.getBatchInitial(), p.getQueueCapacity(), p.getIdleFlushMs());
+                return new StaticBatchWriter(redis, key, p.getStaticBatchSize(), p.getQueueCapacity(),
+                        p.getIdleFlushMs(), p.getWriterThreads());
             case "adaptive":
             default:
                 return new RedisAdaptiveBatchWriter(redis, key, p);
