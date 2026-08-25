@@ -120,6 +120,11 @@ public abstract class AdaptiveBatchWriter<T> implements BatchWriter<T> {
         return candidateBatchSize;
     }
 
+    /** 当前队列水位（监控/收敛采样用） */
+    public int queueSize() {
+        return queue.size();
+    }
+
     public long dropped() {
         return dropped.get();
     }

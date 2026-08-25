@@ -1,6 +1,7 @@
 package lan.chaos.batchwriter.bench;
 
 import lan.chaos.batchwriter.config.BatchWriterProperties;
+import lan.chaos.batchwriter.writer.AdaptiveBatchWriter;
 import lan.chaos.batchwriter.writer.BatchWriter;
 import lan.chaos.batchwriter.writer.BatchWriterFactory;
 import org.junit.jupiter.api.Test;
@@ -12,10 +13,12 @@ import org.springframework.test.context.ActiveProfiles;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -96,6 +99,53 @@ class BenchMarkTest {
         assertTrue(adaptiveBatch > 1, "adaptive 平均批量应 > 1，实际=" + adaptiveBatch);
     }
 
+    /**
+     * 自适应收敛专项：flood 持续 180s（满足"至少 3 分钟"），
+     * 采样线程每 2s 记录一次 batchSize 与队列水位的实时变化，
+     * 用于观察"动态引擎"批量大小从初始值爬升 → 收敛稳定的完整轨迹。
+     */
+    @Test
+    void adaptiveConvergence() throws Exception {
+        String key = "bench:07-adaptive-convergence";
+        AdaptiveBatchWriter<String> w = (AdaptiveBatchWriter<String>)
+                BatchWriterFactory.create("adaptive", redis, key, props);
+
+        List<String[]> trace = new ArrayList<>();
+        AtomicBoolean stop = new AtomicBoolean(false);
+        Thread sampler = new Thread(() -> {
+            long t0 = System.currentTimeMillis();
+            int last = -1;
+            while (!stop.get()) {
+                int bs = w.currentBatchSize();
+                if (bs != last) {
+                    long s = (System.currentTimeMillis() - t0) / 1000L;
+                    trace.add(new String[]{String.valueOf(s), String.valueOf(bs), String.valueOf(w.queueSize())});
+                    last = bs;
+                }
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        }, "convergence-sampler");
+        sampler.setDaemon(true);
+        sampler.start();
+
+        BenchResult r;
+        try {
+            r = BenchEngine.run(w, BenchOptions.of(8, 0, 180, true)); // flood, 180s
+        } finally {
+            stop.set(true);
+            w.close();
+        }
+        printRow("07-adaptive-conv", r);
+
+        appendSection(file("bench-results.md"), "自适应收敛专项（flood 180s）实时轨迹",
+                trace, new String[]{"t(s)", "batchSize", "queue"});
+    }
+
     private static void printRow(String name, BenchResult r) {
         System.out.printf(Locale.ROOT, "[%-18s] items/s=%.1f redis/s=%.1f avgBatch=%.1f dropped=%d errors=%d%n",
                 name, r.itemsPerSec, r.redisPerSec, r.avgBatchSize, r.dropped, r.errors);
@@ -124,6 +174,20 @@ class BenchMarkTest {
         StringBuilder sb = new StringBuilder();
         sb.append("# bench-results (SpringBootTest)\n\n");
         sb.append("> 由 mvn test 生成，Redis 8 @30102，8 汇聚线程，每场景 12s。\n\n");
+        renderTable(sb, rows, header);
+        Files.write(Paths.get(path), sb.toString().getBytes(StandardCharsets.UTF_8));
+    }
+
+    /** 追加一节 markdown（用于收敛专项等非汇总结果的分段输出）。 */
+    static void appendSection(String path, String sectionTitle, List<String[]> rows, String[] header) throws Exception {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n## ").append(sectionTitle).append("\n\n");
+        renderTable(sb, rows, header);
+        Files.write(Paths.get(path), sb.toString().getBytes(StandardCharsets.UTF_8),
+                StandardOpenOption.APPEND);
+    }
+
+    private static void renderTable(StringBuilder sb, List<String[]> rows, String[] header) {
         for (String h : header) {
             sb.append("| ").append(h);
         }
@@ -137,6 +201,5 @@ class BenchMarkTest {
             sb.append(String.join(" | ", r));
             sb.append(" |\n");
         }
-        Files.write(Paths.get(path), sb.toString().getBytes(StandardCharsets.UTF_8));
     }
 }

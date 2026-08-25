@@ -68,7 +68,31 @@ mvn test -Dtest=BenchMarkTest
 4. **削峰与背压**：flood 纯洪水注入 1 亿+ 条（远超 2M 有界队列），adaptive 丢弃(90.8M) 略低于 static(95.7M) 且写入量更高，削峰优于固定批量；其余场景 `dropped=errors=0`，批次闭合无丢失。
 5. **模式正确性**：全场景 errors=0，匀速下 dropped=0；内存测试 30 万条 100% 排空，验证引擎逻辑独立于 Redis 稳定性。
 
-## 五、下一步（可选增强）
+## 五、自适应收敛专项（flood 180s）
+
+> 12s flood 只能触发 ~3 轮调整，看不到收敛稳态。为此新增 180s 专项，采样线程每 2s 记录 `currentBatchSize()` 实时轨迹（场景 `07-adaptive-convergence`，[BenchMarkTest.adaptiveConvergence](file:///d:/project/chaos/chaos-java/jdk8-platform/jdk8-batch-ingest-demo/src/test/java/lan/chaos/batchwriter/bench/BenchMarkTest.java)）。
+
+实测 batchSize 随时间收敛轨迹（queue 恒 2M=满负荷）：
+
+| t(s) | batchSize | queue |
+|---|---|---|
+| 0 | 2048 | 0 |
+| 24 | 3481 | 2M |
+| 42 | 5917 | 2M |
+| 70 | 3845 | 2M |
+| 90 | 4517 | 2M |
+| 116 | 7678 | 2M |
+| 154 | 9021 | 2M |
+
+场景汇总（07-adaptive-conv）：items/s=38223.5、redisCmds/s=22.7、avgBatch=1685.5、errors=0。
+
+**结论**：
+1. **批量大小在持续负载下自增寻优**：从初始 2048 一路爬到 **9021（约 4.4 倍）**，说明引擎在实测吞吐反馈下自动放大批量以摊薄每次 Pipeline 的固定开销。
+2. **吞吐同步提升**：调整期实际吞吐从 ~19325/s 升到 ~21024/s（约 +9%），command 往返数保持极低（redisCmds/s≈22.7）。
+3. **小幅回溯是寻优的正常抖动**：70s 处 5917→3845 是试探低候选后的回落，随后继续上行——体现「探索-反馈」在真实负载下的自适应，而非单调盲增。
+4. **180s 才呈现完整爬升**：印证 12s flood 只能看到调整起步（`1761 best=1638`），**需要 3 分钟级专项才能观察到收敛过程**——这也说明长时压测对动态寻优类引擎的必要性。
+
+## 六、下一步（可选增强）
 
 - **背压升级**：flood 下超 2M 容量的丢弃按「降级直写 / 拒绝背压」策略处理，而非简单丢弃计数。
 - **按 key 分桶多线程**：当前单消费线程 + 可选加速线程；更细粒度可按 key 分桶并发，进一步提升多租户写入吞吐。
