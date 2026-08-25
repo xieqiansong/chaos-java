@@ -31,6 +31,7 @@
         <module>jdk8-zookeeper-demo</module>
         <module>jdk8-microservice-demo</module>
         <module>jdk8-starter-demo</module>
+        <module>jdk8-ratelimiter-demo</module>
     </modules>
 
     <properties>

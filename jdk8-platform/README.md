@@ -43,7 +43,8 @@
 | 19 | `jdk8-seckill-demo` | ✅ 完成 | 秒杀综合实战：Redis 分桶库存 + Lua 扣减 + Redisson 锁 + Kafka 异步下单 + 令牌桶限流 |
 | 20 | `jdk8-short-link-demo` | ✅ 完成 | 短链综合实战：Snowflake+Base62 短码 + 布隆过滤器防穿透 + Redis 缓存 + PG 持久化 |
 | 21 | `jdk8-starter-demo` | ✅ 完成 | Spring Boot Starter 自动装配机制：自动配置类 + `@ConfigurationProperties` 外部化配置 + `@ConditionalOnProperty`/`@ConditionalOnMissingBean` 条件装配 + 命名约定（`xxx-spring-boot-starter`），纯内存零外部依赖，以单元测试为核心验证 |
-| 22 | `jdk8-common` | 🟡 占位 | 公共基础模块占位，承载跨 demo 的公共工具/实体 |
+| 22 | `jdk8-ratelimiter-demo` | ✅ 完成 | 多租户分布式限流对比：Redis+Lua → 本地+Redis（部分精度换高性能）。SpringBoot 整合，REST 演示 `/api/ratelimiter/*`，压测由 `--ratelimiter.bench.*` 属性驱动（吞吐/延迟/Redis 负载/超限率），含 docker-compose |
+| 23 | `jdk8-common` | 🟡 占位 | 公共基础模块占位，承载跨 demo 的公共工具/实体 |
 
 ## 模块详情（同按重要程度排序）
 
@@ -69,6 +70,8 @@
 - **jdk8-scheduler-demo**：覆盖 @Scheduled 三种触发模型（cron/fixedRate/fixedDelay）/ Quartz 内存 RAMJobStore / XXL-JOB 执行端+分片处理器（admin 条件化启用），含 docker-compose。
 - **jdk8-starter-demo**：基于 Spring Boot 2.7 自动装配机制，**功能次要、机制为主**。以零依赖的 `token-spring-boot-starter` 为载体，覆盖：① 自动配置类 `TokenAutoConfiguration` 经 `META-INF/spring/...AutoConfiguration.imports` 被主动加载；② `@ConfigurationProperties`（`token.starter.*`）外部化配置与默认值；③ `@ConditionalOnProperty` 可开关 + `@ConditionalOnMissingBean` 可被用户自定义覆盖；④ 第三方 starter 命名约定 `xxx-spring-boot-starter`。使用方 `StarterUsageApplication` 演示「引依赖即 `@Autowired` 即用」，控制台 `DemoApp.main` 分节打印三场景，单元测试 `TokenAutoConfigurationTest` 断言装配/绑定/关闭/覆盖四条契约。
 - **jdk8-common**：公共基础模块占位（`App.java`），后续承载跨 demo 的公共工具/实体。
+
+- **jdk8-ratelimiter-demo**：多租户分布式限流三实现对比，SpringBoot 整合（根包 `lan.chaos.ratelimiter`）：`redis-lua`（基准，每请求 Redis+Lua 令牌桶，全局精确）/ `local-redis`（优化，本地令牌桶 + 每窗口 Redis 校准）/ `local-only`（纯本地，性能下界）。REST 接口演示放行与指标（`/api/ratelimiter/*`），压测由 `--ratelimiter.bench.*` 属性驱动（吞吐/延迟/Redis 负载/超限率），单元测试无需 Redis 直接跑、需 Redis 用例经 `Assumptions` 跳过。开发计划与压测结果见 `temp/开发计划-01-多租户分布式限流.md`。
 
 ## 备注与待办
 

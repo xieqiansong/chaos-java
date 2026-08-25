@@ -1,0 +1,8 @@
+services:
+  redis:
+    image: redis:7
+    container_name: rate-limiter-redis
+    ports:
+      # 与 seckill-demo 对齐，宿主 30102（若本机已有 30102 Redis 可注释掉本段）
+      - "30102:6379"
+    command: redis-server --requirepass redis123 --appendonly yes

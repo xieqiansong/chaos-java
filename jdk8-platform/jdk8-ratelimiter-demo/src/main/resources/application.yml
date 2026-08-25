@@ -1,0 +1,51 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: rate-limiter-demo
+
+  # ======== Redis 配置（Lettuce 连接池）=======
+  redis:
+    host: localhost
+    # 与 seckill-demo 共用同一 Redis 实例（本机 30102）
+    port: 30102
+    password: ${REDIS_PASSWORD:redis123}
+    database: 0
+    timeout: 3000ms
+    lettuce:
+      pool:
+        max-active: 32
+        max-idle: 16
+        min-idle: 8
+
+# ======== 限流配置 ========
+ratelimiter:
+  # 默认实现：local-redis | redis-lua | local-only（REST 接口按此选用）
+  mode: local-redis
+  # 租户全局限额 QPS
+  default-qps: 1000
+  # 本地+Redis 校准窗口（毫秒）
+  window-ms: 1000
+  # 本地突发容量倍数
+  burst-multiplier: 1.5
+
+  # ===== 压测参数（启动时 --ratelimiter.bench.enabled=true 触发）=====
+  bench:
+    enabled: false
+    mode: local-redis
+    threads: 8
+    qps: 500
+    limit: 1000
+    duration-sec: 10
+    nodes: 4
+    burst-multiplier: 1.5
+    window-ms: 1000
+    tenants: 1
+    flood: false
+    skew: -1
+
+# ======== 日志配置 ========
+logging:
+  level:
+    lan.chaos.ratelimiter: INFO

@@ -1,5 +1,6 @@
 package lan.chaos.microservice.common.log.mask;
 
+import cn.hutool.core.util.StrUtil;
 import lan.chaos.microservice.common.log.annotation.Sensitive;
 import org.junit.jupiter.api.Test;
 
@@ -76,9 +77,9 @@ class SensitiveMaskerTest {
 
     @Test
     void shouldTruncateOversizedString() {
-        String big = "a".repeat(500);
+        String big = StrUtil.repeat('a', 500);
         String out = SensitiveMasker.mask(big);
         assertTrue(out.endsWith("(truncated)"), "超长字符串被截断");
-        assertFalse(out.contains("a".repeat(500)));
+        assertFalse(out.contains(StrUtil.repeat('a', 500)));
     }
 }
