@@ -13,9 +13,10 @@
     <artifactId>jdk21-tech</artifactId>
     <packaging>pom</packaging>
     <name>jdk21-tech</name>
-    <description>JDK21 真实项目技术点 Demo 聚合模块：多级缓存(M1)、虚拟线程(M2，待做)、接口幂等(M3，待做)、数据库调优(M4 已完成)</description>
+    <description>JDK21 技术点 Demo 聚合模块：多级缓存、接口幂等、虚拟线程、数据库调优、工作流、安全合规等单一技术点的可运行示例</description>
 
     <modules>
         <module>jdk21-multilevel-cache-demo</module>
+        <module>jdk21-idempotent</module>
     </modules>
 </project>

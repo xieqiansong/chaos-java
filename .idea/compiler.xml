@@ -22,8 +22,8 @@
           <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
           <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
-        <module name="jdk21-common" />
-        <module name="jdk21-base" />
+        <module name="jdk21-multilevel-cache-demo" />
+        <module name="jdk8-flink-cdc-sync-demo" />
       </profile>
       <profile name="Annotation profile for jdk25-platform" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -353,15 +353,6 @@
         </processorPath>
         <module name="jdk8-zookeeper-demo" />
       </profile>
-      <profile name="Annotation profile for jdk8-flink-cdc-sync-demo" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-        </processorPath>
-        <module name="jdk8-flink-cdc-sync-demo" />
-      </profile>
       <profile name="Annotation profile for jdk8-platform" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -372,6 +363,33 @@
           <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok-mapstruct-binding/0.2.0/lombok-mapstruct-binding-0.2.0.jar" />
         </processorPath>
         <module name="jdk8-mapstruct-demo" />
+      </profile>
+      <profile name="Annotation profile for jdk21-base" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="jdk21-base" />
+      </profile>
+      <profile name="Annotation profile for jdk21-common" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="jdk21-common" />
+      </profile>
+      <profile name="Annotation profile for jdk21-idempotent" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="jdk21-idempotent" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
