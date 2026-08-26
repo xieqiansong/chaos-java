@@ -5,6 +5,8 @@ import lan.chaos.kafka.batch.BatchProducer;
 import lan.chaos.kafka.common.constant.KafkaConstants;
 import lan.chaos.kafka.filter.FilterConsumer;
 import lan.chaos.kafka.filter.FilterProducer;
+import lan.chaos.kafka.isolate.IsolateConsumer;
+import lan.chaos.kafka.isolate.IsolateProducer;
 import lan.chaos.kafka.order.OrderConsumer;
 import lan.chaos.kafka.order.OrderProducer;
 import lan.chaos.kafka.retry.DeadLetterConsumer;
@@ -45,7 +47,9 @@ import static org.junit.jupiter.api.Assertions.*;
                 KafkaConstants.TOPIC_TRANSACTION,
                 KafkaConstants.TOPIC_RETRY,
                 KafkaConstants.TOPIC_RETRY_DLT,
-                KafkaConstants.TOPIC_FILTER
+                KafkaConstants.TOPIC_FILTER,
+                KafkaConstants.TOPIC_ISOLATE_A,
+                KafkaConstants.TOPIC_ISOLATE_B
         },
         brokerProperties = {
                 "transaction.state.log.replication.factor=1",
@@ -71,6 +75,9 @@ class KafkaScenarioTest {
 
     @Autowired private FilterProducer filterProducer;
     @Autowired private FilterConsumer filterConsumer;
+
+    @Autowired private IsolateProducer isolateProducer;
+    @Autowired private IsolateConsumer isolateConsumer;
 
     // ==================== Simple ====================
 
@@ -239,5 +246,30 @@ class KafkaScenarioTest {
         await().atMost(Duration.ofSeconds(10))
                 .untilAsserted(() -> assertEquals(1, filterConsumer.getReceived().size(),
                         "只有 ORDER 类型的消息应该被处理"));
+    }
+
+    // ==================== Isolate（多业务域并发隔离） ====================
+
+    @Test
+    void isolate_slowDomain_shouldNotBlockFastDomain() {
+        isolateConsumer.clear();
+
+        // 先发「慢域」消息（重计算 ~800ms），紧接着发「快域」消息（轻量 ~50ms）。
+        // 若共用线程池，快域会因慢域占满而延迟；域隔离下快域应即时完成、不晚于慢域。
+        String slowKey = "slow-" + System.nanoTime();
+        String fastKey = "fast-" + System.nanoTime();
+        isolateProducer.sendToSlowDomain(slowKey, "slow-domain-msg");
+        isolateProducer.sendToFastDomain(fastKey, "fast-domain-msg");
+
+        // 两个域都应各自处理完成
+        await().atMost(Duration.ofSeconds(10))
+                .untilAsserted(() -> {
+                    assertEquals(1, isolateConsumer.getSlowCount(), "慢域消息应被处理");
+                    assertEquals(1, isolateConsumer.getFastCount(), "快域消息应被处理");
+                });
+
+        // 核心断言：快域处理完成时间不晚于慢域 —— 证明慢域阻塞未拖垮快域（域隔离生效）
+        assertTrue(isolateConsumer.isFastFinishedBeforeOrWithSlow(),
+                "快域处理应不晚于慢域完成，证明业务域并发隔离生效");
     }
 }

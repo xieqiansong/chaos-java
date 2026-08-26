@@ -47,7 +47,9 @@ public class KafkaConfig {
                 topic(KafkaConstants.TOPIC_TRANSACTION),
                 topic(KafkaConstants.TOPIC_RETRY),
                 topic(KafkaConstants.TOPIC_RETRY_DLT),
-                topic(KafkaConstants.TOPIC_FILTER)
+                topic(KafkaConstants.TOPIC_FILTER),
+                topic(KafkaConstants.TOPIC_ISOLATE_A),
+                topic(KafkaConstants.TOPIC_ISOLATE_B)
         );
     }
 
@@ -94,6 +96,29 @@ public class KafkaConfig {
         // 重试 1 次（共 2 次投递）后进死信；间隔 500ms，教学观察足够且不拖慢测试
         DefaultErrorHandler errorHandler = new DefaultErrorHandler(recoverer, new FixedBackOff(500L, 1L));
         factory.setCommonErrorHandler(errorHandler);
+        return factory;
+    }
+
+    /**
+     * 多业务域并发隔离专用 ContainerFactory——仅 {@code IsolateConsumer} 引用。
+     *
+     * <p><b>为什么需要独立线程池：</b>单监听器绑多个 Topic 时，默认共用一个消费线程池；
+     * 若某业务域（如 B 域重计算）处理慢，会占满线程、拖累其它域（如 A 域轻量处理）。
+     * 隔离逻辑落在 {@code IsolateConsumer} 内部：收到消息后按 Topic（业务域）路由到
+     * <b>该域专属的 {@code ExecutorService}</b>，实现<b>域间并发隔离</b>——慢域阻塞不会拖慢快域。</p>
+     *
+     * <p><b>设计取舍：</b>这里只配置独立 ack 模式（RECORD，逐条确认，避免慢域任务未结束就提交 offset）；
+     * 真正的域线程池在 consumer 内惰性创建（每域一个）。线程池生命周期随 Spring 容器管理。
+     * 注：Spring Kafka 2.8.x 的 {@code ConcurrentKafkaListenerContainerFactory} 无
+     * {@code setConsumerTaskExecutor}（高版本才有），故域隔离通过 consumer 内提交域线程池实现，更通用。</p>
+     */
+    @Bean("isolateContainerFactory")
+    public ConcurrentKafkaListenerContainerFactory<String, String> isolateContainerFactory(
+            ConsumerFactory<String, String> consumerFactory) {
+        ConcurrentKafkaListenerContainerFactory<String, String> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory);
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.RECORD);
         return factory;
     }
 }

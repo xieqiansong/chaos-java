@@ -40,9 +40,12 @@ jdk8-kafka-demo/src/main/java/lan/chaos/kafka/
 └── filter/                              # Header 消息过滤 ★★☆
     ├── FilterProducer.java              # 发送带 type header 的消息
     └── FilterConsumer.java              # 按 header 做本地过滤（只处理 ORDER 类型）
+└── isolate/                             # 多业务域并发隔离 ★☆☆
+    ├── IsolateProducer.java             # 分别向快域/慢域 Topic 发送消息
+    └── IsolateConsumer.java             # 单监听器多 Topic，按域路由到独立线程池
 ```
 
-> 设计要点：**能力场景是顶层包**（`simple/batch/order/transaction/retry/filter`），`config/constant/model` 这类「配置与支撑」只是学习边缘关注，统一收进 `common/`（与 `jdk8-rocketmq-demo` 和 `jdk8-redis-demo` 的包结构一致）。
+> 设计要点：**能力场景是顶层包**（`simple/batch/order/transaction/retry/filter/isolate`），`config/constant/model` 这类「配置与支撑」只是学习边缘关注，统一收进 `common/`（与 `jdk8-rocketmq-demo` 和 `jdk8-redis-demo` 的包结构一致）。
 
 ## 场景一览（按使用频率排序）
 
@@ -57,6 +60,7 @@ jdk8-kafka-demo/src/main/java/lan/chaos/kafka/
 - [分区有序 order](#3-分区有序-order-) → `KafkaScenarioTest#order_sameKey_shouldArriveInOrder` / `#order_diffKey_mayArriveInterleaved`
 - [Exactly-Once 事务 transaction](#4-exactly-once-事务-transaction-) → `KafkaScenarioTest#transaction_commit_shouldDeliverBothMessages` / `#transaction_rollback_shouldNotDeliver`
 - [消息过滤 filter](#6-消息过滤-filter-) → `KafkaScenarioTest#filter_onlyOrderType_shouldBeConsumed`
+- [多业务域并发隔离 isolate](#7-多业务域并发隔离-isolate-) → `KafkaScenarioTest#isolate_slowDomain_shouldNotBlockFastDomain`
 
 ---
 
@@ -148,6 +152,28 @@ Kafka 无服务端消息过滤，利用消息 Header 做本地判断（zero brok
 验证：发送 ORDER / LOG / ALERT 各一条，断言 `FilterConsumer.received` 只有 1 条 ORDER 消息。
 
 **与 RocketMQ Tag 过滤对比：** RocketMQ Tag 在 Broker 侧服务端过滤（消费者根本收不到非匹配消息，省带宽）；Kafka 需要消费者侧自行判断，消息仍被拉取到本地但业务跳过。
+
+---
+
+### 7. 多业务域并发隔离 isolate `★☆☆`
+
+一个 `@KafkaListener` 同时订阅多个业务域 Topic，收到消息后按 Topic（业务域）路由到**该域专属线程池**异步处理，实现域间并发隔离——慢域任务阻塞不会拖垮快域。
+
+| 类 | 说明 |
+|----|------|
+| `isolate/IsolateProducer.java` | 分别向快域 `TOPIC_ISOLATE_A` / 慢域 `TOPIC_ISOLATE_B` 发送消息 |
+| `isolate/IsolateConsumer.java` | 单监听器订阅两域；`computeIfAbsent` 惰性创建域线程池，提交到对应池异步处理 |
+| `common/config/KafkaConfig.java` | `isolateContainerFactory`：独立 ack 模式（RECORD）；域线程池在 consumer 内按 Topic 惰性创建 |
+
+**为什么需要域隔离（核心痛点）：** 单监听器绑多 Topic 默认共用一个消费线程池。若某域处理慢（如重聚合/批量外呼），会占满线程、拖垮其它实时域。按域分配独立线程池后，慢域阻塞不影响快域。
+
+**监听器里为什么必须异步提交到域线程池：** 若在 `@KafkaListener` 方法内直接 `Thread.sleep` 或做重计算，会占用 consumer 线程，导致整个监听器停止 poll——其它域消息也跟着卡住。提交到域线程池后 consumer 线程立即返回继续拉取。
+
+**隔离证据（测试断言）：** 先发慢域消息（~800ms）、紧接发快域消息（~50ms）；断言「快域处理完成时间不晚于慢域」，即证明慢域未拖慢快域。
+
+验证：`KafkaScenarioTest#isolate_slowDomain_shouldNotBlockFastDomain` —— await 两个域各处理 1 条，且 `IsolateConsumer.isFastFinishedBeforeOrWithSlow() == true`。
+
+> 进阶方向：本场景以「Topic 即业务域」演示隔离。真实生产可进一步做「单 Topic 多业务域 + 按 key 哈希分域路由」「域级监控/限流」「慢域熔断降级」；Flink 实时链路的事件时间窗口、迟到容忍等机制可在此基础上类比（本 demo 仅覆盖消费侧，不引申 Flink 主 job）。
 
 ---
 
