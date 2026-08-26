@@ -1,0 +1,13 @@
+# 虚拟线程 Demo 配置（空壳）
+#
+# 演示相关 JVM 参数说明（非必需）：
+#   -Djdk.virtualThreadScheduler.parallelism=8   调度器并行度（载体线程数），默认 = 可用 CPU 核数
+#   -Djdk.virtualThreadScheduler.maxPoolSize=256  调度器最大池大小
+#
+# 修改载体线程数后再跑 CarrierObservation / PinningCompare，
+# 可观察「同时运行峰值/去重载体数」随并行度联动变化。
+spring:
+  application:
+    name: jdk21-virtualthread-demo
+  main:
+    banner-mode: "off"

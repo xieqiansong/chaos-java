@@ -18,5 +18,6 @@
     <modules>
         <module>jdk21-multilevel-cache-demo</module>
         <module>jdk21-idempotent-demo</module>
+        <module>jdk21-virtualthread-demo</module>
     </modules>
 </project>
