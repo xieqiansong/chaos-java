@@ -11,7 +11,7 @@
 |------|--------|------|------|
 | `jdk8-flink-cdc-sync-demo` | Flink CDC 同源库表同步 | ✅ | JDK8 |
 | `jdk8-hmac-auth-demo` | HMAC 无状态签名鉴权（签名/防重放/轮换/吞吐对比） | ✅ | JDK8 |
-| `jdk8-bitmap-stat-demo` | Bitmap 统计（在线状态/日活 BITOP/内存账/吞吐/大 key 拆分优化） | ✅ | JDK8 |
+| `jdk8-bitmap-stat-demo` | Bitmap 统计（在线状态/日活 BITOP/内存账/吞吐/大 key 拆分优化/HLL UV 对比） | ✅ | JDK8 |
 
 ## 运行方式
 ```bash
@@ -22,7 +22,7 @@ mvn -q -pl jdk8-tech/jdk8-flink-cdc-sync-demo test
 # HMAC 鉴权 Demo：测试 + 四场景演示
 mvn -q -pl jdk8-tech/jdk8-hmac-auth-demo test
 java -cp jdk8-tech/jdk8-hmac-auth-demo/target/classes lan.chaos.hmac.HmacAuthDemo
-# Bitmap 统计 Demo：测试 + 五场景演示
+# Bitmap 统计 Demo：测试 + 六场景演示
 mvn -q -pl jdk8-tech/jdk8-bitmap-stat-demo test
 java -cp jdk8-tech/jdk8-bitmap-stat-demo/target/classes lan.chaos.bitmap.BitmapStatDemo
 ```

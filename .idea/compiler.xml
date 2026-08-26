@@ -388,17 +388,6 @@
         </processorPath>
         <module name="jdk21-multilevel-cache-demo" />
       </profile>
-      <profile name="Annotation profile for jdk8-platform" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/mapstruct/mapstruct-processor/1.7.0.Beta2/mapstruct-processor-1.7.0.Beta2.jar" />
-          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok-mapstruct-binding/0.2.0/lombok-mapstruct-binding-0.2.0.jar" />
-        </processorPath>
-        <module name="jdk8-mapstruct-demo" />
-      </profile>
       <profile name="Annotation profile for jdk8-flink-cdc-sync-demo" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -415,8 +404,29 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
         <module name="jdk8-hmac-auth-demo" />
+      </profile>
+      <profile name="Annotation profile for jdk8-platform" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/mapstruct/mapstruct-processor/1.7.0.Beta2/mapstruct-processor-1.7.0.Beta2.jar" />
+          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok-mapstruct-binding/0.2.0/lombok-mapstruct-binding-0.2.0.jar" />
+        </processorPath>
+        <module name="jdk8-mapstruct-demo" />
+      </profile>
+      <profile name="Annotation profile for jdk8-bitmap-stat-demo" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="jdk8-bitmap-stat-demo" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
