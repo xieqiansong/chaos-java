@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>lan.chaos</groupId>
+        <artifactId>jdk8-platform</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>jdk8-tech</artifactId>
+    <packaging>pom</packaging>
+    <name>jdk8-tech</name>
+    <description>技术点示例组（JDK8 专属）。当前仅含 Flink CDC 同步 Demo；其余技术点因需 JDK21 放在 jdk21-tech。</description>
+
+    <modules>
+        <module>jdk8-flink-cdc-sync-demo</module>
+    </modules>
+</project>

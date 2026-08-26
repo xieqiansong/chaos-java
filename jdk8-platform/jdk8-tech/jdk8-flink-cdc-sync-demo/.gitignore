@@ -3,4 +3,5 @@ target/
 *.iml
 
 # 本地/测试环境配置（可能含明文密码，不入库）
+src/main/resources/application-test.properties
 src/main/resources/mysql-cdc-sync/application-test.properties

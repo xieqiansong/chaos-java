@@ -46,6 +46,7 @@
 | 22 | `jdk8-ratelimiter-demo` | ✅ 完成 | 多租户分布式限流对比：Redis+Lua → 本地+Redis（部分精度换高性能）。SpringBoot 整合，REST 演示 `/api/ratelimiter/*`，压测由 `--ratelimiter.bench.*` 属性驱动（吞吐/延迟/Redis 负载/超限率），含 docker-compose |
 | 23 | `jdk8-batch-ingest-demo` | ✅ 完成 | 批量入库引擎：内存桶攒批 + 水位触发 + **自适应批量大小在线寻优**（探索-反馈-平滑，类 AQM），flood 削峰（加速线程）。对照 legacy 逐条 / static 定批，SpringBootTest 一键跑压测生成 `bench-results.md`（命令量降 ~400 倍、吞吐升 ~3.2 倍） |
 | 24 | `jdk8-common` | 🟡 占位 | 公共基础模块占位，承载跨 demo 的公共工具/实体 |
+| 25 | `jdk8-tech` | ✅ 完成 | **技术点示例组（JDK8 专属）**：仅含 `jdk8-flink-cdc-sync-demo`（Flink CDC 同源库表同步，覆盖 Q1-Q5）。因 Flink 1.17 不兼容 JDK21，不能进 `jdk21-tech`，单独放此组。详见 `jdk8-tech/README.md`。 |
 
 ## 模块详情（同按重要程度排序）
 
