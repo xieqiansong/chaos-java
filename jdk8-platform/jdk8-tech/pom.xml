@@ -18,5 +18,6 @@
     <modules>
         <module>jdk8-flink-cdc-sync-demo</module>
         <module>jdk8-hmac-auth-demo</module>
+        <module>jdk8-bitmap-stat-demo</module>
     </modules>
 </project>
