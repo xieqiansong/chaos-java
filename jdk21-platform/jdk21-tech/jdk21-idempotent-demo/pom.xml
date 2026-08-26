@@ -10,7 +10,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jdk21-idempotent</artifactId>
+    <artifactId>jdk21-idempotent-demo</artifactId>
     <packaging>jar</packaging>
     <name>idempotent-demo</name>
     <description>接口幂等：请求级幂等号 + 并发双发事务兜底 / 消费级 messageId 去重 / 状态机级终态忽略</description>

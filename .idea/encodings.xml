@@ -31,8 +31,8 @@
     <file url="file://$PROJECT_DIR$/jdk21-platform/jdk21-common/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk21-platform/jdk21-newfeatures-demo/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk21-platform/jdk21-newfeatures-demo/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jdk21-platform/jdk21-tech/jdk21-idempotent/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jdk21-platform/jdk21-tech/jdk21-idempotent/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk21-platform/jdk21-tech/jdk21-idempotent-demo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk21-platform/jdk21-tech/jdk21-idempotent-demo/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk21-platform/jdk21-tech/jdk21-multilevel-cache-demo/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk21-platform/jdk21-tech/jdk21-multilevel-cache-demo/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk21-platform/jdk21-tech/src/main/java" charset="UTF-8" />
