@@ -11,6 +11,7 @@
     <modules>
         <module>jdk21-common</module>
         <module>jdk21-base</module>
+        <module>jdk21-tech</module>
     </modules>
 
   <properties>

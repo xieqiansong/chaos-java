@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: multilevel-cache-demo
+  # Redis 连接：本地无 Redis 时把 multilevel-cache.redis-enabled 置为 false，
+  # 框架会自动退化到内存版 L2（仅单进程演示，集群一致性不生效）。
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      database: 0
+      timeout: 3000ms
+
+multilevel-cache:
+  # true=连接真实 Redis(L2 为 Redis Hash + 版本号一致性)；false=使用内存版 L2(可开箱即跑)
+  redis-enabled: false
+  # Caffeine L1 配置
+  caffeine:
+    maximum-size: 10000
+    expire-after-write-seconds: 600
+  # Demo 业务：车辆缓存容量等
+  demo:
+    vehicle-biz-key: VEHICLE
