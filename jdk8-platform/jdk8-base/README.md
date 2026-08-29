@@ -114,7 +114,7 @@ mvn -pl jdk8-base exec:java -Dexec.mainClass=lan.chaos.simple.web.HttpServer
 - **为什么合并**：四份历史代码 + `jdk8-base-features-demo` 都是「Java 基础的碎片化练习」，各自独立成模块价值不大；合成 `jdk8-base` 后统一编译、便于速查，符合平台「一个能力一个模块」之外的「杂项归拢」诉求。
 - **包名保持不变**：五份来源的包根天然不冲突（`distributed.system.*` / `java.*` / `jdk8features.*` / 根级 `lan.chaos.*`），合并零改动即可共存。
 - **原 `common` 模块的 JMH 依赖**：`chaos-test` 原先依赖 old 仓库的 `common` 模块（仅提供 JMH），迁移时直接把 `jmh-core` / `jmh-generator-annprocess` 收进本模块，去掉对 `common` 的耦合。
-- **修正的一处 SPI Bug**：原 `META-INF/services` 文件名误写成 `lan.chaos.example.java.spi.Search`，与接口真实 FQN `lan.chaos.java.spi.Search` 不一致导致 `ServiceLoader` 加载不到实现；迁移时已改名修复，`SPIDemo` 现在能正确加载两个实现。
+- **修正的一处 SPI Bug**：原 `META-INF/services` 文件名误写成 `lan.chaos.temp.java.spi.Search`，与接口真实 FQN `lan.chaos.java.spi.Search` 不一致导致 `ServiceLoader` 加载不到实现；迁移时已改名修复，`SPIDemo` 现在能正确加载两个实现。
 - **JDK8 新特性合并**：原 `jdk8-base-features-demo` 模块的源码（`lan.chaos.jdk8features.*`）已完整移入本模块，测试由 JUnit 4 升级为 JUnit 5（`spring-boot-starter-test`），每个特性一个包 + 一条可断言 `*Test`。
 - **进阶方向**：分布式 ID 部分可补一个统一入口对比五种方案的吞吐/趋势；JMH 基准可加 `@BenchmarkMode`/`@Fork` 规范化并输出 JSON 报告。
 - **原 `javaagent` 模块的合并**：`SimpleAgent`（Premain，挂 `ClassFileTransformer` 打印每个被加载的类名）与 `DynamicAgent`（Agent-Class，支持 `attach` 动态挂载后打印已加载类数）合并进 `lan.chaos` 包。`java.lang.instrument` 是 JDK 自带，无需额外依赖。`jdk8-base` 本身是普通 demo 模块、未在主 jar 配置 agent manifest；若要实跑，需将这两个类单独打成带 `Premain-Class: lan.chaos.SimpleAgent` / `Agent-Class: lan.chaos.DynamicAgent` 的 jar（参考原 `javaagent` 模块的 `maven-jar-plugin` 配置），再用 `-javaagent:agent.jar=hello -jar your-app.jar` 挂载。
