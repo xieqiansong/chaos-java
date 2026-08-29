@@ -44,7 +44,7 @@ class CustomMapperTest {
     void toSummary_defaultValueAppliesWhenSourceNull() {
         // 关键坑点：defaultValue 仅在「源字段为 null」时生效，空串/0 不算
         User noLevel = User.builder()
-                .id("1").username("root").realName("管理员").email("root@confusion.lan")
+                .id("1").username("root").realName("管理员").email("root@example.com")
                 .gender(Gender.MALE).role(Role.ADMIN)
                 .birthday(LocalDate.of(1990, 1, 1))
                 .createdAt(LocalDateTime.of(2026, 7, 19, 10, 0, 0))

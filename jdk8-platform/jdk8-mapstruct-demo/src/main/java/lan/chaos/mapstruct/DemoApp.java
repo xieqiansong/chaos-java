@@ -31,7 +31,7 @@ public class DemoApp {
                 .id("1")
                 .username("root")
                 .password("root")
-                .email("root@confusion.lan")
+                .email("root@example.com")
                 .phone("12388888888")
                 .realName("管理员")
                 .gender(Gender.MALE)
