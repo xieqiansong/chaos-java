@@ -45,8 +45,9 @@
 | 21 | `jdk8-starter-demo` | ✅ 完成 | Spring Boot Starter 自动装配机制：自动配置类 + `@ConfigurationProperties` 外部化配置 + `@ConditionalOnProperty`/`@ConditionalOnMissingBean` 条件装配 + 命名约定（`xxx-spring-boot-starter`），纯内存零外部依赖，以单元测试为核心验证 |
 | 22 | `jdk8-ratelimiter-demo` | ✅ 完成 | 多租户分布式限流对比：Redis+Lua → 本地+Redis（部分精度换高性能）。SpringBoot 整合，REST 演示 `/api/ratelimiter/*`，压测由 `--ratelimiter.bench.*` 属性驱动（吞吐/延迟/Redis 负载/超限率），含 docker-compose |
 | 23 | `jdk8-batch-ingest-demo` | ✅ 完成 | 批量入库引擎：内存桶攒批 + 水位触发 + **自适应批量大小在线寻优**（探索-反馈-平滑，类 AQM），flood 削峰（加速线程）。对照 legacy 逐条 / static 定批，SpringBootTest 一键跑压测生成 `bench-results.md`（命令量降 ~400 倍、吞吐升 ~3.2 倍） |
-| 24 | `jdk8-common` | 🟡 占位 | 公共基础模块占位，承载跨 demo 的公共工具/实体 |
-| 25 | `jdk8-tech` | ✅ 完成 | **技术点示例组（JDK8 专属）**：仅含 `jdk8-flink-cdc-sync-demo`（Flink CDC 同源库表同步，覆盖 Q1-Q5）。因 Flink 1.17 不兼容 JDK21，不能进 `jdk21-tech`，单独放此组。详见 `jdk8-tech/README.md`。 |
+| 24 | `jdk8-servlet-filter-async-demo` | ✅ 完成 | 热路径 Servlet Filter 异步化：高频接口在 Filter 层（`HIGHEST_PRECEDENCE`）绕过 DispatcherServlet，手动读流 + 校验 + 异步提交即返回，Tomcat 线程即时释放。自包含 SpringBootTest 双 mode 对照（controller-sync / filter-async），量化「绕过 MVC 省下的链路 CPU」 |
+| 25 | `jdk8-common` | 🟡 占位 | 公共基础模块占位，承载跨 demo 的公共工具/实体 |
+| 26 | `jdk8-tech` | ✅ 完成 | **技术点示例组（JDK8 专属）**：仅含 `jdk8-flink-cdc-sync-demo`（Flink CDC 同源库表同步，覆盖 Q1-Q5）。因 Flink 1.17 不兼容 JDK21，不能进 `jdk21-tech`，单独放此组。详见 `jdk8-tech/README.md`。 |
 
 ## 模块详情（同按重要程度排序）
 
@@ -75,6 +76,7 @@
 
 - **jdk8-ratelimiter-demo**：多租户分布式限流三实现对比，SpringBoot 整合（根包 `lan.chaos.ratelimiter`）：`redis-lua`（基准，每请求 Redis+Lua 令牌桶，全局精确）/ `local-redis`（优化，本地令牌桶 + 每窗口 Redis 校准）/ `local-only`（纯本地，性能下界）。REST 接口演示放行与指标（`/api/ratelimiter/*`），压测由 `--ratelimiter.bench.*` 属性驱动（吞吐/延迟/Redis 负载/超限率），单元测试无需 Redis 直接跑、需 Redis 用例经 `Assumptions` 跳过。开发计划与压测结果见 `temp/开发计划-01-多租户分布式限流.md`。
 - **jdk8-batch-ingest-demo**：批量入库引擎三实现对比，SpringBoot 整合（根包 `lan.chaos.batchwriter`）：`legacy`（基准，逐条直写）/ `static`（对照，定批 + Pipeline）/ `adaptive`（目标，内存桶攒批 + 水位触发 + **批量大小在线寻优**）。核心 `AdaptiveBatchWriter`：一级有界队列 `ArrayBlockingQueue`、水位感知触发（满批 flush / 超 `queue-critical` 启用第二加速线程削峰 / `idle-flush-ms` 兜底）、自适应寻优（候选 ×{0.5,0.8,1.0,1.25,2.0} 探索 → 指数衰减加权速度反馈 → 平滑过渡）。`AdaptiveBatchWriterTest` 内存验证 30 万条 100% 无丢失；`BenchMarkTest`（@ActiveProfiles("local")，读本项目 `application-local.yml`）一键跑 6 场景生成 `target/bench-results.md`。实测 flood 下 adaptive T/s=39882（legacy 3.2×、static 1.6×），redisCmds/s 较 legacy 降 ~420 倍。开发计划与压测结果见 `temp/开发计划-02-Redis批量入库引擎.md`。
+- **jdk8-servlet-filter-async-demo**：热路径 Servlet Filter 异步化（根包 `lan.chaos.filterasync`）。`EarlyReportFilter`（`HIGHEST_PRECEDENCE`，拦截 `/*`）在 DispatcherServlet 之前截断最高频接口 `/api/report`：手动读流 + 校验 + `CompletableFuture.runAsync(..., 独立线程池)` 异步提交即返回，Tomcat 线程即时释放；`ReportController` 为完整 MVC 基线。`BenchMarkTest` 启动两次内嵌 Tomcat（属性 `app.mode=controller-sync` / `filter-async`），下游「异步提交即返回」刻意保持极轻（仅计数）以聚焦「链路 CPU 成本」，采集 req/s、p50/p99、Tomcat 忙线程、进程 CPU，生成 `target/bench-results.md`。开发计划与压测结果见模块 `README.md`。
 
 ## 备注与待办
 

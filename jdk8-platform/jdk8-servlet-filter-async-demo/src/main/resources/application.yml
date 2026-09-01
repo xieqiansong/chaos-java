@@ -1,0 +1,18 @@
+server:
+  port: 8089
+  tomcat:
+    # 开启 Tomcat MBean，供压测采集 currentThreadsBusy（忙线程数）
+    mbeanregistry:
+      enabled: true
+
+spring:
+  application:
+    name: servlet-filter-async-demo
+
+app:
+  # 默认优化模式；压测由 BenchMarkTest 切换为 controller-sync / filter-async
+  mode: filter-async
+
+logging:
+  level:
+    lan.chaos.filterasync: INFO

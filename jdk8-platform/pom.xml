@@ -33,6 +33,7 @@
         <module>jdk8-starter-demo</module>
         <module>jdk8-ratelimiter-demo</module>
         <module>jdk8-batch-ingest-demo</module>
+        <module>jdk8-servlet-filter-async-demo</module>
         <module>jdk8-tech</module>
     </modules>
 
