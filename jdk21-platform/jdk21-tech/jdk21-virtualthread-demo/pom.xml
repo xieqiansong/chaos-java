@@ -13,7 +13,12 @@
     <artifactId>jdk21-virtualthread-demo</artifactId>
     <packaging>jar</packaging>
     <name>virtualthread-demo</name>
-    <description>虚拟线程：平台线程 vs 虚拟线程吞吐对比 / 载体线程挂载卸载观察 / synchronized pinning 复现 / 结构化并发 / ThreadLocal 继承语义</description>
+    <description>虚拟线程：机制演示（吞吐对比 / 载体线程挂载卸载 / synchronized pinning / 结构化并发 / ThreadLocal 语义）+ 压测量化（IO 密集 / 饱和拒绝 / pinning 代价 / CPU 边界 / HTTP 服务）</description>
+
+    <properties>
+        <!-- 默认不跑压测矩阵（分钟级）；用 mvn test -Dbench=true 显式触发 -->
+        <bench>false</bench>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -49,6 +54,10 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>--enable-preview</argLine>
+                    <!-- 把 -Dbench 透传给测试 JVM，使 @EnabledIfSystemProperty 生效 -->
+                    <systemPropertyVariables>
+                        <bench>${bench}</bench>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
             <plugin>

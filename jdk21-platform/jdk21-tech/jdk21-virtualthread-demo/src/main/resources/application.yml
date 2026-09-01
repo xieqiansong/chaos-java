@@ -6,6 +6,9 @@
 #
 # 修改载体线程数后再跑 CarrierObservation / PinningCompare，
 # 可观察「同时运行峰值/去重载体数」随并行度联动变化。
+#
+# 压测层参数不在这里：任务数/并发/池大小等集中在 bench/BenchOptions 与各 BenchXxx 场景类的常量中，
+# 避免「配置两处、不知道哪个生效」。跑法见 README 与 TEST_REPORT.md。
 spring:
   application:
     name: jdk21-virtualthread-demo
