@@ -1,0 +1,105 @@
+{
+  "Name": "stockPurchaseSaga",
+  "Comment": "SAGA 官方状态机引擎：扣款 → 建单 → 扣库存，失败逆序补偿",
+  "StartState": "DeductAccount",
+  "Version": "0.0.1",
+  "States": {
+    "DeductAccount": {
+      "Type": "ServiceTask",
+      "ServiceName": "sagaAccountService",
+      "ServiceMethod": "deduct",
+      "CompensateState": "CompensateDeductAccount",
+      "Input": [
+        "$.[userId]",
+        "$.[amount]"
+      ],
+      "Catch": [
+        {
+          "Exceptions": [
+            "java.lang.Throwable"
+          ],
+          "Next": "CompensationTrigger"
+        }
+      ],
+      "Next": "CreateOrder"
+    },
+    "CreateOrder": {
+      "Type": "ServiceTask",
+      "ServiceName": "sagaOrderService",
+      "ServiceMethod": "create",
+      "CompensateState": "CompensateCreateOrder",
+      "Input": [
+        "$.[userId]",
+        "$.[productId]",
+        "$.[amount]",
+        "$.[orderNo]"
+      ],
+      "Catch": [
+        {
+          "Exceptions": [
+            "java.lang.Throwable"
+          ],
+          "Next": "CompensationTrigger"
+        }
+      ],
+      "Next": "DeductStorage"
+    },
+    "DeductStorage": {
+      "Type": "ServiceTask",
+      "ServiceName": "sagaStorageService",
+      "ServiceMethod": "deduct",
+      "CompensateState": "CompensateDeductStorage",
+      "Input": [
+        "$.[productId]",
+        "$.[count]"
+      ],
+      "Catch": [
+        {
+          "Exceptions": [
+            "java.lang.Throwable"
+          ],
+          "Next": "CompensationTrigger"
+        }
+      ],
+      "Next": "Succeed"
+    },
+    "CompensateDeductAccount": {
+      "Type": "ServiceTask",
+      "ServiceName": "sagaAccountService",
+      "ServiceMethod": "compensateDeduct",
+      "Input": [
+        "$.[userId]",
+        "$.[amount]"
+      ]
+    },
+    "CompensateCreateOrder": {
+      "Type": "ServiceTask",
+      "ServiceName": "sagaOrderService",
+      "ServiceMethod": "compensateCreate",
+      "Input": [
+        "$.[orderNo]"
+      ]
+    },
+    "CompensateDeductStorage": {
+      "Type": "ServiceTask",
+      "ServiceName": "sagaStorageService",
+      "ServiceMethod": "compensateDeduct",
+      "Input": [
+        "$.[productId]",
+        "$.[count]"
+      ]
+    },
+    "CompensationTrigger": {
+      "Type": "CompensationTrigger",
+      "Next": "Fail"
+    },
+    "Succeed": {
+      "Type": "Succeed"
+    },
+    "Fail": {
+      "Type": "Fail",
+      "ErrorCode": "PURCHASE_FAILED",
+      "Message": "购买流程失败"
+    }
+  }
+}

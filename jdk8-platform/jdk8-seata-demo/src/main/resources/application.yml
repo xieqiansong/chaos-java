@@ -1,4 +1,8 @@
 spring:
+  application:
+    # Seata 客户端 applicationId / 状态机引擎 app_name 来源
+    name: jdk8-seata-demo
+
   # ================================
   # 数据源：默认 H2 内存库，单元测试开箱即跑
   # docker-compose 场景通过命令行 --spring.datasource.url=... 覆盖
@@ -38,7 +42,8 @@ seata:
     vgroup-mapping:
       chaos-seata-tx-group: default
     grouplist:
-      default: 127.0.0.1:8091
+      # 本机默认部署端口：见 docker-compose.yml（宿主机 30107 映射容器 8091）
+      default: 127.0.0.1:30107
   config:
     type: file
   registry:

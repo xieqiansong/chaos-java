@@ -16,9 +16,10 @@ services:
   seata-server:
     image: seataio/seata-server:1.6.1
     container_name: seata-server
+    restart: unless-stopped
     ports:
-      - "7091:7091"   # Web 控制台（查看全局事务日志）
-      - "8091:8091"   # 事务协调端口（TM / RM 通信）
+      - "30106:7091"   # Web 控制台（查看全局事务日志）   ← 外层统一端口
+      - "30107:8091"   # 事务协调端口（TM / RM 通信）     ← 外层统一端口
     environment:
       # 注册中心类型：file 模式（文件直连，无需 Nacos / Eureka）
       - SEATA_REGISTRY_TYPE=file
@@ -26,8 +27,13 @@ services:
       - SEATA_CONFIG_TYPE=file
       # 存储模式：file（事务日志存本地文件，学习环境足够）
       - STORE_MODE=file
-      # Seata Server 控制台端口
-      - SEATA_PORT=7091
+      # 容器内 TC 监听端口（默认即 8091，显式写明更清晰）
+      - SEATA_PORT=8091
+      # 控制台端口已由镜像内置为 7091，无需再通过 SEATA_PORT 覆盖
+    deploy:
+      resources:
+        limits:
+          memory: 1G
 
   # ==================== MySQL（可选，生产模拟） ====================
   # 默认使用 H2 内存数据库（无需 MySQL），此服务供可选的生产化验证。
