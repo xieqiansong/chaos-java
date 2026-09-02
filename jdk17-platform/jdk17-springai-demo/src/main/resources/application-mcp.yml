@@ -1,0 +1,26 @@
+# MCP 客户端模式：连接本地最小 MCP 服务端（jdk17-mcp-server-demo，SSE 端点 http://localhost:30052）
+#
+# WHY：MCP 的价值是"跨进程、跨应用共享能力"——工具跑在独立服务端里，
+# 客户端只需声明连接信息，就能让模型调用远端工具，业务代码不感知网络细节。
+#
+# 运行前置：先启动 MCP 服务端
+#   cd jdk17-mcp-server-demo
+#   java -jar target/jdk17-mcp-server-demo-1.0-SNAPSHOT.jar
+#
+# 运行方式（与对话模型 profile 叠加使用）：
+#   mvn -pl jdk17-springai-demo test -Dspring.profiles.active=deepseek,mcp -Dtest=McpTest
+spring:
+  ai:
+    mcp:
+      client:
+        enabled: true
+        name: chaos-springai-client
+        version: 1.0.0
+        # SYNC：与服务端 type=SYNC 保持一致（同步工具方法）
+        type: SYNC
+        request-timeout: 30s
+        sse:
+          connections:
+            # 连接名可自定义；url 只填"协议+主机+端口"，sse-endpoint 默认 /sse
+            demo-server:
+              url: http://localhost:30052

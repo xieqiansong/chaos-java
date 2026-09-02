@@ -1,0 +1,22 @@
+server:
+  # 30050/30051 已被本机其他服务占用，故取 30052（与 30040 对话模型、30041 embedding 错开）
+  port: 30052
+
+spring:
+  application:
+    name: jdk17-mcp-server-demo
+  ai:
+    mcp:
+      server:
+        name: chaos-demo-mcp-server
+        version: 1.0.0
+        # SYNC：命令式工具方法（本例的 @McpTool 都是同步方法）
+        type: SYNC
+        # SSE：以 Server-Sent Events 对外提供 MCP 端点（默认 /sse）
+        protocol: SSE
+        annotation-scanner:
+          enabled: true
+
+logging:
+  level:
+    org.springframework.ai.mcp: INFO

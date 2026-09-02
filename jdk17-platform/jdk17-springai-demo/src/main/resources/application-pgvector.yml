@@ -1,0 +1,27 @@
+# PgVector 生产级向量存储模式
+#
+# WHY：内存版 SimpleVectorStore 重启即丢，只适合演示；真实业务需要持久化的向量库。
+# 由于 RagService 面向 VectorStore 抽象编程，切换存储只需激活本 profile，业务代码零改动。
+#
+# 运行方式（与对话模型 profile 叠加）：
+#   $env:PG_PASSWORD="..."     # 密码只走环境变量
+#   mvn -pl jdk17-springai-demo test -Dspring.profiles.active=deepseek,pgvector -Dtest=RagTest
+#
+# 安全约定：数据库密码只从环境变量 PG_PASSWORD 读取，严禁写入本文件（否则随仓库泄露）。
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:30101/postgres
+    username: postgres
+    password: ${PG_PASSWORD}
+  ai:
+    vectorstore:
+      # 真正的开关：PgVectorStore 自动配置靠 type=pgvector 激活（matchIfMissing=true，不设反而默认开）
+      type: pgvector
+      pgvector:
+        # 首次运行自动建表（含 vector 扩展）；生产建议交由 Flyway/Liquibase 管理
+        initialize-schema: true
+        # 必须与 embedding 模型维度一致：bge-m3 输出 1024 维，不匹配会导致入库失败
+        dimensions: 1024
+        index-type: HNSW
+        distance-type: COSINE_DISTANCE
+        table-name: vector_store

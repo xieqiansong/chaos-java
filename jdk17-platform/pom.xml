@@ -11,6 +11,9 @@
     <modules>
         <module>jdk17-common</module>
         <module>jdk17-base</module>
+        <module>jdk17-springai-demo</module>
+        <!-- 最小 MCP 服务端：供 jdk17-springai-demo 的 MCP 客户端连接演示 -->
+        <module>jdk17-mcp-server-demo</module>
     </modules>
 
     <properties>
@@ -24,6 +27,7 @@
 
         <!-- 统一版本管理（便于子模块继承） -->
         <spring-boot.version>3.5.14</spring-boot.version>
+        <spring-ai.version>1.1.0</spring-ai.version>
         <spring-cloud.version>2025.1.0</spring-cloud.version>
         <spring-cloud-alibaba.version>2025.0.0.0</spring-cloud-alibaba.version>
         <mybatis-plus.version>3.5.7</mybatis-plus.version>
@@ -45,6 +49,15 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- 2. Spring AI BOM (生成式 AI 统一抽象，1.1.x 对齐 Spring Boot 3.5.x，要求 JDK 17+) -->
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-bom</artifactId>
+                <version>${spring-ai.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

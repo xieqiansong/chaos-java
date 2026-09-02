@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: jdk17-springai-demo
+  ai:
+    openai:
+      # 本地 llama.cpp llama-server 的 OpenAI 兼容端点。
+      # 注意：Spring AI 的 completions-path 默认自带 /v1/chat/completions，base-url 不能再带 /v1，
+      # 否则会拼成 /v1/v1/chat/completions 导致 404。云端 OpenAI 兼容 API（DeepSeek 等）同样只填根地址。
+      base-url: http://localhost:30040
+      # llama-server 不校验 key，但 Spring AI 要求非空占位；换云端 API 时填真实 key
+      api-key: llama-local
+      chat:
+        options:
+          # 与 llama-server 实际加载的模型名保持一致（llama-server 以已加载模型应答）
+          model: Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M
+          temperature: 0.7
+      # Embedding 模型：与对话模型独立配置，这里指向本地 bge-m3（llama-server --embeddings --port 30041）。
+      # 注意：即使对话切到 DeepSeek，embedding 仍用本地模型（DeepSeek 不提供 embedding API）。
+      embedding:
+        base-url: http://localhost:30041
+        api-key: llama-local
+        options:
+          model: bge-m3
+    # MCP 客户端默认关闭：客户端启动时会主动连服务端，连不上会让整个 Spring 上下文启动失败、把所有测试拖红。
+    # 需要体验 MCP 时，用 -Dspring.profiles.active=deepseek,mcp 启用（配置见 application-mcp.yml）。
+    mcp:
+      client:
+        enabled: false
+    # 默认走内存版 SimpleVectorStore。必须显式把 type 设为非 pgvector 的值来关闭 PgVectorStore
+    # 自动配置——它的开关是 spring.ai.vectorstore.type=pgvector 且 matchIfMissing=true，
+    # 不设反而默认激活并强依赖数据源，会把整个应用上下文拖垮、所有测试变红。
+    vectorstore:
+      type: simple
+
+logging:
+  level:
+    # 生产可观察性：查看请求/响应（含 token 用量），学习阶段保持 ON 便于观察
+    org.springframework.ai.chat.client: INFO

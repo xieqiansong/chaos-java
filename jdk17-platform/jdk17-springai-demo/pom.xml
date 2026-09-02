@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>lan.chaos</groupId>
+        <artifactId>jdk17-platform</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>jdk17-springai-demo</artifactId>
+    <packaging>jar</packaging>
+    <name>jdk17-springai-demo</name>
+    <description>Spring AI 学习模块：对话/流式/记忆/工具调用/结构化输出/RAG 高频场景</description>
+
+    <dependencies>
+        <!-- Spring AI OpenAI 兼容 starter：统一对接本地 llama.cpp llama-server（OpenAI 兼容 /v1 端点）或任意兼容服务 -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-openai</artifactId>
+        </dependency>
+
+        <!-- 向量库抽象（VectorStore）与内存实现（SimpleVectorStore）。
+             RAG 的存储层统一走 VectorStore 接口，生产换 pgvector/milvus 时业务代码不用改。 -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-vector-store</artifactId>
+        </dependency>
+
+        <!-- MCP 客户端：连接 MCP 服务端（jdk17-mcp-server-demo）并复用其工具。
+             注意：客户端默认关闭（见 application.yml），避免未启动服务端时连接失败拖垮整个应用上下文。 -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-mcp-client</artifactId>
+        </dependency>
+
+        <!-- PgVector 向量库（生产级存储）。默认关闭，由 pgvector profile 启用；
+             未启用时仍走内存版 SimpleVectorStore，业务代码面向 VectorStore 抽象不变。 -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-vector-store-pgvector</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <!-- Spring AI @Tool 依赖编译期保留参数名（-parameters），否则工具参数退化为 arg0/arg1，Function Calling 无法绑定 -->
+                    <parameters>true</parameters>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- 与父 POM 的 includes 合并；测试输出含中文，统一 UTF-8，
+                         否则 Windows 下 fork JVM 跟随系统 GBK，控制台看到的是乱码 -->
+                    <argLine>-Dfile.encoding=UTF-8</argLine>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <configuration>
+                    <mainClass>lan.chaos.springai.SpringAiApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

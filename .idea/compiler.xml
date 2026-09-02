@@ -14,19 +14,6 @@
         <module name="jdk11-base" />
         <module name="jdk11-common" />
       </profile>
-      <profile name="Annotation profile for jdk25-platform" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-        </processorPath>
-        <module name="jdk25-base" />
-        <module name="jdk17-common" />
-        <module name="jdk17-base" />
-        <module name="jdk11-mybatis-plus-demo" />
-        <module name="jdk25-common" />
-      </profile>
       <profile name="Annotation profile for jdk8-base" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -377,42 +364,6 @@
         </processorPath>
         <module name="jdk8-zookeeper-demo" />
       </profile>
-      <profile name="Annotation profile for jdk21-base" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-        </processorPath>
-        <module name="jdk21-base" />
-      </profile>
-      <profile name="Annotation profile for jdk21-common" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-        </processorPath>
-        <module name="jdk21-common" />
-      </profile>
-      <profile name="Annotation profile for jdk21-idempotent-demo" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-        </processorPath>
-        <module name="jdk21-idempotent-demo" />
-      </profile>
-      <profile name="Annotation profile for jdk21-multilevel-cache-demo" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-        </processorPath>
-        <module name="jdk21-multilevel-cache-demo" />
-      </profile>
       <profile name="Annotation profile for jdk8-bitmap-stat-demo" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -447,15 +398,6 @@
         </processorPath>
         <module name="jdk8-mapstruct-demo" />
       </profile>
-      <profile name="Annotation profile for jdk8-servlet-filter-async-demo" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-        </processorPath>
-        <module name="jdk8-servlet-filter-async-demo" />
-      </profile>
       <profile name="Annotation profile for jdk8-flink-cdc-sync-demo" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -476,6 +418,26 @@
         </processorPath>
         <module name="jdk8-hmac-auth-demo" />
       </profile>
+      <profile name="Annotation profile for jdk17-platform" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="jdk21-base" />
+        <module name="jdk21-multilevel-cache-demo" />
+        <module name="jdk21-idempotent-demo" />
+        <module name="jdk17-base" />
+        <module name="jdk8-servlet-filter-async-demo" />
+        <module name="jdk17-mcp-server-demo" />
+        <module name="jdk17-springai-demo" />
+        <module name="jdk25-base" />
+        <module name="jdk17-common" />
+        <module name="jdk11-mybatis-plus-demo" />
+        <module name="jdk21-common" />
+        <module name="jdk25-common" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="jdk11-newfeatures-demo" target="11" />
@@ -489,6 +451,8 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="jdk17-mcp-server-demo" options="-parameters" />
+      <module name="jdk17-springai-demo" options="-parameters" />
       <module name="jdk21-virtualthread-demo" options="--enable-preview" />
       <module name="jdk25-base" options="--enable-preview" />
       <module name="jdk25-base-features-demo" options="--enable-preview" />

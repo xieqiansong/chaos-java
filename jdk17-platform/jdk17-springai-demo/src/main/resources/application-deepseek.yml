@@ -1,0 +1,26 @@
+# DeepSeek 云端验证模式
+#
+# WHY：DeepSeek API 兼容 OpenAI 协议，因此无需更换 starter——沿用 spring-ai-starter-model-openai，
+# 仅覆盖 base-url / api-key / model，业务代码与测试零改动。这正是 Spring AI「统一抽象、一套代码切模型」的价值。
+#
+# 激活方式（二选一）：
+#   1) mvn  -pl jdk17-springai-demo test -Dspring.profiles.active=deepseek
+#   2) $env:SPRING_PROFILES_ACTIVE="deepseek"
+#
+# 安全约定：API Key 只从环境变量 DEEPSEEK_API_KEY 读取，禁止写入本文件（否则随仓库泄露）。
+# Windows:  $env:DEEPSEEK_API_KEY="sk-xxxx"
+# Linux:    export DEEPSEEK_API_KEY=sk-xxxx
+spring:
+  ai:
+    openai:
+      base-url: https://api.deepseek.com
+      api-key: ${DEEPSEEK_API_KEY:}
+      chat:
+        options:
+          # 2026 年 DeepSeek 主力模型为 V4 系列：deepseek-v4-flash（便宜）/ deepseek-v4-pro（更强更贵）。
+          # 选 flash 用于日常学习验证，成本极低（输出约 4.5~9 元/百万 tokens，闲时半价）。
+          model: deepseek-v4-flash
+          # 注意：V4 默认开启思考模式，且思考模式下 temperature/top_p 等采样参数不生效。
+          # 与 llama.cpp 的关键差异：DeepSeek 的 max_tokens 只限制最终输出，思考 token 单独计量，
+          # 不会出现「思考占满预算导致 content 为空」的问题，因此流式/同步都能正常拿到 content。
+          temperature: 0.7
