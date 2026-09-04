@@ -50,6 +50,8 @@ class ExcelBenchTest {
 
         assertTrue(report.length() > 0, "横评报告必须生成");
         assertTrue(export.toMarkdown().contains("SXSSF"), "导出横评应覆盖 SXSSF 方案");
+        assertTrue(export.toMarkdown().contains("Hutool"), "导出横评应覆盖 Hutool 方案");
         assertTrue(anImport.toMarkdown().contains("SAX"), "导入横评应覆盖 SAX 方案");
+        assertTrue(anImport.toMarkdown().contains("Hutool"), "导入横评应覆盖 Hutool 方案");
     }
 }

@@ -5,6 +5,7 @@ import com.alibaba.excel.support.ExcelTypeEnum;
 import lan.chaos.excel.common.model.Order;
 import lan.chaos.excel.common.util.OutFiles;
 import lan.chaos.excel.common.util.Rows;
+import lan.chaos.excel.hutool.HutoolExcelService;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -18,7 +19,7 @@ import java.nio.file.Files;
 /**
  * 横评一：<b>导出</b>——同样 7 列数据，五种写法的耗时 / 内存 / 体积对比。
  *
- * <p>参与方：XSSF（全内存）、SXSSF（窗口 100 / 1000）、EasyExcel、CSV。
+ * <p>参与方：XSSF（全内存）、SXSSF（窗口 100 / 1000）、EasyExcel、CSV、Hutool（全内存封装）。
  *
  * <p><b>怎么读这张表</b>：
  * <ul>
@@ -33,9 +34,11 @@ import java.nio.file.Files;
 public class ExportBench {
 
     private final OutFiles outFiles;
+    private final HutoolExcelService hutoolExcelService;
 
-    public ExportBench(OutFiles outFiles) {
+    public ExportBench(OutFiles outFiles, HutoolExcelService hutoolExcelService) {
         this.outFiles = outFiles;
+        this.hutoolExcelService = hutoolExcelService;
     }
 
     public BenchResult run(int rows) {
@@ -46,6 +49,7 @@ public class ExportBench {
         bench(result, "SXSSF（窗口=1000）", rows, r -> sxssf(r, 1000));
         bench(result, "EasyExcel", rows, this::easyExcel);
         bench(result, "CSV（EasyExcel）", rows, this::csv);
+        bench(result, "Hutool（全内存封装）", rows, r -> hutoolExcelService.write(r));
         return result;
     }
 
