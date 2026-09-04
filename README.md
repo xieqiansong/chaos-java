@@ -1,7 +1,23 @@
 # chaos-java
 
 > Java 多版本生态下「**中间件最小可用设计**」学习聚合仓库。以 `jdk<version>-platform` 划分 Maven 聚合工程，一个平台承载一批可独立运行的 Demo，一个模块 = 一个技术点。
-> 平台划分、模块命名等全部约束见 [AGENTS.md](AGENTS.md)，本文件只做模块树形概述。
+
+## 从这里开始
+
+| 我想… | 去这里 |
+|---|---|
+| 找某个技术点的可运行实现 | **[技术点索引 `TECH-INDEX.md`](TECH-INDEX.md)** —— 按技术域组织，覆盖全部 5 个 JDK 平台 |
+| 查还缺什么、按什么顺序补 | [`TECH-INDEX.md` 末尾的 roadmap](TECH-INDEX.md#待补技术点与建设优先级) —— 11 项未完成 + P2–P4 优先级与依赖链 |
+| 了解平台划分与 Demo 规范 | [`AGENTS.md`](AGENTS.md) |
+| 浏览模块树 | 继续往下 |
+
+## 本仓库的三个差异点
+
+1. **五 JDK 版本矩阵**：同一技术点在不同 JDK 下的实现差异，都是真实约束踩出来的——MyBatis-Plus 拦截器因 `mybatis-plus-jsqlparser` 需 JDK 11+ 字节码，从 `jdk8` 整体迁至 `jdk11`；Flink 1.17 不兼容 JDK 21，Flink CDC 只能留在 `jdk8-tech`。
+2. **优化类 Demo 带量化结论**：批量入库吞吐 3.2×（Redis 命令量降约 420 倍）、虚拟线程 vs 平台线程 IO 密集压测与落地边界、热路径 Filter 异步化的吞吐/P99/忙线程对照、多租户限流三实现的吞吐与 Redis 负载对比。
+3. **笔记 ↔ 代码双向可跳**：[`chaos-notes`](https://github.com/xieqiansong/chaos-notes) 中的原理与压测数据均对应到本仓库可运行模块，见 [`TECH-INDEX.md`](TECH-INDEX.md) 的「笔记」列。
+
+> 本文件只做模块树形概述；平台划分、模块命名等全部约束见 [`AGENTS.md`](AGENTS.md)。
 
 ## 模块总览
 
@@ -88,4 +104,4 @@ jdk25-platform/
 
 ---
 
-各平台模块清单、技术栈与学习记录以模块内 `README.md` 为准；Java 技术全景与学习路线见 [jdk8-platform/JAVA-TECH-PANORAMA.md](jdk8-platform/JAVA-TECH-PANORAMA.md)。
+各平台模块清单、技术栈与学习记录以模块内 `README.md` 为准；按技术域检索全部平台、以及待补技术点与建设优先级，均见 [`TECH-INDEX.md`](TECH-INDEX.md)。
