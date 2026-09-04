@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>lan.chaos</groupId>
+        <artifactId>jdk8-platform</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>jdk8-office-tech</artifactId>
+    <packaging>pom</packaging>
+    <name>jdk8-office-tech</name>
+    <description>Office 文档处理专题组：Excel / Word / PDF 的导入导出与常见工具横评（JDK8 专属，POI 5.5.1 + EasyExcel 4.0.3 + PDFBox 3.0.6）。</description>
+
+    <modules>
+        <module>jdk8-excel-demo</module>
+        <module>jdk8-word-demo</module>
+        <module>jdk8-pdf-demo</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+
+        <!-- POI 5.5.1 官方测试依赖的版本（均兼容 Java 8）；高于 Spring Boot 2.7.18 BOM 管理的版本，故在此抬回。
+             其中 commons-compress 尤其关键：POI 5.4+ 的 zip 重复条目校验（CVE-2025-31672）与
+             zip bomb 防护都依赖它，被压回老版本等于把安全修复吃掉。 -->
+        <commons-codec.version>1.20.0</commons-codec.version>
+        <commons-collections4.version>4.5.0</commons-collections4.version>
+        <commons-lang3.version>3.18.0</commons-lang3.version>
+        <commons-compress.version>1.28.0</commons-compress.version>
+        <commons-io.version>2.21.0</commons-io.version>
+    </properties>
+
+    <!-- 本组范围内的版本覆盖：只作用于 jdk8-office-tech 及其子模块，
+         不会影响平台其他 25 个模块（那里仍由 Spring Boot BOM 说了算）。
+
+         WHY：Spring Boot 2.7.18 的 BOM 管理了 commons-codec / commons-collections4 / commons-lang3，
+         且版本低于 POI 5.5.1 官方测试依赖的版本。由于 dependencyManagement 会覆盖传递依赖，
+         若不在这里抬回去，POI 实际跑在它没测过的老 commons-* 上（enforcer 的 requireUpperBoundDeps 已证实）。 -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${commons-collections4.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>${commons-compress.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <!-- 依赖审计守卫：只在 Office 专题组开启，不影响平台其他 24 个模块。
+                 requireUpperBoundDeps —— 传递依赖不得低于直接依赖声明的版本（防 POI 版本被 EasyExcel 拖低）；
+                 banDuplicateClasses  —— 不同 jar 出现同名类立即失败（防 POI 5.2.5 与 5.5.1 同时被打进 classpath）。 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>office-dependency-audit</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireUpperBoundDeps>
+                                    <excludes>
+                                        <!-- log4j-api：Spring Boot BOM 会把它压到 2.17.x，POI 仅作日志门面使用，不影响功能 -->
+                                        <exclude>org.apache.logging.log4j:log4j-api</exclude>
+                                    </excludes>
+                                </requireUpperBoundDeps>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

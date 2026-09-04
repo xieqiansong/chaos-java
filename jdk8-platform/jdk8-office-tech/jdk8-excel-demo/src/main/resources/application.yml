@@ -1,0 +1,8 @@
+spring:
+  main:
+    banner-mode: off
+
+app:
+  excel:
+    # 各场景产出的 xlsx/xls 落盘目录（target/ 已被 .gitignore 忽略，不污染仓库）
+    out-dir: target/out

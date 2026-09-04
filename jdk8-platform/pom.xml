@@ -35,6 +35,7 @@
         <module>jdk8-batch-ingest-demo</module>
         <module>jdk8-servlet-filter-async-demo</module>
         <module>jdk8-tech</module>
+        <module>jdk8-office-tech</module>
     </modules>
 
     <properties>
@@ -60,6 +61,14 @@
         <guava.version>33.6.0-jre</guava.version>
         <lombok.version>1.18.46</lombok.version>
         <caffeine.version>2.9.3</caffeine.version>
+
+        <!-- Office 文档处理专题（jdk8-office-tech：Excel / Word / PDF 导入导出） -->
+        <!-- POI：4.0.1 起要求 Java 8+，5.5.1 是 JDK8 可用的最新版（POI 6 尚未 GA） -->
+        <poi.version>5.5.1</poi.version>
+        <!-- EasyExcel 4.0.3 是最新版，其传递依赖是 POI 5.2.5，必须由本 BOM 统一收敛到 ${poi.version} -->
+        <easyexcel.version>4.0.3</easyexcel.version>
+        <!-- PDFBox 3.0.x 支持 Java 8（4.0 起要求 Java 11）；版本与 POI 5.5.1 的 optional 依赖对齐 -->
+        <pdfbox.version>3.0.6</pdfbox.version>
 
         <!-- Maven 插件版本 -->
         <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
@@ -136,6 +145,38 @@
                 <groupId>com.github.ben-manes.caffeine</groupId>
                 <artifactId>caffeine</artifactId>
                 <version>${caffeine.version}</version>
+            </dependency>
+
+            <!-- ===== Office 文档处理（jdk8-office-tech）===== -->
+            <!-- Apache POI：Excel/Word/PPT 读写。注意 poi-ooxml 5.4+ 默认只带 poi-ooxml-lite，
+                 用到图表/绘图等完整 OOXML schema 时需显式替换成 poi-ooxml-full -->
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml-full</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <!-- EasyExcel：阿里基于 POI 的流式封装。Spring Boot BOM 不管 POI，
+                 故必须在此锁版本，否则 EasyExcel 传递的 POI 5.2.5 与直接引入的 5.5.1 会二选一 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version>
+            </dependency>
+            <!-- Apache PDFBox：PDF 生成/解析/合并（P2 使用） -->
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>pdfbox</artifactId>
+                <version>${pdfbox.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
