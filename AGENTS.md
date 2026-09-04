@@ -1,7 +1,6 @@
 # AGENTS.md — Demo 生成规范（硬约束 + 形态适配）
 
-本仓库以 **「单技术点 Demo」** 为核心交付物，用本规范约束 AI 生成的每一个 demo。
-另有少量 **「综合实战 Demo」**（如 `jdk8-seckill-demo` / `jdk8-short-link-demo`）作为面试/落地演示，可保留，但**不新增**，除非用户明确要求。
+本仓库以 **「单技术点 Demo」** 为核心交付物，用本规范约束 AI 生成的每一个 demo；综合实战 Demo（如 `jdk8-seckill-demo` / `jdk8-short-link-demo`）仅保留、**不新增**，除非用户明确要求（见第七章）。
 
 > 新生成的单技术点 demo，优先参考本仓库的 **`jdk8-localcache-demo`（Caffeine 本地缓存）** 的注释风格、测试形态与 README 七段式；但其**单模块目录结构只是形态之一**，当技术点天然多进程时，按本规范第二节选择多模块形态（见 Nacos / Seata 等）。
 
@@ -37,14 +36,13 @@
 - **必须自带样例数据**：提供 `sampleXxx()` 工厂造默认数据，调用方无需自己准备输入。
 - **必须可观察**：场景执行后务必打印/返回「输入 → 输出」（日志、JSON、控制台），**静默执行是零分**。
 - **注释讲 WHY 而非只写 WHAT**：每个能力类必须有一段说明——该机制解决什么痛点、关键 API 是什么、生产环境有什么坑/差异。
-- **外部依赖最小化**：能用内存/JDK/Embedded 实现的（Caffeine、H2、EmbeddedKafka、MapStruct 编译期）就**不要**引真实中间件。必须连外部组件时，提供 `docker-compose.yml` + 合理默认地址，README 写明「先起组件再起 Demo」。
+- **外部依赖最小化**：能用内存/JDK/Embedded 实现的（Caffeine、H2、EmbeddedKafka、MapStruct 编译期）就**不要**引真实中间件；确需外部组件时的处理顺序见 5.3。
 
 ## 四、验证与触发形态（强制，首选顺序）
 
 1. **单元测试（首要形态，及格线）**：每个场景至少一条可断言的 `*Test`，既验证语义又充当「可观察输出」。无外部依赖时直接跑；CI 无外部依赖时靠 `Assumptions` 优雅跳过。**禁止**用「`@Disabled` 整体禁用 + `Thread.sleep` 当入口」的做法（那是 RocketMQ demo 的历史包袱，新 demo 不得复制）。
 2. **控制台 Runner（可选）**：纯库/非 Web 想分节打印「输入→输出」时，提供 `DemoApp.main()`，用分隔线把每个场景的输出分节打印。
-3. **HTTP 端点（可选）**：仅当需交互式把玩才加，放 `common/trigger`，且不含知识点。
-4. **场景注册表（可选，非强制）**：把场景抽象为 `Scenario { name(); description(); run(); }` 由 Spring 收集，经 `ApplicationRunner` 或测试加载，支持「按名 / 一键全跑」。
+3. **场景注册表（可选，非强制）**：把场景抽象为 `Scenario { name(); description(); run(); }` 由 Spring 收集，经 `ApplicationRunner` 或测试加载，支持「按名 / 一键全跑」。
 
 > 关键认知：**Demo 的好坏不靠 Web 控制器撑着**。没有 HTTP 端点，单元测试 + 控制台输出同样能把每个场景讲清楚、跑通、可观察。
 
@@ -76,13 +74,13 @@
 
 1. **内存 / 内嵌**：能用 H2、EmbeddedKafka、内存 Redis、编译期 MapStruct 等就优先，零外部依赖、CI 自包含。
 2. **Testcontainers**：需真实组件语义（如多数据源、事务）且本地有 Docker 时，用 Testcontainers 起临时容器，仅 `verify` 阶段跑。
-3. **docker-compose + `Assumptions` 跳过**：demo 自带 `docker-compose.yml` 供交互式把玩；CI 无组件时 `Assumptions.assumeTrue(...)` 优雅跳过，**禁止 `@Disabled` + `Thread.sleep` 当入口**（历史包袱，新 demo 不得复制）。
+3. **docker-compose + `Assumptions` 跳过**：demo 自带 `docker-compose.yml` 供交互式把玩；CI 无组件时 `Assumptions.assumeTrue(...)` 优雅跳过。
 4. **敏感信息**：连接串 / 密码走 `application-local.yml`（已被 gitignore），测试读取本地 profile，绝不落库、不打印。
 
 ### 5.4 断言与可观察性
 
 - 断言优先用 **AssertJ**（流式、可读、错误信息清晰），Mock 用 Mockito；**禁止用 `System.out` / `Thread.sleep` 充当测试断言**。
-- 每个场景至少一条可断言 `*Test`（呼应第四节及格线）；压测用例需输出可对比指标（吞吐 / P99 / 误差）并落报告。
+- 压测用例需输出可对比指标（吞吐 / P99 / 误差）并落报告。
 
 ### 5.5 覆盖率与质量门禁
 
@@ -121,36 +119,46 @@ GitHub Actions（或等价 Runner）分阶段：
 - 在平台 `README.md` 中单独归类为「综合实战（锦上添花）」，标注「可选」。
 - 不新增综合实战 demo，除非用户明确要求。
 
+## 八、仓库结构约束（平台划分、模块命名、README 定位）
+
+本章约束代码落在**哪个平台 / 以什么名字命名**，与第一~七章（Demo 内部怎么写）互补。
+
+### 8.1 平台划分：JDK 约束取最小可用
+
+- 技术对 JDK 有强约束（依赖库 / 字节码要求，如 `mybatis-plus-jsqlparser` 需 JDK 11+）→ 归入**能跑通该技术的最低版本平台**（`jdk11-platform` / `jdk17-platform` / `jdk21-platform` / `jdk25-platform`）。
+- 技术对 JDK 无约束 → 一律归 `jdk8-platform`（默认位，兼容最广）。
+- 已有技术点聚合组（`jdk8-tech` / `jdk21-tech` / `jdk8-office-tech`）能收纳的纯技术点示例，**先进对应聚合组**（子模块仍是单技术点 demo），不随意在平台根平铺新模块。
+
+### 8.2 模块命名与目录形态
+
+- 平台内模块统一 `jdk<version>-*-demo` 形式，**一个模块 = 一个技术点**。
+- `jdk<version>-base`：对应 JDK 版本的基础知识与新特性。
+- `jdk<version>-common`：平台内公共基础模块（占位 / 沉淀跨 demo 公共工具）。
+- 聚合组模块：`jdk<version>-tech` 等父目录自含 `pom.xml`，组内每个子模块仍是单技术点 demo，须遵守本规范全部硬约束。
+- 综合实战 demo（`jdk8-seckill-demo` / `jdk8-short-link-demo` / `jdk8-microservice-demo`）保留但**不新增**（见第七章）。
+- 依赖 Demo 原样归位：同一技术点按 JDK 基线拆分时，旧基线模块若仍可跑**保留原位**，新拦截器 / 新特性版本放入更高版本平台，两者并存且各自说明差异。
+
+### 8.3 版本与工程约定
+
+- 依赖版本、测试框架版本与插件（surefire / failsafe / JaCoCo / `stress` profile）统一在平台根 `pom.xml` 的 `dependencyManagement` / `pluginManagement` 收口，子模块不写版本号。
+- 引入新组件前先查平台根是否已管理该版本；确需覆盖时在子模块显式声明并注释原因。
+
+### 8.4 README 定位
+
+- 仓库根 `README.md` **只做模块树形概述**，不承载任何规则 / 约束 / 清单。
+- 一切生成规范、仓库结构与自检约束写在本文件（`AGENTS.md`）。
+- 平台 / 模块 `README.md` 的内容形态遵循第六章七段式。
+
 ---
 
-## ⛳ AI 生成 Demo 自检清单（生成后逐条核对）
+## ⛳ 生成后自检（速查清单，细则见对应章节）
 
-新建或生成 demo 后，必须满足以下**通用硬约束**，再按所选形态核对专项项：
-
-**通用硬约束（必满足）：**
-- [ ] 根包为 `lan.chaos.<tech>`，无 `demo` 中间层
-- [ ] 公共常量在 `common/constant`，配置在 `common/config`，样例模型在 `common/model`
-- [ ] 每个能力一个类，命名见名知意，且含 `sampleXxx()` 样例数据
-- [ ] 每个能力类有 WHY 注释（痛点 / 关键 API / 生产坑）
-- [ ] 每个场景执行后有「输入→输出」可观察输出，无静默执行
-- [ ] 至少一条可断言的 `*Test`；无外部依赖直接跑，有依赖用 `Assumptions` 跳过；**无** `@Disabled`+`sleep` 当入口
-- [ ] 非必要不引真实中间件；必须引时附 `docker-compose.yml` + README 说明
-- [ ] README 含七段式，且平台总表状态置 ✅
-
-**测试流程专项（新增）：**
-- [ ] 测试分层正确：单测 `*Test`、集成 `*IT`(failsafe)、压测 `*Bench`(独立 `stress` profile，不进 `mvn test`)
-- [ ] 框架统一 JUnit 5 + AssertJ + Mockito，无 `junit:junit`(JUnit4)；测试版本在平台 parent pom 收口
-- [ ] 外部依赖走 内存 > Testcontainers > docker-compose + `Assumptions` 跳过；无 `@Disabled` + `sleep` 当入口
-- [ ] 断言用 AssertJ，无 `System.out` / `Thread.sleep` 充当断言；压测产物落 `bench-results/*.md` 且无敏感信息
-- [ ] 平台引入 JaCoCo 覆盖率门禁；共享 `*-common-test` 测试支撑模块沉淀基类 / 助手 / 造数工厂
-
-**单模块形态专项（形态一）：**
-- [ ] 能力是顶层包（`<tech>.<capability>`），`controller/service/repository/dto` 未占顶层
-- [ ] 启动类 `<Tech>Application` 在根包下
-
-**多模块形态专项（形态二，天然多进程技术点）：**
-- [ ] 按部署/角色单元拆模块，顶层包即部署单元名
-- [ ] 模块内部仍按能力分包，公共支撑收进各模块 `common/`
-- [ ] 每个独立进程有启动类（`<Role>Application`）
-
-> 形态选择原则：技术点本身是单进程库 → 形态一；技术点本身是分布式/多进程基础设施 → 形态二（多进程才能真实演示，是正选而非例外）。
+- [ ] 根包 `lan.chaos.<tech>`、无 `demo` 层；能力是顶层包，公共支撑进 `common/`（constant/config/model/util），`controller` 等不占顶层（形态二除外，见第二章）
+- [ ] 多进程基础设施按部署 / 角色单元拆模块，每进程一个 `<Role>Application`，模块内仍按能力分包
+- [ ] 一个场景一个类：`sampleXxx()` 样例数据 + WHY 注释 + 「输入→输出」可观察输出（第三章）
+- [ ] 每场景至少一条可断言 `*Test`；无外部依赖直接跑、有依赖 `Assumptions` 跳过；禁 `@Disabled`+`sleep` 当入口（第四章）
+- [ ] 测试分层 `*Test` / `*IT` / `*Bench`，JUnit5 + AssertJ + Mockito，版本在平台根 pom 收口（第五章）
+- [ ] 外部依赖顺序 内存/Embedded > Testcontainers > docker-compose；敏感信息只走 `application-local.yml`（5.3）
+- [ ] README 七段式；平台「已完成学习记录」置 ✅；根 `README.md` 树形概述同步（第六章 / 8.4）
+- [ ] 归位：JDK 强约束 → 最低版本平台，无约束 → `jdk8-platform`，可入聚合组先入组（第八章）
+- [ ] 模块名 `jdk<version>-<tech>-demo`；不新增综合实战 / 不随意建新聚合组（第七章 / 8.2）

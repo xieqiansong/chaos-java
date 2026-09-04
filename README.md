@@ -1,51 +1,91 @@
 # chaos-java
 
-> Java 多版本生态下的**中间件最小可用设计**学习聚合仓库。以顶层 `jdk<version>-platform` 划分工程，一个平台承载一批可独立运行的技术 Demo，按「**JDK 约束取最小可用**」归位。
+> Java 多版本生态下「**中间件最小可用设计**」学习聚合仓库。以 `jdk<version>-platform` 划分 Maven 聚合工程，一个平台承载一批可独立运行的 Demo，一个模块 = 一个技术点。
+> 平台划分、模块命名等全部约束见 [AGENTS.md](AGENTS.md)，本文件只做模块树形概述。
 
-## 设计理念
+## 模块总览
 
-顶层仅按 JDK 版本划分出多个 `jdk<version>-platform` 聚合工程，核心原则是**中间件最小可用设计**：
+### jdk8-platform · JDK 8 · Spring Boot 2.7.18
 
-- **技术对 JDK 有强制要求** → 归入对应的最低版本平台。
-  例如 MyBatis-Plus 3.5.9 起的分页/多租户拦截器拆分到 `mybatis-plus-jsqlparser`，要求 JDK 11+，故对应 Demo 迁至 `jdk11-platform`。
-- **技术对 JDK 无要求** → 全部归入 `jdk8-platform`（兼容性最广，作为默认位）。
+默认位：承载对 JDK 无强约束的技术，共 27 个 Maven 模块。
 
-这样每个平台都能用**刚够用的 JDK**跑通它承载的中间件，既不浪费、也不因版本不足而报错；平台之间通过 Maven 多模块聚合，版本、依赖统一由各平台 `pom.xml` 集中管理。
-
-## 平台总览
-
-| 平台 | JDK | Spring Boot | 承载内容 | 定位 |
-|------|-----|-------------|----------|------|
-| [jdk8-platform](file:///d:/project/chaos/chaos-java/jdk8-platform/README.md) | 8 | 2.7.18 | 22 个模块：Java 基础内功、Redis / 本地缓存 / MyBatis-Plus / Nacos / 微服务 / RocketMQ / Kafka / Sentinel / Seata / ES / ZK / Security / 加密 / 序列化 / 定时 / MapStruct / 秒杀 / 短链 / Starter / 测试 等 | 默认位，无 JDK 强约束的技术 |
-| [jdk11-platform](file:///d:/project/chaos/chaos-java/jdk11-platform) | 11 | 2.7.18 | jdk11-base（新特性）、jdk11-common、jdk11-mybatis-plus-demo | 需 JDK 11+ 的技术（如 MyBatis-Plus 拦截器） |
-| [jdk17-platform](file:///d:/project/chaos/chaos-java/jdk17-platform) | 17 | 3.5.14 | jdk17-base（新特性：密封类等）、jdk17-common | 需 JDK 17+ 的技术 |
-| [jdk21-platform](file:///d:/project/chaos/chaos-java/jdk21-platform) | 21 | 3.5.14 | jdk21-base（新特性）、jdk21-common | 需 JDK 21+ 的技术 |
-| [jdk25-platform](file:///d:/project/chaos/chaos-java/jdk25-platform) | 25 | 4.0.7 | jdk25-base（新特性）、jdk25-common | 需 JDK 25+ 的技术 |
-
-> 各平台详情、模块清单与学习记录见对应平台 `README.md`。
-
-## 模块命名约定
-
-- 各平台内统一 `jdk<version>-*-demo` 形式（如 `jdk8-redis-demo`），一个模块 = 一个技术点。
-- `jdk<version>-base`：对应 JDK 版本的基础知识与新特性。
-- `jdk<version>-common`：平台内公共基础模块。
-- Demo 生成与展示形态遵循根目录 [`AGENTS.md`](file:///d:/project/chaos/chaos-java/AGENTS.md) 的硬约束（单技术点、一个类讲清一个点、样例数据、可断言测试、WHY 注释、外部依赖最小化）。
-
-## 快速开始
-
-每个平台是独立的多模块 Maven 工程，可单独构建：
-
-```bash
-# 进入某个平台（示例：JDK8 平台）
-cd jdk8-platform
-# 编译并跑一个 demo 的测试
-mvn -pl jdk8-redis-demo test
+```
+jdk8-platform/
+├── jdk8-batch-ingest-demo/          批量入库引擎：内存攒批 + 水位触发 + 批量大小在线寻优
+├── jdk8-base/                       Java 基础内功 + JDK8 新特性合集（分布式 ID / IO-NIO-Netty / JUC / JVM / Agent 等）
+├── jdk8-common/                     平台公共基础模块（占位）
+├── jdk8-crypto-demo/                加密与签名：AES / RSA / SHA / 国密 SM2-SM3-SM4
+├── jdk8-elasticsearch-demo/         Elasticsearch：索引 / 文档 / 搜索 / 聚合
+├── jdk8-kafka-demo/                 Kafka：收发 / 批量 / 分区有序 / Exactly-Once 事务 / 重试死信
+├── jdk8-localcache-demo/            Caffeine 本地缓存：读写 / 过期 / 淘汰 / @Cacheable（★ 标杆模板）
+├── jdk8-mapstruct-demo/             MapStruct 对象映射：basic / collection / custom / nested
+├── jdk8-microservice-demo/          企业级 Spring Cloud Alibaba 微服务：common 支撑 6 模块 + gateway/auth/user/order
+├── jdk8-mybatis-plus-demo/          MyBatis-Plus 高阶用法：Wrapper / 分页 / 多租户 / 动态表名 / 字段加密（内置拦截器版）
+├── jdk8-nacos-demo/                 Nacos 注册发现 + 配置中心（provider / consumer / config 多进程）
+├── jdk8-office-tech/                办公文档处理组：excel / word / pdf（POI / EasyExcel / PDFBox，含横评）
+├── jdk8-ratelimiter-demo/           多租户分布式限流三实现对比（Redis+Lua / 本地+Redis / 纯本地）
+├── jdk8-redis-demo/                 Redis 全场景：缓存 / 集合 / 排行榜 / 计数 / 分布式锁 / Lua / Pipeline / PubSub
+├── jdk8-rocketmq-demo/              RocketMQ 全场景：消息模型与生产消费进阶模式
+├── jdk8-scheduler-demo/             定时任务：@Scheduled / Quartz / XXL-JOB
+├── jdk8-seata-demo/                 分布式事务：AT / TCC / SAGA / XA
+├── jdk8-seckill-demo/               秒杀综合实战：分桶库存 + Lua 扣减 + Kafka 异步下单
+├── jdk8-security-demo/              Spring Security 过滤器链 + JWT + OAuth2 资源服务器
+├── jdk8-sentinel-demo/              流控 / 熔断 / 热点参数 / @SentinelResource
+├── jdk8-serialization-demo/         序列化对比：Jackson / Kryo / JDK 原生
+├── jdk8-servlet-filter-async-demo/  热路径 Servlet Filter 异步化（绕过 DispatcherServlet）
+├── jdk8-short-link-demo/            短链综合实战：Snowflake+Base62 + 布隆过滤 + Redis 缓存
+├── jdk8-starter-demo/               Spring Boot Starter 自动装配机制
+├── jdk8-tech/                       JDK8 专属技术点组：flink-cdc-sync / hmac-auth / bitmap-stat
+└── jdk8-testing-demo/               JUnit5 + Mockito 测试专项（Mock / BDD / 切片测试）
 ```
 
-多数 Demo 自带单元测试（无外部依赖时直接跑），需外部组件的（Redis / Kafka / Nacos 等）附 `docker-compose.yml`，按对应 README「先起组件再起 Demo」执行。
+### jdk11-platform · JDK 11 · Spring Boot 2.7.18
 
-## 相关文档
+承载需 JDK 11+ 的技术。
 
-- [AGENTS.md](file:///d:/project/chaos/chaos-java/AGENTS.md) — Demo 生成规范（硬约束 + 形态适配 + 自检清单）
-- [jdk8-platform](file:///d:/project/chaos/chaos-java/jdk8-platform/README.md) — 主平台模块总览、技术栈、补充计划
-- [jdk8-platform/JAVA-TECH-PANORAMA.md](file:///d:/project/chaos/chaos-java/jdk8-platform/JAVA-TECH-PANORAMA.md) — Java 必学技术全景与学习路线
+```
+jdk11-platform/
+├── jdk11-base/              JDK11 新特性（含 JDK9/10 引入）：String / Files / Optional / Stream / HttpClient / var
+├── jdk11-common/            平台公共基础模块（占位）
+└── jdk11-mybatis-plus-demo/ MyBatis-Plus 高阶用法（独立拦截器链 mybatis-plus-jsqlparser 版，需 JDK 11+）
+```
+
+### jdk17-platform · JDK 17 · Spring Boot 3.5.14
+
+承载需 JDK 17+ 的技术。
+
+```
+jdk17-platform/
+├── jdk17-base/              JDK17 新特性：文本块 / Record / 密封类 / Switch 表达式 / instanceof 模式匹配
+├── jdk17-common/            平台公共基础模块（占位）
+├── jdk17-springai-demo/     Spring AI：chat / stream / memory / prompt / 结构化输出 / 工具调用 / RAG / MCP 客户端
+└── jdk17-mcp-server-demo/   最小 MCP 服务端（SSE 传输，供 springai-demo 的 MCP 客户端连接演示）
+```
+
+### jdk21-platform · JDK 21 · Spring Boot 3.5.14
+
+承载需 JDK 21+ 的技术。
+
+```
+jdk21-platform/
+├── jdk21-base/              JDK21 新特性：虚拟线程 / Sequenced 集合 / 模式匹配 switch / Record 模式
+├── jdk21-common/            平台公共基础模块（占位）
+└── jdk21-tech/              JDK21 技术点组：multilevel-cache / idempotent / virtualthread
+    ├── jdk21-multilevel-cache-demo/ 多级缓存：Caffeine L1 + Redis Hash L2 + 版本号一致性
+    ├── jdk21-idempotent-demo/       接口幂等：请求级 / 消费级 / 状态机三层去重
+    └── jdk21-virtualthread-demo/    虚拟线程：机制演示 + 压测量化
+```
+
+### jdk25-platform · JDK 25 · Spring Boot 4.0.7
+
+承载需 JDK 25+ 的技术。
+
+```
+jdk25-platform/
+├── jdk25-base/              JDK25 新特性：模块导入 / 灵活构造器体 / 隐式类 main / Stream Gatherers / 原始类型模式
+└── jdk25-common/            平台公共基础模块（占位）
+```
+
+---
+
+各平台模块清单、技术栈与学习记录以模块内 `README.md` 为准；Java 技术全景与学习路线见 [jdk8-platform/JAVA-TECH-PANORAMA.md](jdk8-platform/JAVA-TECH-PANORAMA.md)。
