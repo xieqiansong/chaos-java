@@ -48,7 +48,60 @@
 
 > 关键认知：**Demo 的好坏不靠 Web 控制器撑着**。没有 HTTP 端点，单元测试 + 控制台输出同样能把每个场景讲清楚、跑通、可观察。
 
-## 五、README 七段式（强制）
+## 五、标准化测试流程（强制）
+
+本仓库以「单技术点 Demo」为核心交付物，其质量由测试保证。测试规范分两层：上层是第四节的**验证 / 触发形态**（讲「怎么演示、怎么触发」），本节是**工程 / 构建层**（讲「怎么算通过、怎么分层、用什么框架」），二者共同构成标准化测试流程。
+
+### 5.1 测试分层与命名（金字塔）
+
+| 层级 | 命名约定 | 执行生命周期 | 是否进 `mvn test` |
+|------|----------|--------------|-------------------|
+| 单元测试 | `*Test` / `*Tests` | `mvn test`（surefire） | 是（默认、最快） |
+| 集成测试 | `*IT` | `mvn verify`（failsafe） | 否，仅 `verify` 阶段 |
+| 压测 / 基准 | `*Bench` | 独立 `stress` profile | 否，避免污染单测、拖慢 CI |
+
+- **默认只跑单测**：`mvn test` 必须快、稳定、零外部依赖或靠 `Assumptions` 跳过。
+- **集成测试分流**：凡依赖真实 / 容器化中间件且无法内存化的用例，命名 `*IT`，由 failsafe 在 `verify` 阶段执行；禁止把集成测试伪造成 `*Test` 挤进单测阶段。
+- **压测隔离**：所有 `*Bench` 必须排除在 surefire 之外，仅通过 `-Pstress` 单独跑；产物落 `bench-results/*.md`，**不得写入任何连接凭证 / 内网地址等敏感信息**（呼应根 `AGENTS.md` 公开项目脱敏约束）。
+- **历史命名兼容**：既有 `BenchMarkTest`、`*IntegrationTest` 沿用旧名，由各平台父 pom 的 surefire 排除 / failsafe 包含规则直接兼容；**新增**测试请严格遵循 `*Bench` / `*IT` 命名。
+
+### 5.2 框架统一（淘汰 JUnit4）
+
+- 基线：**JUnit 5（Jupiter）+ AssertJ + Mockito**，全平台 JDK8+ 可跑。
+- 大多数 Demo 直接引入 `spring-boot-starter-test`（已含上述三者）。
+- 纯库 / 非 Spring Demo 允许裸 `org.junit.jupiter:junit-jupiter`，**不得退回 `junit:junit`（JUnit 4）**。
+- 所有测试相关版本（junit-bom、assertj、mockito、testcontainers、surefire、failsafe、jacoco）**在平台级 parent `pom.xml` 的 `dependencyManagement` / `pluginManagement` 统一收口**，子模块不写版本号。
+
+### 5.3 外部依赖处理矩阵（优先顺序）
+
+1. **内存 / 内嵌**：能用 H2、EmbeddedKafka、内存 Redis、编译期 MapStruct 等就优先，零外部依赖、CI 自包含。
+2. **Testcontainers**：需真实组件语义（如多数据源、事务）且本地有 Docker 时，用 Testcontainers 起临时容器，仅 `verify` 阶段跑。
+3. **docker-compose + `Assumptions` 跳过**：demo 自带 `docker-compose.yml` 供交互式把玩；CI 无组件时 `Assumptions.assumeTrue(...)` 优雅跳过，**禁止 `@Disabled` + `Thread.sleep` 当入口**（历史包袱，新 demo 不得复制）。
+4. **敏感信息**：连接串 / 密码走 `application-local.yml`（已被 gitignore），测试读取本地 profile，绝不落库、不打印。
+
+### 5.4 断言与可观察性
+
+- 断言优先用 **AssertJ**（流式、可读、错误信息清晰），Mock 用 Mockito；**禁止用 `System.out` / `Thread.sleep` 充当测试断言**。
+- 每个场景至少一条可断言 `*Test`（呼应第四节及格线）；压测用例需输出可对比指标（吞吐 / P99 / 误差）并落报告。
+
+### 5.5 覆盖率与质量门禁
+
+- 各平台引入 **JaCoCo**，平台级设覆盖率阈值（如行覆盖 ≥ 60%，可按平台微调），未达标 `verify` 失败。
+- 报告聚合到平台根 `target/site/jacoco/`，便于检视。
+
+### 5.6 共享测试支撑模块
+
+- 各平台维护一个 `*-common-test`（参考 `jdk8-microservice-demo/jdk8-ms-common-test`）：沉淀测试基类、`@Container` Testcontainers 助手、H2 / 嵌入式中间件约定、样例数据工厂 `sampleXxx()`。
+- 该模块为 `test` scope 依赖，仅被其他模块的测试代码引用，不进运行时。
+
+### 5.7 CI 串联（可选，推荐）
+
+GitHub Actions（或等价 Runner）分阶段：
+1. `mvn -q test` —— 单测 + 覆盖率门禁；
+2. `mvn -q verify` —— 集成测试（`*IT`）；
+3. `mvn -Pstress test` —— 压测 / 基准（按需、可手动触发）。
+
+## 六、README 七段式（强制）
 
 每个 A 类 Demo 的 README 必须包含：
 1. **一句话定位**（学什么、覆盖哪些能力）
@@ -61,7 +114,7 @@
 
 完成后把所在平台 `README.md` 的「已完成学习记录」表对应状态更新为 ✅。
 
-## 六、综合实战 Demo（可选，记录不强制）
+## 七、综合实战 Demo（可选，记录不强制）
 
 - 综合实战 = 把多个技术点组合进一个带业务外壳的 demo（如 `jdk8-seckill-demo` / `jdk8-short-link-demo`）。
 - 允许业务分层（controller/service/repository/dto/config），**不要求**对齐单模块 A 类的分包规则；但其中**每个被演示的技术点仍应满足本规范第三节的硬约束**（一个类讲清一个点、WHY 注释、可观察输出、可断言测试）。
@@ -83,6 +136,13 @@
 - [ ] 至少一条可断言的 `*Test`；无外部依赖直接跑，有依赖用 `Assumptions` 跳过；**无** `@Disabled`+`sleep` 当入口
 - [ ] 非必要不引真实中间件；必须引时附 `docker-compose.yml` + README 说明
 - [ ] README 含七段式，且平台总表状态置 ✅
+
+**测试流程专项（新增）：**
+- [ ] 测试分层正确：单测 `*Test`、集成 `*IT`(failsafe)、压测 `*Bench`(独立 `stress` profile，不进 `mvn test`)
+- [ ] 框架统一 JUnit 5 + AssertJ + Mockito，无 `junit:junit`(JUnit4)；测试版本在平台 parent pom 收口
+- [ ] 外部依赖走 内存 > Testcontainers > docker-compose + `Assumptions` 跳过；无 `@Disabled` + `sleep` 当入口
+- [ ] 断言用 AssertJ，无 `System.out` / `Thread.sleep` 充当断言；压测产物落 `bench-results/*.md` 且无敏感信息
+- [ ] 平台引入 JaCoCo 覆盖率门禁；共享 `*-common-test` 测试支撑模块沉淀基类 / 助手 / 造数工厂
 
 **单模块形态专项（形态一）：**
 - [ ] 能力是顶层包（`<tech>.<capability>`），`controller/service/repository/dto` 未占顶层

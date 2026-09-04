@@ -3,7 +3,7 @@ package lan.chaos.java.base.annotation;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -15,16 +15,16 @@ class CustomAnnotationTest {
     void auditable_shouldReadClassLevelAnnotation() {
         CustomAnnotationDemo demo = new CustomAnnotationDemo();
         String result = demo.processAuditable(CustomAnnotationDemo.User.class);
-        assertTrue("应读取审核人 admin", result.contains("admin"));
-        assertTrue("应读取级别 2", result.contains("级别=2"));
-        assertTrue("高级审核", result.contains("高级审核"));
+        assertTrue(result.contains("admin"), "应读取审核人 admin");
+        assertTrue(result.contains("级别=2"), "应读取级别 2");
+        assertTrue(result.contains("高级审核"), "高级审核");
     }
 
     @Test
     void auditable_noAnnotation_shouldReturnDefaultMessage() {
         CustomAnnotationDemo demo = new CustomAnnotationDemo();
         String result = demo.processAuditable(String.class);
-        assertTrue("无注解应有提示", result.contains("无需审核"));
+        assertTrue(result.contains("无需审核"), "无注解应有提示");
     }
 
     @Test
@@ -32,8 +32,8 @@ class CustomAnnotationTest {
         CustomAnnotationDemo demo = new CustomAnnotationDemo();
         CustomAnnotationDemo.User user = new CustomAnnotationDemo.User("张三", "13812345678", "zhangsan@company.com");
         String result = demo.processSensitive(user);
-        assertTrue("name 非敏感", result.contains("张三") && result.contains("非敏感"));
-        assertTrue("phone 应脱敏", result.contains("****"));
-        assertTrue("email 应脱敏", result.contains("***@"));
+        assertTrue(result.contains("张三") && result.contains("非敏感"), "name 非敏感");
+        assertTrue(result.contains("****"), "phone 应脱敏");
+        assertTrue(result.contains("***@"), "email 应脱敏");
     }
 }

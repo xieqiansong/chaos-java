@@ -74,6 +74,13 @@
         <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
         <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
+
+        <!-- 测试分层（统一收口）：surefire 包含/排除与 failsafe 版本 -->
+        <maven-failsafe-plugin.version>3.2.2</maven-failsafe-plugin.version>
+        <surefire.include1>**/*Test.java</surefire.include1>
+        <surefire.include2>**/*Tests.java</surefire.include2>
+        <!-- 压测类默认不进 mvn test，仅 -Pstress 运行 -->
+        <bench.exclude>**/*Bench.java</bench.exclude>
     </properties>
 
     <dependencyManagement>
@@ -208,10 +215,27 @@
                     <version>${maven-surefire-plugin.version}</version>
                     <configuration>
                         <includes>
-                            <include>**/*Test.java</include>
-                            <include>**/*Tests.java</include>
+                            <include>${surefire.include1}</include>
+                            <include>${surefire.include2}</include>
                         </includes>
-                        <!-- <skipTests>false</skipTests>-->
+                        <!-- 压测类（*Bench / BenchMarkTest）默认不进 mvn test，仅 -Pstress 运行 -->
+                        <excludes>
+                            <exclude>${bench.exclude}</exclude>
+                            <exclude>**/BenchMarkTest.java</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+
+                <!-- 集成测试：*IT / *IntegrationTest，在 mvn verify 阶段由 failsafe 执行 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven-failsafe-plugin.version}</version>
+                    <configuration>
+                        <includes>
+                            <include>**/*IT.java</include>
+                            <include>**/*IntegrationTest.java</include>
+                        </includes>
                     </configuration>
                 </plugin>
 
@@ -230,5 +254,33 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
+        <!-- failsafe 绑定到 verify 生命周期，继承上方 pluginManagement 配置 -->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
+
+    <profiles>
+        <!-- 压测专用：只跑 *Bench / BenchMarkTest，其余单测让位 -->
+        <profile>
+            <id>stress</id>
+            <properties>
+                <surefire.include1>**/*Bench.java</surefire.include1>
+                <surefire.include2>**/BenchMarkTest.java</surefire.include2>
+                <bench.exclude>**/NoSuchBench.java</bench.exclude>
+            </properties>
+        </profile>
+    </profiles>
 </project>

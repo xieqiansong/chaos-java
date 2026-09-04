@@ -40,6 +40,12 @@
         <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
         <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
+
+        <!-- 测试分层（统一收口）：surefire 包含/排除与 failsafe 版本 -->
+        <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
+        <surefire.include1>**/*Test.java</surefire.include1>
+        <surefire.include2>**/*Tests.java</surefire.include2>
+        <bench.exclude>**/*Bench.java</bench.exclude>
     </properties>
 
     <dependencyManagement>
@@ -148,10 +154,25 @@
                     <version>3.2.5</version>
                     <configuration>
                         <includes>
-                            <include>**/*Test.java</include>
-                            <include>**/*Tests.java</include>
+                            <include>${surefire.include1}</include>
+                            <include>${surefire.include2}</include>
                         </includes>
-                        <!-- <skipTests>false</skipTests>-->
+                        <excludes>
+                            <exclude>${bench.exclude}</exclude>
+                            <exclude>**/BenchMarkTest.java</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven-failsafe-plugin.version}</version>
+                    <configuration>
+                        <includes>
+                            <include>**/*IT.java</include>
+                            <include>**/*IntegrationTest.java</include>
+                        </includes>
                     </configuration>
                 </plugin>
 
@@ -171,5 +192,31 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>stress</id>
+            <properties>
+                <surefire.include1>**/*Bench.java</surefire.include1>
+                <surefire.include2>**/BenchMarkTest.java</surefire.include2>
+                <bench.exclude>**/NoSuchBench.java</bench.exclude>
+            </properties>
+        </profile>
+    </profiles>
 </project>

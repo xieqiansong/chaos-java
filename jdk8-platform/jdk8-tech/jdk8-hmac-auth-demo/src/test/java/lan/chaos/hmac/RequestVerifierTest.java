@@ -6,11 +6,11 @@ import lan.chaos.hmac.model.ReportRequest;
 import lan.chaos.hmac.model.VerifyResult;
 import lan.chaos.hmac.verify.ReplayGuard;
 import lan.chaos.hmac.verify.RequestVerifier;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** 完整校验链：时间窗 / 防重放 / 幂等去重。 */
 public class RequestVerifierTest {
@@ -21,7 +21,7 @@ public class RequestVerifierTest {
     private long now;
     private RequestVerifier verifier;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         this.now = System.currentTimeMillis() / 1000L;
         this.verifier = new RequestVerifier(
@@ -61,7 +61,7 @@ public class RequestVerifierTest {
                 sixthPassed = r.isPassed();
             }
         }
-        assertFalse("滑动窗口内第 6 次应被限流", sixthPassed);
+        assertFalse(sixthPassed, "滑动窗口内第 6 次应被限流");
     }
 
     @Test

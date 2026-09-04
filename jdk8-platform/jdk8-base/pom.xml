@@ -87,18 +87,10 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- JDK8 新特性测试：JUnit 5 (Vintage 引擎兼容 JUnit 4) -->
+        <!-- JDK8 新特性测试：JUnit 5 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- 让 JUnit 4 风格测试（org.junit）也能在 JUnit Platform 下运行 -->
-        <dependency>
-            <groupId>org.junit.vintage</groupId>
-            <artifactId>junit-vintage-engine</artifactId>
-            <version>5.8.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

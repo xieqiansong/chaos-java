@@ -1,11 +1,11 @@
 package lan.chaos.hmac;
 
 import lan.chaos.hmac.core.HmacSigner;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** 签名 / 验签正确性。 */
 public class HmacSignerTest {

@@ -4,13 +4,13 @@ import lan.chaos.bitmap.bigkey.BitMapWithCounter;
 import lan.chaos.bitmap.bigkey.HashSharder;
 import lan.chaos.bitmap.bigkey.RegionSharder;
 import lan.chaos.bitmap.bigkey.SingleThreadQueueSimulator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * 大 key 拆分优化测试：哈希/区域分片、增量计数一致性、单线程尾延迟改善。
@@ -36,7 +36,7 @@ public class BigKeyShardSceneTest {
             seen[sharder.shardOf("dev-" + i)] = true;
         }
         for (boolean b : seen) {
-            assertTrue("每个分片都应有设备落入", b);
+            assertTrue(b, "每个分片都应有设备落入");
         }
     }
 
@@ -46,7 +46,7 @@ public class BigKeyShardSceneTest {
         assertEquals(0, sharder.shardOf("410100001"));
         assertEquals(1, sharder.shardOf("410299999"));
         assertEquals(2, sharder.shardOf("410312345"));
-        assertEquals("4102", sharder.regionOf(1));
+        assertEquals(sharder.regionOf(1), "4102");
     }
 
     @Test
@@ -97,7 +97,7 @@ public class BigKeyShardSceneTest {
         long tailSplit = SingleThreadQueueSimulator.finishTimes(split)[n / 2 + 1];
 
         assertEquals(bigCost + (n / 2 + 1), tailSingle);
-        assertTrue("拆分后第 51 个命令的等待应显著缩短", tailSplit < tailSingle);
+        assertTrue(tailSplit < tailSingle, "拆分后第 51 个命令的等待应显著缩短");
     }
 
     private static long sum(long[] arr) {

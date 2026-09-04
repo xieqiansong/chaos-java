@@ -4,7 +4,6 @@ import lan.chaos.virtualthread.common.constant.Scenario;
 import lan.chaos.virtualthread.common.model.BenchCase;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 断言只卡「方向性结论」（虚拟线程明显更快、pinning 明显更慢），不卡绝对数值，避免机器差异导致误报。
  */
 @Tag("bench")
-@EnabledIfSystemProperty(named = "bench", matches = "true")
 class BenchMarkTest {
 
     @Test

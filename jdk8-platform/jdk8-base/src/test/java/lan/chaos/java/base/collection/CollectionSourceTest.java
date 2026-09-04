@@ -1,9 +1,9 @@
 package lan.chaos.java.base.collection;
 
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 集合源码分析测试：验证 HashMap / ConcurrentHashMap / ArrayList 的核心行为。
@@ -14,18 +14,18 @@ public class CollectionSourceTest {
     public void hashMap_putGet_thenResize() throws Exception {
         HashMapSourceAnalysis demo = new HashMapSourceAnalysis();
         String result = demo.demonstratePutGet();
-        assertTrue("put 流程应包含 key=one", result.contains("one"));
-        assertTrue("get 应命中", result.contains("O(1)"));
-        assertTrue("应触发 resize", result.contains("resize"));
+        assertTrue(result.contains("one"), "put 流程应包含 key=one");
+        assertTrue(result.contains("O(1)"), "get 应命中");
+        assertTrue(result.contains("resize"), "应触发 resize");
     }
 
     @Test
     public void hashMap_inspectInternal_shouldRevealTableAndThreshold() throws Exception {
         HashMapSourceAnalysis demo = new HashMapSourceAnalysis();
         String result = demo.inspectInternal();
-        assertTrue("应显示 table.len", result.contains("table.len="));
-        assertTrue("应显示 threshold", result.contains("threshold="));
-        assertTrue("应显示 resize", result.contains("resize"));
+        assertTrue(result.contains("table.len="), "应显示 table.len");
+        assertTrue(result.contains("threshold="), "应显示 threshold");
+        assertTrue(result.contains("resize"), "应显示 resize");
     }
 
     @Test
@@ -43,31 +43,31 @@ public class CollectionSourceTest {
     public void concurrentHashMap_concurrentPut_shouldNotLoseData() throws Exception {
         ConcurrentHashMapSourceAnalysis demo = new ConcurrentHashMapSourceAnalysis();
         String result = demo.concurrentPut();
-        assertTrue("应无数据丢失", result.contains("✓ 无丢失无覆盖"));
-        assertTrue("应能读取 key=0", result.contains("val-0"));
+        assertTrue(result.contains("✓ 无丢失无覆盖"), "应无数据丢失");
+        assertTrue(result.contains("val-0"), "应能读取 key=0");
     }
 
     @Test
     public void concurrentHashMap_atomicOperations_shouldBeCorrect() {
         ConcurrentHashMapSourceAnalysis demo = new ConcurrentHashMapSourceAnalysis();
         String result = demo.atomicOperations();
-        assertTrue("putIfAbsent 不应覆盖", result.contains("不会被覆盖"));
-        assertTrue("merge 1+2+3", result.contains("6"));
+        assertTrue(result.contains("不会被覆盖"), "putIfAbsent 不应覆盖");
+        assertTrue(result.contains("6"), "merge 1+2+3");
     }
 
     @Test
     public void arrayList_shouldExpandAt15xRate() throws Exception {
         ArrayListSourceAnalysis demo = new ArrayListSourceAnalysis();
         String result = demo.demonstrateExpansion();
-        assertTrue("应说明 1.5 倍增长", result.contains("1.5"));
-        assertTrue("应显示扩容", result.contains("触发扩容"));
+        assertTrue(result.contains("1.5"), "应说明 1.5 倍增长");
+        assertTrue(result.contains("触发扩容"), "应显示扩容");
     }
 
     @Test
     public void arrayList_randomAccessShouldBeFasterThanLinkedList() throws Exception {
         ArrayListSourceAnalysis demo = new ArrayListSourceAnalysis();
         String result = demo.arrayListVsLinkedList();
-        assertTrue("应说明 O(1) vs O(n)", result.contains("O(1)"));
-        assertTrue("应说明 ArrayList get 更快", result.contains("ArrayList"));
+        assertTrue(result.contains("O(1)"), "应说明 O(1) vs O(n)");
+        assertTrue(result.contains("ArrayList"), "应说明 ArrayList get 更快");
     }
 }

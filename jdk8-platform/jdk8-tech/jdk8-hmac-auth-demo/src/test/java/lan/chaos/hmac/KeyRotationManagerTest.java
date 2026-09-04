@@ -6,11 +6,11 @@ import lan.chaos.hmac.model.ReportRequest;
 import lan.chaos.hmac.rotate.KeyRotationManager;
 import lan.chaos.hmac.verify.ReplayGuard;
 import lan.chaos.hmac.verify.RequestVerifier;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** 双密钥过渡轮换：新钥生效 / 宽限期旧钥可验 / 宽限期后旧钥拒绝。 */
 public class KeyRotationManagerTest {
@@ -25,7 +25,7 @@ public class KeyRotationManagerTest {
     private KeyRotationManager rotation;
     private RequestVerifier verifier;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         this.now = System.currentTimeMillis() / 1000L;
         this.keyStore = new SecretKeyStore(SECRET_V1);
@@ -42,15 +42,15 @@ public class KeyRotationManagerTest {
     @Test
     public void oldKeyStillValidDuringGracePeriod() {
         rotation.rotate(SECRET_V2);
-        assertTrue("宽限期内旧密钥仍可验签（在途设备未升级）", signVerify(SECRET_V1, "dev-old", "batch-old"));
+        assertTrue(signVerify(SECRET_V1, "dev-old", "batch-old"), "宽限期内旧密钥仍可验签（在途设备未升级）");
     }
 
     @Test
     public void completeRotationThenOldKeyRejected() {
         rotation.rotate(SECRET_V2);
         rotation.completeRotation();
-        assertFalse("宽限期结束后旧密钥应被拒绝", signVerify(SECRET_V1, "dev-old", "batch-old"));
-        assertTrue("新密钥不受影响", signVerify(SECRET_V2, "dev-new", "batch-new"));
+        assertFalse(signVerify(SECRET_V1, "dev-old", "batch-old"), "宽限期结束后旧密钥应被拒绝");
+        assertTrue(signVerify(SECRET_V2, "dev-new", "batch-new"), "新密钥不受影响");
     }
 
     @Test
@@ -58,9 +58,9 @@ public class KeyRotationManagerTest {
         // 连续两次轮换：v1 -> v2 -> v3，宽限期只保留最近一版旧钥
         rotation.rotate(SECRET_V2);
         rotation.rotate("secret-v3");
-        assertTrue("v2 宽限期内可验", signVerify(SECRET_V2, "dev-2", "batch-2"));
-        assertFalse("v1 已被丢弃", signVerify(SECRET_V1, "dev-1", "batch-1"));
-        assertTrue("v3 立即生效", signVerify("secret-v3", "dev-3", "batch-3"));
+        assertTrue(signVerify(SECRET_V2, "dev-2", "batch-2"), "v2 宽限期内可验");
+        assertFalse(signVerify(SECRET_V1, "dev-1", "batch-1"), "v1 已被丢弃");
+        assertTrue(signVerify("secret-v3", "dev-3", "batch-3"), "v3 立即生效");
     }
 
     private boolean signVerify(String secret, String deviceId, String batchNo) {

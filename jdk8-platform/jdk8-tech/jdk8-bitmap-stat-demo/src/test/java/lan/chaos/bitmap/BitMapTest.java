@@ -1,11 +1,11 @@
 package lan.chaos.bitmap;
 
 import lan.chaos.bitmap.core.BitMap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 核心位图单元测试：置位/清零/查询、跨 long 边界、自动扩容、BITCOUNT、BITOP、内存占用。

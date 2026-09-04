@@ -2,9 +2,9 @@ package lan.chaos.bitmap;
 
 import lan.chaos.bitmap.core.BitMap;
 import lan.chaos.bitmap.stat.DailyActiveStat;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 日活统计测试：BITOP OR（近 N 天活跃）与 BITOP AND（连续 N 天活跃）语义。

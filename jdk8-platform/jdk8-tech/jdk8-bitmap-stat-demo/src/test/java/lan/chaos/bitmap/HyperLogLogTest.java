@@ -1,12 +1,12 @@
 package lan.chaos.bitmap;
 
 import lan.chaos.bitmap.probabilistic.HyperLogLog;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * HyperLogLog 单元测试：基数估算误差带（小/中/大基数）、去重语义、恒定内存。
@@ -34,7 +34,7 @@ public class HyperLogLogTest {
         for (int i = 0; i < n; i++) {
             hll.pfadd("dev-" + rnd.nextInt(10_000_000));
         }
-        assertTrue("小基数误差过大: " + relErrPct(hll, n) + "%", relErrPct(hll, n) < 10.0);
+        assertTrue(relErrPct(hll, n) < 10.0, "小基数误差过大: " + relErrPct(hll, n) + "%");
     }
 
     @Test
@@ -46,7 +46,7 @@ public class HyperLogLogTest {
         for (int i = 0; i < n; i++) {
             hll.pfadd("dev-" + i);
         }
-        assertTrue("大基数误差过大: " + relErrPct(hll, n) + "%", relErrPct(hll, n) < 2.0);
+        assertTrue(relErrPct(hll, n) < 2.0, "大基数误差过大: " + relErrPct(hll, n) + "%");
     }
 
     @Test
@@ -61,7 +61,7 @@ public class HyperLogLogTest {
         for (int i = 0; i < 5_000_000; i++) {
             hll.pfadd("dev-" + rnd.nextInt(unique)); // 全部是重复元素
         }
-        assertTrue("重复插入导致膨胀: " + relErrPct(hll, unique) + "%", relErrPct(hll, unique) < 2.0);
+        assertTrue(relErrPct(hll, unique) < 2.0, "重复插入导致膨胀: " + relErrPct(hll, unique) + "%");
     }
 
     @Test
