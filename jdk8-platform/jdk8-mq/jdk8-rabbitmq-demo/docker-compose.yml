@@ -1,0 +1,15 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: jdk8-rabbitmq-demo
+    ports:
+      - "5672:5672"     # AMQP
+      - "15672:15672"   # 管理界面 http://localhost:15672  (guest/guest)
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

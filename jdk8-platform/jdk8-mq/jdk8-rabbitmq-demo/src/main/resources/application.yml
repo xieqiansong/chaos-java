@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: jdk8-rabbitmq-demo
+  rabbitmq:
+    # 连真实 Broker（docker-compose 起的 rabbitmq:3.12-management）。
+    # *IT（Testcontainers）会通过 @DynamicPropertySource 覆盖 host/port/username/password。
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    # 生产者确认：Publisher Confirm 场景需要（CachingConnectionFactory.publisherConfirms=true 由 RabbitConfig 设置）
+    publisher-confirms: true
+    listener:
+      simple:
+        # 消费者手动 Ack：consumer-ack 场景演示 basicAck / basicNack(requeue)
+        acknowledge-mode: manual
+        # 预取=1 保证公平分发（可观察）
+        prefetch: 1
+        # 应用启动时自动拉起监听器容器（监听器在 collectors 中，@Profile("!mock")）
+        auto-startup: true
+
+logging:
+  level:
+    lan.chaos.rabbitmq: info
+
+# 拓扑（Exchange/Queue/Binding）由 common/config/RabbitConfig 的 @Bean 自动声明，
+# 开箱即跑，无需手动 rabbitmqadmin / 命令行创建。

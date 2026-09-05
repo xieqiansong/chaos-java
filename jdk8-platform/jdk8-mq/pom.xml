@@ -16,6 +16,7 @@
 
     <modules>
         <module>jdk8-kafka-demo</module>
+        <module>jdk8-rabbitmq-demo</module>
         <module>jdk8-rocketmq-demo</module>
     </modules>
 </project>
