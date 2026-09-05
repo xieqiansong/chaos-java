@@ -9,6 +9,8 @@ import lan.chaos.kafka.isolate.IsolateConsumer;
 import lan.chaos.kafka.isolate.IsolateProducer;
 import lan.chaos.kafka.order.OrderConsumer;
 import lan.chaos.kafka.order.OrderProducer;
+import lan.chaos.kafka.reliability.ReliabilityConsumer;
+import lan.chaos.kafka.reliability.ReliabilityProducer;
 import lan.chaos.kafka.retry.DeadLetterConsumer;
 import lan.chaos.kafka.retry.RetryConsumer;
 import lan.chaos.kafka.retry.RetryProducer;
@@ -49,7 +51,8 @@ import static org.junit.jupiter.api.Assertions.*;
                 KafkaConstants.TOPIC_RETRY_DLT,
                 KafkaConstants.TOPIC_FILTER,
                 KafkaConstants.TOPIC_ISOLATE_A,
-                KafkaConstants.TOPIC_ISOLATE_B
+                KafkaConstants.TOPIC_ISOLATE_B,
+                KafkaConstants.TOPIC_RELIABILITY
         },
         brokerProperties = {
                 "transaction.state.log.replication.factor=1",
@@ -78,6 +81,9 @@ class KafkaScenarioTest {
 
     @Autowired private IsolateProducer isolateProducer;
     @Autowired private IsolateConsumer isolateConsumer;
+
+    @Autowired private ReliabilityProducer reliabilityProducer;
+    @Autowired private ReliabilityConsumer reliabilityConsumer;
 
     // ==================== Simple ====================
 
@@ -271,5 +277,27 @@ class KafkaScenarioTest {
         // 核心断言：快域处理完成时间不晚于慢域 —— 证明慢域阻塞未拖垮快域（域隔离生效）
         assertTrue(isolateConsumer.isFastFinishedBeforeOrWithSlow(),
                 "快域处理应不晚于慢域完成，证明业务域并发隔离生效");
+    }
+
+    // ==================== Reliability（不丢） ====================
+
+    @Test
+    void reliability_producerConfirmAndConsumerManualAck_shouldNotLose() {
+        reliabilityConsumer.clear();
+        String key = "rel-" + System.nanoTime();
+        String value = "reliability-msg-" + System.nanoTime();
+
+        // 生产者：同步确认 + 重试，Broker ack 后才算成功
+        boolean confirmed = reliabilityProducer.sendWithRetry(key, value, 3);
+        assertTrue(confirmed, "Broker 应确认发送成功");
+
+        // 消费者：业务处理完成后才手动提交 offset（不丢的核心）
+        await().atMost(Duration.ofSeconds(10))
+                .untilAsserted(() -> {
+                    assertEquals(1, reliabilityConsumer.getProcessedCount(),
+                            "消费端业务处理并完成手动 ack 的消息应为 1 条");
+                    assertTrue(reliabilityConsumer.getProcessed().contains(value),
+                            "应收到并成功处理该消息");
+                });
     }
 }

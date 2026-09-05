@@ -12,6 +12,7 @@ import lan.chaos.rocketmq.filter.FilterProducer;
 import lan.chaos.rocketmq.keyquery.KeyQueryProducer;
 import lan.chaos.rocketmq.order.GlobalOrderProducer;
 import lan.chaos.rocketmq.order.OrderedProducer;
+import lan.chaos.rocketmq.reliability.ReliabilityProducer;
 import lan.chaos.rocketmq.pull.PullConsumer;
 import lan.chaos.rocketmq.pull.PullProducer;
 import lan.chaos.rocketmq.requestreply.RequestReplyProducer;
@@ -182,6 +183,13 @@ class DemoTest {
     void broadcastNoRetry() {
         Assertions.assertDoesNotThrow(() ->
                 SpringUtil.getBean(BroadcastNoRetryProducer.class).send());
+        ThreadUtil.sleep(WAIT_CONSUME_MS);
+    }
+
+    @Test
+    void reliability() {
+        Assertions.assertDoesNotThrow(() ->
+                SpringUtil.getBean(ReliabilityProducer.class).sendGuaranteed("REL_001", "可靠性不丢消息"));
         ThreadUtil.sleep(WAIT_CONSUME_MS);
     }
 }

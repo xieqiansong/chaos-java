@@ -70,9 +70,12 @@ rocketmq-demo/src/main/java/lan/chaos/rocketmq/
 │   └── PullConsumer.java
 ├── acl/                              # ACL 鉴权 ★★☆
 │   └── AclProducer.java
-└── throttle/                         # 消费限流调优 ★★☆
-    ├── ThrottleProducer.java
-    └── ThrottleConsumer.java
+├── throttle/                         # 消费限流调优 ★★☆
+│   ├── ThrottleProducer.java
+│   └── ThrottleConsumer.java
+└── reliability/                      # 消息可靠性专题（不丢 + 不重） ★★★
+    ├── ReliabilityProducer.java      # 不丢·生产侧：syncSend + 校验 SendStatus.SEND_OK + 重试
+    └── ReliabilityConsumer.java      # 不丢+不重：消费成功提交 + MessageIdStore 幂等去重
 ```
 
 ## 场景一览（按使用频率排序）
@@ -87,6 +90,7 @@ rocketmq-demo/src/main/java/lan/chaos/rocketmq/
 - [按 Key 检索 keyquery](#6-按-key-检索-keyquery) → `DemoTest#keyQuery`
 - [发送侧容错 faulttolerant](#7-发送侧容错-faulttolerant) → `DemoTest#faultTolerant`
 - [消息轨迹 trace](#8-消息轨迹-trace) → `DemoTest#trace`
+- [消息可靠性（不丢+不重）reliability](#18-消息可靠性专题不丢--不重--有序) → `DemoTest#reliability`
 
 `★★☆ 中频`
 - [顺序消息 order](#9-顺序消息-order) → `DemoTest#order`
@@ -322,6 +326,30 @@ RocketMQ 半消息 + 本地事务回查机制实现最终一致：`TransactionLi
 | `throttle/ThrottleConsumer.java` | 限流/调优参数下的消费者 |
 
 触发：`DemoTest#throttle`
+
+---
+
+### 18. 消息可靠性专题（不丢 / 不重 / 有序） `★★★`
+
+面试常问「消息怎么保证**不丢、不重、有序**」。RocketMQ 在这三方面都有内建能力，本模块用 `reliability/` 演示**应用层**保证，并区分**中间件层**配置（仅说明）。「有序」由 [顺序消息](#9-顺序消息-order) 的 `OrderedProducer` / `GlobalOrderProducer` 演示，「不重」由 [基础收发·幂等消费](#3-基础收发与幂等消费-simple) 的 `IdempotentConsumer` + `MessageIdStore` 演示。
+
+**应用层（代码演示）：**
+
+| 维度 | 类 | 做法 |
+|------|----|------|
+| 不丢·生产侧 | `reliability/ReliabilityProducer.java` | `syncSend` 同步发送并校验 `SendStatus.SEND_OK`，失败抛异常触发生产者重试（`retryTimesWhenSendFailed`）；设消息 Key 便于检索/去重 |
+| 不丢·消费侧 | `reliability/ReliabilityConsumer.java` | 业务成功才返回（框架提交消费进度）；处理抛异常框架自动 `RECONSUME_LATER`，Broker 重试投递直到死信 |
+| 不重 | `reliability/ReliabilityConsumer.java` + `MessageIdStore` | 以 `msgId` 去重，重复投递（msgId 不变）直接跳过 |
+
+触发：`DemoTest#reliability`
+
+**中间件层（仅配置，非代码演示）：**
+- **不丢·Broker 持久化**：`flushDiskType=SYNC_FLUSH`（同步刷盘，落盘才返回成功）+ `brokerRole=SYNC_MASTER`（主从同步复制，默认 ASYNC 可能丢从）；Dledger 多副本选主防单点。
+- **不丢·生产者**：`retryTimesWhenSendFailed` / `retryTimesWhenSendAsyncFailed` 重试；`sendMsgTimeout` 超时控制。
+- **不重**：RocketMQ 是 at-least-once，天然会因重试/主从切换重投，必须消费端幂等（见 [simple 幂等](#3-基础收发与幂等消费-simple)）；`enableBatchMessage=false` 等不影响。
+- **有序**：`syncSendOrderly` + `ConsumeMode.ORDERLY`（`order/` 场景）：相同 key 路由同一队列 + 单队列串行消费；全局顺序用单队列 Topic（牺牲并发）。
+
+> 一句话：RocketMQ 的不丢靠「同步刷盘 + 主从同步 + 生产者重试 + 消费重试」；不重靠「消费端业务幂等」；有序靠「相同 key 同队列 + ORDERLY 消费」。
 
 ---
 

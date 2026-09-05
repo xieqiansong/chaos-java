@@ -1,0 +1,7 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2.0.18
+    container_name: jdk8-mqtt-demo
+    ports:
+      - "1883:1883"     # MQTT
+    # 默认镜像配置允许匿名连接，适合学习演示；生产环境应加 password_file / ACL

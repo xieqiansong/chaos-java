@@ -42,6 +42,11 @@ public final class MqConstants {
     public static final String ACK_QUEUE = "demo.ack.queue";
     public static final String ACK_ROUTING = "demo.ack.routing";
 
+    // ===================== 可靠性：幂等消费（不重） =====================
+    public static final String IDEMPOTENT_EXCHANGE = "demo.idempotent.exchange";
+    public static final String IDEMPOTENT_QUEUE = "demo.idempotent.queue";
+    public static final String IDEMPOTENT_ROUTING = "demo.idempotent.routing";
+
     // ===================== TTL + DLX 死信与延迟消息 =====================
     /** 工作交换机（direct），消息先发到这里，再由工作队列经 TTL 死信到 DLX */
     public static final String WORK_EXCHANGE = "demo.dlx.work.exchange";

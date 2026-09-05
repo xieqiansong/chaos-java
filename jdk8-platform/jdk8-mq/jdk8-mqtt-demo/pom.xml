@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>lan.chaos</groupId>
+        <artifactId>jdk8-mq</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>jdk8-mqtt-demo</artifactId>
+    <packaging>jar</packaging>
+    <name>jdk8-mqtt-demo</name>
+    <description>MQTT 学习 Demo：发布订阅 / 通配符订阅 / QoS 等级 / 保留消息 / 遗嘱消息（Eclipse Paho 客户端 + 内存 Broker）</description>
+
+    <properties>
+        <!-- Eclipse Paho MQTT v3 客户端：1.2.x 是 v3 最终维护分支，运行目标 Java 7+ -->
+        <paho-mqtt.version>1.2.5</paho-mqtt.version>
+        <!-- Moquette 内存 Broker：0.15（2021）运行目标 Java 8；0.16+ 已升到 Java 11。
+             自包含 *Test 用它替代真实 Broker，类比 rabbitmq-mock / EmbeddedKafka -->
+        <moquette.version>0.15</moquette.version>
+        <!-- Testcontainers：*IT 跑真实 Broker（mosquitto），无 Docker 优雅跳过 -->
+        <testcontainers.version>1.17.6</testcontainers.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.paho</groupId>
+            <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+            <version>${paho-mqtt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- 测试 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- 内存 Broker：自包含 *Test，无需 Docker，类比 Kafka @EmbeddedKafka -->
+        <dependency>
+            <groupId>io.moquette</groupId>
+            <artifactId>moquette-broker</artifactId>
+            <version>${moquette.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Testcontainers：*IT 跑真实 Broker（mosquitto，用 GenericContainer + 匿名配置）；无 Docker 优雅跳过。
+             注：本环境镜像源未收录 org.testcontainers:mqtt 模块，故用核心 GenericContainer 代替 MosquittoContainer -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <configuration>
+                    <mainClass>lan.chaos.mqtt.MqttApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

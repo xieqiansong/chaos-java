@@ -91,6 +91,7 @@
 | Kafka | [`jdk8-kafka-demo`](jdk8-platform/jdk8-mq/jdk8-kafka-demo/README.md) | 8 | 基础收发 / 批量 / 分区有序 / Exactly-Once 事务 / 重试与死信 / Header 过滤。`@EmbeddedKafka` 自包含，无需外部 Broker | [Kafka 学习记录](https://github.com/xieqiansong/chaos-notes/blob/main/notes/Kafka学习记录.md) |
 | RocketMQ | [`jdk8-rocketmq-demo`](jdk8-platform/jdk8-mq/jdk8-rocketmq-demo/README.md) | 8 | 原生 Client，14 类场景：simple / batch / broadcast / delay / filter / order / pull / request-reply / retry / transaction / trace / throttle / ACL / 容错 | [RocketMQ 学习记录](https://github.com/xieqiansong/chaos-notes/blob/main/notes/RocketMQ学习记录.md) |
 | RabbitMQ | [`jdk8-rabbitmq-demo`](jdk8-platform/jdk8-mq/jdk8-rabbitmq-demo/README.md) | 8 | Spring AMQP：Exchange 类型（direct/topic/fanout/headers）、publisher confirm / consumer 手动 ack、TTL+DLX 死信与延迟消息；rabbitmq-mock 自包含 *Test + Testcontainers 真实 Broker *Test（无 Docker 优雅跳过） | — |
+| MQTT | [`jdk8-mqtt-demo`](jdk8-platform/jdk8-mq/jdk8-mqtt-demo/README.md) | 8 | Eclipse Paho 客户端：发布订阅模型 / 通配符订阅（`+` 单层、`#` 多层）/ QoS 0·1·2 / 保留消息（Retained）/ 遗嘱消息（LWT）；moquette 内存 Broker 自包含 *Test + Testcontainers 真实 mosquitto *Test（无 Docker 优雅跳过） | （学习笔记待补） |
 
 ---
 

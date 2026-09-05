@@ -7,6 +7,8 @@ import lan.chaos.rabbitmq.dlx.DelayedMessageCollector;
 import lan.chaos.rabbitmq.dlx.DelayedMessageDemo;
 import lan.chaos.rabbitmq.reliability.AckCollector;
 import lan.chaos.rabbitmq.reliability.ConsumerAckDemo;
+import lan.chaos.rabbitmq.reliability.IdempotentCollector;
+import lan.chaos.rabbitmq.reliability.IdempotentDemo;
 import lan.chaos.rabbitmq.reliability.PublisherConfirmDemo;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -77,6 +79,8 @@ class RabbitmqBrokerTest {
     @Autowired private AckCollector ackCollector;
     @Autowired private DeadLetterCollector dlxCollector;
     @Autowired private DelayedMessageCollector delayedCollector;
+    @Autowired private IdempotentDemo idempotentDemo;
+    @Autowired private IdempotentCollector idempotentCollector;
 
     // ===================== 生产者确认 =====================
 
@@ -127,6 +131,20 @@ class RabbitmqBrokerTest {
             // 延迟消息应至少延迟一个 TTL 时长才送达
             assertThat(System.currentTimeMillis() - start)
                     .isGreaterThanOrEqualTo(1000L);
+        });
+    }
+
+    // ===================== 幂等消费（不重） =====================
+
+    @Test
+    void idempotent_shouldProcessOnlyOnce() {
+        idempotentCollector.reset();
+        // 同一 orderId 发送两次（模拟重投），消费端应只真正处理一次
+        idempotentDemo.publishDuplicate("I1");
+
+        await().atMost(Duration.ofSeconds(10)).untilAsserted(() -> {
+            assertThat(idempotentCollector.getReceivedCount().get()).isEqualTo(2);
+            assertThat(idempotentCollector.getProcessedCount().get()).isEqualTo(1);
         });
     }
 }

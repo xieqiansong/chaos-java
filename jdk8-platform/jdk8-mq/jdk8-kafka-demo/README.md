@@ -40,9 +40,12 @@ jdk8-kafka-demo/src/main/java/lan/chaos/kafka/
 └── filter/                              # Header 消息过滤 ★★☆
     ├── FilterProducer.java              # 发送带 type header 的消息
     └── FilterConsumer.java              # 按 header 做本地过滤（只处理 ORDER 类型）
-└── isolate/                             # 多业务域并发隔离 ★☆☆
-    ├── IsolateProducer.java             # 分别向快域/慢域 Topic 发送消息
-    └── IsolateConsumer.java             # 单监听器多 Topic，按域路由到独立线程池
+├── isolate/                             # 多业务域并发隔离 ★☆☆
+│   ├── IsolateProducer.java             # 分别向快域/慢域 Topic 发送消息
+│   └── IsolateConsumer.java             # 单监听器多 Topic，按域路由到独立线程池
+└── reliability/                         # 消息可靠性（不丢）专题 ★★★
+    ├── ReliabilityProducer.java         # 同步确认 + 重试：Broker ack 才算成功
+    └── ReliabilityConsumer.java         # 业务完成后手动 ack：offset 提交后才算消费成功
 ```
 
 > 设计要点：**能力场景是顶层包**（`simple/batch/order/transaction/retry/filter/isolate`），`config/constant/model` 这类「配置与支撑」只是学习边缘关注，统一收进 `common/`（与 `jdk8-rocketmq-demo` 和 `jdk8-redis-demo` 的包结构一致）。
@@ -53,6 +56,7 @@ jdk8-kafka-demo/src/main/java/lan/chaos/kafka/
 
 - [基础收发 simple](#1-基础收发-simple-) → `KafkaScenarioTest#simple_syncSend_shouldArrive` / `#simple_asyncSend_shouldArrive` / `#simple_fireAndForget_shouldArrive`
 - [重试 + 死信 retry](#5-重试与死信-retry-) → `@EmbeddedKafka` 下真实跑通并断言：重试耗尽后消息进 DLT
+- [消息可靠性（不丢）reliability](#8-消息可靠性不丢-reliability-) → `KafkaScenarioTest#reliability_producerConfirmAndConsumerManualAck_shouldNotLose`
 
 `★★☆ 中频`
 
@@ -174,6 +178,30 @@ Kafka 无服务端消息过滤，利用消息 Header 做本地判断（zero brok
 验证：`KafkaScenarioTest#isolate_slowDomain_shouldNotBlockFastDomain` —— await 两个域各处理 1 条，且 `IsolateConsumer.isFastFinishedBeforeOrWithSlow() == true`。
 
 > 进阶方向：本场景以「Topic 即业务域」演示隔离。真实生产可进一步做「单 Topic 多业务域 + 按 key 哈希分域路由」「域级监控/限流」「慢域熔断降级」；Flink 实时链路的事件时间窗口、迟到容忍等机制可在此基础上类比（本 demo 仅覆盖消费侧，不引申 Flink 主 job）。
+
+---
+
+### 8. 消息可靠性（不丢）reliability `★★★`
+
+面试高频：**消息可靠性 = 不丢 + 不重 + 有序**。本模块用 `reliability/` 包专门演示「不丢」的应用层保证，下方「中间件层配置」说明集群参数（非代码可演示）。「不重」由 [Exactly-Once 事务](#4-exactly-once-事务-transaction-) 覆盖，「有序」由 [分区有序](#3-分区有序-order-) 覆盖。
+
+**应用层（代码演示）：**
+
+| 维度 | 类 | 做法 |
+|------|----|------|
+| 不丢·生产侧 | `reliability/ReliabilityProducer.java` | 同步发送 + 校验 Broker ack（partition/offset）；失败有限次重试；异步发送用回调确认 |
+| 不丢·消费侧 | `reliability/ReliabilityConsumer.java` | 关闭自动提交（`enable-auto-commit: false`），业务处理完成后才 `ack.acknowledge()`；处理抛异常则不提交 offset，重启/重平衡后重投（at-least-once） |
+
+验证：`KafkaScenarioTest#reliability_producerConfirmAndConsumerManualAck_shouldNotLose` —— 生产者同步确认成功、消费者手动 ack 后断言仅处理 1 条。
+
+**中间件层（仅配置，非代码演示）：**
+
+- **不丢·Broker 多副本**：Kafka 的「真不丢」靠**多副本冗余**——Topic `replication.factor ≥ 3`，Leader 写入后需足够 Follower 同步；配合生产者 `acks=all`（等所有 ISR 副本落盘）与 `min.insync.replicas ≥ 2`（至少多少 ISR 确认才算成功）。单副本/单节点（本 demo 学习用 `replicas(1)`）无法真正防丢。
+- **不丢·生产者重试**：`retries`（开启幂等时为最大值）+ `enable.idempotence=true` 防重试导致乱序/重复；`delivery.timeout.ms` 控制整体超时。
+- **不重**：`enable.idempotence=true`（PID + sequence 去重，单分区 exactly-once）；跨分区原子性用[事务](#4-exactly-once-事务-transaction-)。
+- **有序**：同 key → 同 partition 单线程消费（见[分区有序](#3-分区有序-order-)）；partition 数变化会破坏 hash 路由。
+
+> 一句话：应用层负责「确认 + 手动提交 + 重试/幂等」；中间件层负责「副本 + acks + ISR + 幂等」——两层合力才真正不丢不重。
 
 ---
 

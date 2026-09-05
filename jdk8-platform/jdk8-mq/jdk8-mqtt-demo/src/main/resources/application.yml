@@ -1,0 +1,9 @@
+mqtt:
+  # 连真实 Broker（docker-compose 起的 eclipse-mosquitto，端口 1883）。
+  # 自包含 *Test 通过 @DynamicPropertySource 覆盖为内存 Broker（moquette）端口；
+  # *IT（Testcontainers）覆盖为 mosquitto 容器映射端口。
+  broker-url: tcp://localhost:1883
+
+logging:
+  level:
+    lan.chaos.mqtt: info

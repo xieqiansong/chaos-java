@@ -49,7 +49,8 @@ public class KafkaConfig {
                 topic(KafkaConstants.TOPIC_RETRY_DLT),
                 topic(KafkaConstants.TOPIC_FILTER),
                 topic(KafkaConstants.TOPIC_ISOLATE_A),
-                topic(KafkaConstants.TOPIC_ISOLATE_B)
+                topic(KafkaConstants.TOPIC_ISOLATE_B),
+                topic(KafkaConstants.TOPIC_RELIABILITY)
         );
     }
 

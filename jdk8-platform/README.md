@@ -51,6 +51,7 @@
 | 27 | `jdk8-office-tech` | ✅ 完成 | **办公文档处理组**：`jdk8-excel-demo`（POI / EasyExcel / Hutool 三体系横评，含版本守门与能力限制）、`jdk8-word-demo`（文档生成与处理）、`jdk8-pdf-demo`（PDFBox）。详见 `jdk8-office-tech/README.md`。 |
 | 28 | `jdk8-tech` | ✅ 完成 | **技术点示例组（JDK8 专属）**：含 3 个子模块——`jdk8-flink-cdc-sync-demo`（Flink CDC 同源库表同步，覆盖 Q1-Q5；因 Flink 1.17 不兼容 JDK21，不能进 `jdk21-tech`）、`jdk8-hmac-auth-demo`（HMAC 签名鉴权）、`jdk8-bitmap-stat-demo`（位图统计）。详见 `jdk8-tech/README.md`。 |
 | 29 | `jdk8-rabbitmq-demo`（jdk8-mq 组） | ✅ 完成 | **RabbitMQ（Spring AMQP 2.4.x）**：Exchange 类型路由（direct/topic/fanout/headers）、Publisher Confirm 生产者确认、消费者手动 Ack（basicAck/basicNack 重入队）、TTL+DLX 死信与延迟消息；rabbitmq-mock 内存 Broker 自包含 *Test + Testcontainers 真实 Broker *Test（无 Docker 优雅跳过）。详见 `jdk8-mq/jdk8-rabbitmq-demo/README.md`。 |
+| 30 | `jdk8-mqtt-demo`（jdk8-mq 组） | ✅ 完成 | **MQTT（Eclipse Paho 1.2.5）**：发布订阅模型、通配符订阅（`+` 单层 / `#` 多层）、QoS 0/1/2 三等级、保留消息（Retained）、遗嘱消息（LWT）；moquette 0.15 内存 Broker 自包含 *Test + Testcontainers 真实 mosquitto *Test（无 Docker 优雅跳过）。详见 `jdk8-mq/jdk8-mqtt-demo/README.md`。 |
 
 ## 模块详情（同按重要程度排序）
 

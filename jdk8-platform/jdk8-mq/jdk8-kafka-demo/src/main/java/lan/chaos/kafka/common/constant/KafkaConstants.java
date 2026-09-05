@@ -24,6 +24,10 @@ public final class KafkaConstants {
     public static final String TOPIC_ISOLATE_A    = "demo-isolate-a-topic";   // 快域（轻处理）
     public static final String TOPIC_ISOLATE_B    = "demo-isolate-b-topic";   // 慢域（重处理，易拖累）
 
+    // ==================== 消息可靠性专题（不丢） ====================
+    public static final String TOPIC_RELIABILITY  = "demo-reliability-topic";
+    public static final String GROUP_RELIABILITY  = "demo-reliability-group";
+
     // ==================== Group ====================
     public static final String GROUP_SIMPLE      = "demo-simple-group";
     public static final String GROUP_BATCH       = "demo-batch-group";

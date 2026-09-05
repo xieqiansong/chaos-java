@@ -29,10 +29,12 @@ jdk8-rabbitmq-demo/
 │   │   ├── TopicExchangeDemo.java        # 通配符 order.* / log.* / #
 │   │   ├── FanoutExchangeDemo.java       # 广播到所有绑定队列
 │   │   └── HeadersExchangeDemo.java      # 按消息 header 路由
-│   ├── reliability/                     # ★★★ 生产者确认 / 消费者手动 Ack
-│   │   ├── PublisherConfirmDemo.java     # Publisher Confirm（waitForConfirms）
-│   │   ├── ConsumerAckDemo.java          # 发布 + 场景编排
-│   │   └── AckCollector.java             # @RabbitListener 手动 ack + nack 重入队（@Profile("!mock")）
+│   ├── reliability/                     # ★★★ 消息可靠性：不丢 / 不重 / 有序
+│   │   ├── PublisherConfirmDemo.java     # 不丢·生产侧：Publisher Confirm（waitForConfirms）
+│   │   ├── ConsumerAckDemo.java          # 不丢·消费侧：发布 + 场景编排
+│   │   ├── AckCollector.java             # 不丢·消费侧：@RabbitListener 手动 ack + nack 重入队（@Profile("!mock")）
+│   │   ├── IdempotentDemo.java           # 不重：同一 orderId 发两次模拟重投
+│   │   └── IdempotentCollector.java      # 不重：业务键去重，重复投递仅处理一次（@Profile("!mock")）
 │   └── dlx/                             # ★★☆ TTL + DLX 死信与延迟消息
 │       ├── DeadLetterDemo.java           # 工作队列 TTL 到期 → 死信到 DLT
 │       ├── DeadLetterCollector.java      # DLT 监听器（@Profile("!mock")）
@@ -55,6 +57,7 @@ jdk8-rabbitmq-demo/
 - [Headers 按属性路由](#4-headers-交换机按-header-路由) → `publishTyped(type, ...)`：按消息 header 路由
 - [生产者确认 Publisher Confirm](#5-生产者确认-publisher-confirm-) → `publishWithConfirm()`：waitForConfirms 确认到 Broker
 - [消费者手动 Ack](#6-消费者手动-ack--nack-重入队) → `ConsumerAckDemo` + `AckCollector`：basicAck / basicNack(requeue)
+- [幂等消费（不重）](#9-消息可靠性专题不丢--不重--有序) → `IdempotentDemo` + `IdempotentCollector`：业务键去重，重复投递仅处理一次
 
 `★★☆ 中频`
 - [TTL + DLX 死信](#7-ttl--dlx-死信队列) → 工作队列超时自动死信到 DLT（Broker 原生，无需抛异常）
@@ -142,6 +145,26 @@ RabbitMQ 原生无延迟交换机（官方 `rabbitmq-delayed-message-exchange` �
 验证：`RabbitmqBrokerTest#delayed_shouldDeliverAfterDelay`（约 1.5s 后到达，断言耗时 ≥ 1s）。
 
 **局限**：队列级 TTL 对所有消息同延迟；单条不同延迟需消息级 `expiration` 或延迟插件。
+
+---
+
+### 9. 消息可靠性专题（不丢 / 不重 / 有序） `★★★`
+
+面试常问「消息怎么保证**不丢、不重、有序**」。本模块把三件事拆开演示，并区分**应用层**（代码可演示）与**中间件层**（需集群/队列属性配置，README 说明）。
+
+| 维度 | 本 demo 演示（应用层） | 中间件层配置（仅说明） |
+|------|----------------------|----------------------|
+| **不丢·生产→Broker** | [`PublisherConfirmDemo`](#5-生产者确认-publisher-confirm-)：`waitForConfirms` 确认落盘 | `publisher-confirms=true` + 队列 `durable=true` + 消息 `deliveryMode=PERSISTENT`（持久化）；`publisher-returns`/`mandatory` 感知不可路由 |
+| **不丢·Broker→消费** | [`ConsumerAckDemo`+`AckCollector`](#6-消费者手动-ack--nack-重入队)：业务完成才 `basicAck`，失败 `basicNack(requeue)` | 消费者 `AcknowledgeMode.MANUAL`；镜像/仲裁队列保证 Broker 高可用（见进阶方向） |
+| **不重（幂等）** | `IdempotentDemo` + `IdempotentCollector`：以 `orderId` 业务键去重，重复投递仅真正处理一次 | 生产环境去重表用 Redis `SETNX+EX` / 数据库唯一键（多实例、重启仍有效） |
+| **有序** | 单队列天然 FIFO（默认行为，无需专门代码） | 注意：多消费者 + `prefetch>1` 会破坏严格顺序；需严格有序用「单队列 + 单消费者」或消费端排序 |
+
+**不重演示验证：** `RabbitmqBrokerTest#idempotent_shouldProcessOnlyOnce` —— 同一 orderId 发送 2 次，断言 `receivedCount==2`、`processedCount==1`。
+
+**中间件层要点（面试话术）：**
+- **不丢本质 = 确认机制 + 持久化 + 高可用队列**：confirm 只保证「到 Broker」，必须配合队列/消息持久化（否则 Broker 重启丢内存消息），再配合仲裁队列（quorum，替代 classic mirrored queue）防单点。
+- **不重本质 = 业务幂等**：RabbitMQ 是 at-least-once，网络抖动/重投必然重复，只能靠消费端按业务键去重；本 demo 用内存 `Set` 演示原理，生产换分布式去重存储。
+- **有序本质 = 单队列有序**：RabbitMQ 没有 Kafka 分区、RocketMQ MessageQueue 那样的「局部有序」概念，一个 queue 内本就 FIFO；要保证全局有序就「一 topic 一队列一消费者」，代价是失去并发。
 
 ---
 

@@ -43,6 +43,7 @@ jdk8-platform/
 ├── jdk8-redis-demo/                 Redis 全场景：缓存 / 集合 / 排行榜 / 计数 / 分布式锁 / Lua / Pipeline / PubSub
 ├── jdk8-rocketmq-demo/              RocketMQ 全场景：消息模型与生产消费进阶模式
 ├── jdk8-rabbitmq-demo/              RabbitMQ（Spring AMQP）：Exchange 路由 / publisher confirm / 手动 Ack / TTL+DLX 死信与延迟
+├── jdk8-mqtt-demo/                  MQTT（Eclipse Paho）：发布订阅 / 通配符订阅 / QoS 三等级 / 保留消息 / 遗嘱消息（LWT）
 ├── jdk8-scheduler-demo/             定时任务：@Scheduled / Quartz / XXL-JOB
 ├── jdk8-seata-demo/                 分布式事务：AT / TCC / SAGA / XA
 ├── jdk8-seckill-demo/               秒杀综合实战：分桶库存 + Lua 扣减 + Kafka 异步下单

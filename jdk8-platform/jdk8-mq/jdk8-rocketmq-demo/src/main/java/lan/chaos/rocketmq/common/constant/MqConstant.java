@@ -37,6 +37,7 @@ public final class MqConstant {
     public static final String TOPIC_BROADCAST_NO_RETRY = "demo-broadcast-noretry-topic";
     public static final String TOPIC_KEYQUERY = "demo-keyquery-topic";
     public static final String TOPIC_ACL = "demo-acl-topic";
+    public static final String TOPIC_RELIABILITY = "demo-reliability-topic";
 
     /** 消息轨迹上报专用主题（RocketMQ 内置，Broker 需预先存在） */
     public static final String TRACE_TOPIC = "RMQ_SYS_TRACE_TOPIC";
@@ -61,6 +62,7 @@ public final class MqConstant {
     public static final String GROUP_BROADCAST_2 = "demo-broadcast-group-2";
     public static final String GROUP_BROADCAST_NO_RETRY = "demo-broadcast-noretry-group";
     public static final String GROUP_ACL = "demo-acl-group";
+    public static final String GROUP_RELIABILITY = "demo-reliability-consumer-group";
 
     // ====================== 派生主题(Derived) ======================
 

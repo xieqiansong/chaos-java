@@ -216,6 +216,24 @@ public class RabbitConfig {
         return BindingBuilder.bind(ackQueue()).to(ackExchange()).with(MqConstants.ACK_ROUTING);
     }
 
+    // ===================== 可靠性：幂等消费（不重）拓扑 =====================
+
+    @Bean
+    public DirectExchange idempotentExchange() {
+        return new DirectExchange(MqConstants.IDEMPOTENT_EXCHANGE);
+    }
+
+    @Bean
+    public Queue idempotentQueue() {
+        return new Queue(MqConstants.IDEMPOTENT_QUEUE, true);
+    }
+
+    @Bean
+    public Binding idempotentBinding() {
+        return BindingBuilder.bind(idempotentQueue()).to(idempotentExchange())
+                .with(MqConstants.IDEMPOTENT_ROUTING);
+    }
+
     // ===================== TTL + DLX 死信 / 延迟拓扑（仅真实 Broker：非 mock） =====================
 
     @Bean

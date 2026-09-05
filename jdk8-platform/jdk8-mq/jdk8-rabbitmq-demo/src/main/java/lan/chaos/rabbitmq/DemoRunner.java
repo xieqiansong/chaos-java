@@ -8,6 +8,7 @@ import lan.chaos.rabbitmq.exchange.FanoutExchangeDemo;
 import lan.chaos.rabbitmq.exchange.HeadersExchangeDemo;
 import lan.chaos.rabbitmq.exchange.TopicExchangeDemo;
 import lan.chaos.rabbitmq.reliability.ConsumerAckDemo;
+import lan.chaos.rabbitmq.reliability.IdempotentDemo;
 import lan.chaos.rabbitmq.reliability.PublisherConfirmDemo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ public class DemoRunner implements ApplicationRunner {
     private final HeadersExchangeDemo headersDemo;
     private final PublisherConfirmDemo confirmDemo;
     private final ConsumerAckDemo ackDemo;
+    private final IdempotentDemo idempotentDemo;
     private final DeadLetterDemo dlxDemo;
     private final DelayedMessageDemo delayedDemo;
 
@@ -48,6 +50,7 @@ public class DemoRunner implements ApplicationRunner {
         headersDemo.publishTyped("notify", OrderEvent.sample("demo-notify"));
         confirmDemo.publishWithConfirm(OrderEvent.sample("demo-confirm"));
         ackDemo.publish(OrderEvent.sample("demo-ack"));
+        idempotentDemo.publishDuplicate("demo-idempotent");
         dlxDemo.publish(OrderEvent.sample("demo-dlx"));
         delayedDemo.publish(OrderEvent.sample("demo-delayed"));
         log.info("========== 已发布；观察各 @RabbitListener 日志（DLX/延迟约 1~1.5s 后到达）==========");
