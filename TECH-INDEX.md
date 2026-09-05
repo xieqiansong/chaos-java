@@ -90,6 +90,7 @@
 |---|---|---|---|---|
 | Kafka | [`jdk8-kafka-demo`](jdk8-platform/jdk8-mq/jdk8-kafka-demo/README.md) | 8 | 基础收发 / 批量 / 分区有序 / Exactly-Once 事务 / 重试与死信 / Header 过滤。`@EmbeddedKafka` 自包含，无需外部 Broker | [Kafka 学习记录](https://github.com/xieqiansong/chaos-notes/blob/main/notes/Kafka学习记录.md) |
 | RocketMQ | [`jdk8-rocketmq-demo`](jdk8-platform/jdk8-mq/jdk8-rocketmq-demo/README.md) | 8 | 原生 Client，14 类场景：simple / batch / broadcast / delay / filter / order / pull / request-reply / retry / transaction / trace / throttle / ACL / 容错 | [RocketMQ 学习记录](https://github.com/xieqiansong/chaos-notes/blob/main/notes/RocketMQ学习记录.md) |
+| RabbitMQ | [`jdk8-rabbitmq-demo`](jdk8-platform/jdk8-mq/jdk8-rabbitmq-demo/README.md) | 8 | Spring AMQP：Exchange 类型（direct/topic/fanout/headers）、publisher confirm / consumer 手动 ack、TTL+DLX 死信与延迟消息；rabbitmq-mock 自包含 *Test + Testcontainers *IT | — |
 
 ---
 
@@ -114,6 +115,7 @@
 | 熔断限流 | [`jdk8-sentinel-demo`](jdk8-platform/jdk8-sentinel-demo/README.md) | 8 | QPS 直接/关联/WarmUp 流控、异常数/比例/慢调用比例熔断、热点参数、`@SentinelResource`、程序化 `SphU.entry()` | [Sentinel 学习记录](https://github.com/xieqiansong/chaos-notes/blob/main/notes/Sentinel学习记录.md) |
 | **热路径 Filter 异步化（压测量化）** | [`jdk8-servlet-filter-async-demo`](jdk8-platform/jdk8-servlet-filter-async-demo/README.md) | 8 | `HIGHEST_PRECEDENCE` Filter 在 DispatcherServlet 之前截断最高频接口，异步提交即返回释放 Tomcat 线程；双 mode 内嵌 Tomcat 对照，量化「绕过 MVC 省下的链路 CPU」 | **[热路径 Filter 异步化：高频接口绕过 Spring MVC](https://github.com/xieqiansong/chaos-notes/blob/main/performance/热路径Filter异步化-高频接口绕过SpringMVC.md)** |
 | 微服务全链路 | [`jdk8-microservice-demo`](jdk8-platform/jdk8-microservice-demo/README.md) | 8 | 形态二（多进程，10 模块）：common 层 6 模块 + gateway/auth/user/order；已落地 P0–P6——统一响应异常、MDC traceId、多数据源（PG 主 / MySQL 副）、Sentinel 熔断降级、Seata AT 全局事务、双令牌 JWT、AccessLog 脱敏、Nacos 多环境 | [企业级微服务架构实践](https://github.com/xieqiansong/chaos-notes/blob/main/notes/企业级微服务架构实践.md) |
+| **WebFlux 响应式编程** | [`jdk8-webflux-demo`](jdk8-platform/jdk8-webflux-demo/README.md) | 8 | Reactor（Mono/Flux + map/flatMap/filter）、背压（request(n) 按需拉取 + onBackpressure* 策略）、RouterFunction 函数式路由、注解式响应式 Controller（对照）、WebClient 异步非阻塞调用；Netty 非阻塞，内存仓储 + 内嵌端点，零外部依赖，StepVerifier/WebTestClient 双轨验证 | （学习笔记待补） |
 
 ---
 
@@ -206,7 +208,6 @@
 | # | 重要度 | 技术点 | 状态 | 建议落点 / 说明 |
 |---|---|---|---|---|
 | 16 | 🟡 中 | 字节码与 Java Agent（ASM / ByteBuddy） | 🟡 部分 | `jdk8-base` 已有 Premain/Agent-Class；缺 ASM `ClassVisitor`/`ClassWriter` 字节码操作、ByteBuddy 运行时动态代理与方法拦截。建议补 `java.agent.asm` 子包 |
-| 17 | 🟡 中 | WebFlux 响应式编程 | 🟡 / ❌ | MVC 已间接覆盖；缺 RouterFunction 函数式路由、WebClient 异步非阻塞调用、Reactor（Mono/Flux）背压。JDK 8 下 WebFlux 需 Spring Boot 2.x |
 | 23 | 🟡 中 | Spring Cloud Gateway 网关 | ❌ 待补 | `jdk8-gateway-demo`：路由断言工厂（Path/Host/Header）、GatewayFilter 过滤器链、集成 Sentinel 限流 + Nacos 动态路由。**依赖 Nacos + Sentinel** |
 | 24 | 🟡 中 | 链路追踪（SkyWalking / Sleuth+Zipkin） | ❌ 待补 | `jdk8-tracing-demo`：SkyWalking Agent 自动探针 + MQ 跨进程追踪、Sleuth（TraceId/SpanId）+ Brave。**依赖 Nacos + MQ** |
 | 31 | 🟡 中 | 监控（Actuator / Prometheus / Grafana） | ❌ 待补 | `jdk8-monitor-demo`：Actuator 端点（health/metrics/env）、Micrometer 指标暴露、Prometheus 采集 + Grafana 仪表盘、自定义业务指标。**依赖 Docker** |
@@ -214,7 +215,6 @@
 | 36 | 🟡 中 | CI/CD（GitHub Actions / GitLab CI） | ❌ 待补 | **工程级**补充（非 demo 级）：`.github/workflows/build.yml`（Maven 编译 + 测试 + 打包）、`.gitlab-ci.yml` 多阶段流水线 |
 | 37 | ⚪ 低 | JPA / Hibernate | ❌ 待补 | `jdk8-jpa-demo`：仓库方法命名查询、`@Query` JPQL、实体关联（`@OneToMany`/`@ManyToMany`）、二级缓存。与 MyBatis 二选一 |
 | 38 | ⚪ 低 | Lucene（搜索底层） | ❌ 进阶 | 建议直接在 `jdk8-elasticsearch-demo` 内补充：倒排索引构建、IK 分词器、查询解析、高亮 |
-| 40 | ⚪ 低 | RabbitMQ | ❌ 待补 | `jdk8-rabbitmq-demo`：Exchange 类型（direct/topic/fanout/headers）、publisher confirm / consumer ack、TTL+DLX 死信与延迟消息、Spring AMQP |
 | 41 | ⚪ 低 | ShardingSphere 分库分表 | ❌ 待补 | `jdk8-shardingsphere-demo`：水平分库分表（inline/standard 策略）、读写分离、分布式主键、绑定表 + 广播表 |
 
 ### 建设优先级
@@ -226,11 +226,9 @@
 | 🟡 按序补（有依赖链，需独立建 demo） | P2 | Spring Cloud Gateway 网关 | `jdk8-gateway-demo` | Nacos + Sentinel |
 | | P2 | SkyWalking 链路追踪 | `jdk8-tracing-demo` | Nacos + MQ |
 | | P2 | Actuator + Prometheus + Grafana 监控 | `jdk8-monitor-demo` | Docker |
-| | P2 | WebFlux 响应式编程 | `jdk8-webflux-demo` | — |
 | ⚪ 可选补（低重要度或工程级） | P3 | K8s 部署清单（Dockerfile / K8s YAML） | 工程级补充 | — |
 | | P3 | GitHub Actions + GitLab CI | 工程级补充 | — |
 | | P3 | JPA / Hibernate | `jdk8-jpa-demo` | — |
-| | P3 | RabbitMQ | `jdk8-rabbitmq-demo` | — |
 | | P3 | ShardingSphere 分库分表 | `jdk8-shardingsphere-demo` | — |
 | | P4 | Lucene 底层 | `jdk8-elasticsearch-demo` 内补充 | — |
 

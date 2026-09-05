@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: jdk8-webflux-demo
+
+# demo Runner(DemoApp.main)用固定端口；测试用 @SpringBootTest(RANDOM_PORT) 覆盖为随机端口
+server:
+  port: 18080
+
+logging:
+  level:
+    root: INFO
+    lan.chaos.webflux: INFO

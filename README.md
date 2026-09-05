@@ -23,7 +23,7 @@
 
 ### jdk8-platform · JDK 8 · Spring Boot 2.7.18
 
-默认位：承载对 JDK 无强约束的技术，共 27 个 Maven 模块。
+默认位：承载对 JDK 无强约束的技术，共 28 个 Maven 模块。
 
 ```
 jdk8-platform/
@@ -42,6 +42,7 @@ jdk8-platform/
 ├── jdk8-ratelimiter-demo/           多租户分布式限流三实现对比（Redis+Lua / 本地+Redis / 纯本地）
 ├── jdk8-redis-demo/                 Redis 全场景：缓存 / 集合 / 排行榜 / 计数 / 分布式锁 / Lua / Pipeline / PubSub
 ├── jdk8-rocketmq-demo/              RocketMQ 全场景：消息模型与生产消费进阶模式
+├── jdk8-rabbitmq-demo/              RabbitMQ（Spring AMQP）：Exchange 路由 / publisher confirm / 手动 Ack / TTL+DLX 死信与延迟
 ├── jdk8-scheduler-demo/             定时任务：@Scheduled / Quartz / XXL-JOB
 ├── jdk8-seata-demo/                 分布式事务：AT / TCC / SAGA / XA
 ├── jdk8-seckill-demo/               秒杀综合实战：分桶库存 + Lua 扣减 + Kafka 异步下单
@@ -50,6 +51,7 @@ jdk8-platform/
 ├── jdk8-serialization-demo/         序列化对比：Jackson / Kryo / JDK 原生
 ├── jdk8-servlet-filter-async-demo/  热路径 Servlet Filter 异步化（绕过 DispatcherServlet）
 ├── jdk8-short-link-demo/            短链综合实战：Snowflake+Base62 + 布隆过滤 + Redis 缓存
+├── jdk8-webflux-demo/              WebFlux 响应式编程：Reactor / 背压 / RouterFunction / WebClient
 ├── jdk8-starter-demo/               Spring Boot Starter 自动装配机制
 ├── jdk8-tech/                       JDK8 专属技术点组：flink-cdc-sync / hmac-auth / bitmap-stat
 └── jdk8-testing-demo/               JUnit5 + Mockito 测试专项（Mock / BDD / 切片测试）
