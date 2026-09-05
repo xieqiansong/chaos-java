@@ -20,6 +20,7 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
         <module name="jdk8-base" />
       </profile>
@@ -68,7 +69,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
           <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
         <module name="jdk8-kafka-demo" />
@@ -269,7 +269,6 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
         <module name="jdk8-rocketmq-demo" />
       </profile>
@@ -369,6 +368,7 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
         <module name="jdk8-bitmap-stat-demo" />
       </profile>
@@ -387,6 +387,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
           <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
         <module name="jdk8-hmac-auth-demo" />
@@ -442,6 +443,16 @@
         <module name="jdk21-common" />
         <module name="jdk25-common" />
       </profile>
+      <profile name="Annotation profile for jdk8-pdf-demo" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="jdk8-pdf-demo" />
+      </profile>
       <profile name="Annotation profile for jdk8-platform" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -455,15 +466,6 @@
           <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok-mapstruct-binding/0.2.0/lombok-mapstruct-binding-0.2.0.jar" />
         </processorPath>
         <module name="jdk8-mapstruct-demo" />
-      </profile>
-      <profile name="Annotation profile for jdk8-pdf-demo" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-        </processorPath>
-        <module name="jdk8-pdf-demo" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

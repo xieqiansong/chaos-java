@@ -97,6 +97,12 @@
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-microservice-demo/jdk8-ms-user/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-microservice-demo/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-microservice-demo/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-mq/jdk8-kafka-demo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-mq/jdk8-kafka-demo/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-mq/jdk8-rocketmq-demo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-mq/jdk8-rocketmq-demo/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-mq/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-mq/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-mybatis-plus-demo/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-mybatis-plus-demo/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdk8-platform/jdk8-nacos-demo/jdk8-nacos-common/src/main/java" charset="UTF-8" />

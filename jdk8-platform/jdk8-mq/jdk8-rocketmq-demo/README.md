@@ -332,20 +332,20 @@ RocketMQ 半消息 + 本地事务回查机制实现最终一致：`TransactionLi
 docker-compose up -d
 
 # 2) 跑全部场景：无 broker 时自动跳过，有 broker 时真实发送并断言
-mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test
+mvn -o -pl jdk8-platform/jdk8-mq/jdk8-rocketmq-demo test
 
 # 3) 跑单个场景
-mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#sync
-mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#broadcast
-mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#requestReply
-mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#pull
-mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#globalOrder
-mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#keyQuery
-mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#faultTolerant
-mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#trace
-mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#acl
-mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#throttle
-mvn -o -pl jdk8-platform/jdk8-rocketmq-demo test -Dtest=DemoTest#broadcastNoRetry
+mvn -o -pl jdk8-platform/jdk8-mq/jdk8-rocketmq-demo test -Dtest=DemoTest#sync
+mvn -o -pl jdk8-platform/jdk8-mq/jdk8-rocketmq-demo test -Dtest=DemoTest#broadcast
+mvn -o -pl jdk8-platform/jdk8-mq/jdk8-rocketmq-demo test -Dtest=DemoTest#requestReply
+mvn -o -pl jdk8-platform/jdk8-mq/jdk8-rocketmq-demo test -Dtest=DemoTest#pull
+mvn -o -pl jdk8-platform/jdk8-mq/jdk8-rocketmq-demo test -Dtest=DemoTest#globalOrder
+mvn -o -pl jdk8-platform/jdk8-mq/jdk8-rocketmq-demo test -Dtest=DemoTest#keyQuery
+mvn -o -pl jdk8-platform/jdk8-mq/jdk8-rocketmq-demo test -Dtest=DemoTest#faultTolerant
+mvn -o -pl jdk8-platform/jdk8-mq/jdk8-rocketmq-demo test -Dtest=DemoTest#trace
+mvn -o -pl jdk8-platform/jdk8-mq/jdk8-rocketmq-demo test -Dtest=DemoTest#acl
+mvn -o -pl jdk8-platform/jdk8-mq/jdk8-rocketmq-demo test -Dtest=DemoTest#throttle
+mvn -o -pl jdk8-platform/jdk8-mq/jdk8-rocketmq-demo test -Dtest=DemoTest#broadcastNoRetry
 ```
 
 > 触发入口 `DemoTest` 已去除类级 `@Disabled`：每个场景独立 `@Test`；类上挂 `BrokerReachableCondition`，

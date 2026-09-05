@@ -13,9 +13,8 @@
         <module>jdk8-mapstruct-demo</module>
         <module>jdk8-mybatis-plus-demo</module>
         <module>jdk8-nacos-demo</module>
-        <module>jdk8-rocketmq-demo</module>
         <module>jdk8-redis-demo</module>
-        <module>jdk8-kafka-demo</module>
+        <module>jdk8-mq</module>
         <module>jdk8-localcache-demo</module>
         <module>jdk8-seata-demo</module>
         <module>jdk8-sentinel-demo</module>

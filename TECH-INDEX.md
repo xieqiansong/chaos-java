@@ -88,8 +88,8 @@
 
 | 技术点 | 模块 | JDK | 关键能力 | 笔记 |
 |---|---|---|---|---|
-| Kafka | [`jdk8-kafka-demo`](jdk8-platform/jdk8-kafka-demo/README.md) | 8 | 基础收发 / 批量 / 分区有序 / Exactly-Once 事务 / 重试与死信 / Header 过滤。`@EmbeddedKafka` 自包含，无需外部 Broker | [Kafka 学习记录](https://github.com/xieqiansong/chaos-notes/blob/main/notes/Kafka学习记录.md) |
-| RocketMQ | [`jdk8-rocketmq-demo`](jdk8-platform/jdk8-rocketmq-demo/README.md) | 8 | 原生 Client，14 类场景：simple / batch / broadcast / delay / filter / order / pull / request-reply / retry / transaction / trace / throttle / ACL / 容错 | [RocketMQ 学习记录](https://github.com/xieqiansong/chaos-notes/blob/main/notes/RocketMQ学习记录.md) |
+| Kafka | [`jdk8-kafka-demo`](jdk8-platform/jdk8-mq/jdk8-kafka-demo/README.md) | 8 | 基础收发 / 批量 / 分区有序 / Exactly-Once 事务 / 重试与死信 / Header 过滤。`@EmbeddedKafka` 自包含，无需外部 Broker | [Kafka 学习记录](https://github.com/xieqiansong/chaos-notes/blob/main/notes/Kafka学习记录.md) |
+| RocketMQ | [`jdk8-rocketmq-demo`](jdk8-platform/jdk8-mq/jdk8-rocketmq-demo/README.md) | 8 | 原生 Client，14 类场景：simple / batch / broadcast / delay / filter / order / pull / request-reply / retry / transaction / trace / throttle / ACL / 容错 | [RocketMQ 学习记录](https://github.com/xieqiansong/chaos-notes/blob/main/notes/RocketMQ学习记录.md) |
 
 ---
 
