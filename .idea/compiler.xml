@@ -431,6 +431,15 @@
         </processorPath>
         <module name="jdk8-rabbitmq-demo" />
       </profile>
+      <profile name="Annotation profile for jdk8-mqtt-demo" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../../Users/xqs/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="jdk8-mqtt-demo" />
+      </profile>
       <profile name="Annotation profile for jdk8-platform" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />

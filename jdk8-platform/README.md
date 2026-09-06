@@ -23,7 +23,7 @@
 | 重要度 | 模块 | 状态 | 说明 |
 |--------|------|------|------|
 | 1 | `jdk8-base` | ✅ 完成 | Java 基础内功：分布式 ID/Paxos、IO/NIO/Netty/SPI/JUC 并发、JVM/类加载/迷你 Servlet 容器/JMH/Java Agent 字节码增强；JDK8 新特性：Lambda/Stream/Optional/方法引用/默认方法/日期时间/Base64/StringJoiner/CompletableFuture（106 个可运行小例子+新特性场景） |
-| 2 | `jdk8-redis-demo` | ✅ 完成 | Redis 全场景：缓存、Hash/List/Set、ZSet 排行榜、计数、分布式锁、Lua 限流/扣库存、Pipeline、PubSub |
+| 2 | `jdk8-redis-demo` | ✅ 完成 | Redis 全场景：缓存、Hash/List/Set、ZSet 排行榜、计数、分布式锁、Lua 限流/扣库存、Pipeline、PubSub、Stream 消息队列 |
 | 3 | `jdk8-localcache-demo` | ✅ 完成 ★ 标杆 | 本地缓存（Caffeine）：基础读写 / 写入过期 / 容量淘汰 / 声明式 @Cacheable，纯内存零外部依赖。**后续 A 类 demo 模板** |
 | 4 | `jdk11-mybatis-plus-demo`（自 jdk8 迁移） | ✅ 完成 | MyBatis-Plus 高阶：条件构造器 / 分页（单表+联表）/ 逻辑删除+乐观锁+自动填充 / 多租户隔离 / 动态表名分表 / 字段透明加密（AES）；因依赖的 MyBatis-Plus 3.5.16 拦截器模块需 JDK 11+，已迁移至 `jdk11-platform`，以单元测试为核心验证，H2 内存库零外部依赖 |
 | 5 | `jdk8-testing-demo` | ✅ 完成 | 单元测试专项：JUnit5 + Mockito `@Mock/@Spy/@InjectMocks`、参数匹配与行为验证（`argThat`/`verify`）、BDD 风格（given/when/then）、Spring Boot 切片测试（`@WebMvcTest`），各场景均含可断言 `*Test` |

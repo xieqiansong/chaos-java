@@ -1,10 +1,10 @@
 # jdk8-redis-demo
 
-Redis（内存键值数据库）演示模块，覆盖**字符串/对象缓存、Hash/List/Set、ZSet 排行榜、计数自增、限流、分布式锁、Lua、Pipeline、发布订阅**等核心能力（基于 Spring Data Redis + Lettuce）。单模块多包，**以单元测试为核心验证手段**，无 Web 层。
+Redis（内存键值数据库）演示模块，覆盖**字符串/对象缓存、Hash/List/Set、ZSet 排行榜、计数自增、限流、分布式锁、Lua、Pipeline、发布订阅、Stream 消息队列**等核心能力（基于 Spring Data Redis + Lettuce）。单模块多包，**以单元测试为核心验证手段**，无 Web 层。
 
 - 基础包：`lan.chaos.redis`
 - 技术栈：Spring Boot 2.7.18 + Spring Data Redis 2.7.x + Lettuce（默认客户端，走 `6379`）
-- 验证入口：`src/test/.../RedisScenarioTest`（覆盖缓存 JSON 往返 / 排行榜 TopN / 计数原子 / 分布式锁），无 Redis 时用例自动跳过
+- 验证入口：`src/test/.../RedisScenarioTest`（覆盖缓存 JSON 往返 / 排行榜 TopN / 计数原子 / 分布式锁 / Stream 生产消费确认），无 Redis 时用例自动跳过
 
 > 所有场景均连真实 Redis（`localhost:6379`）。跑测试前先启动 Redis Server 即可；不启动也能 `mvn test`（集成用例跳过，上下文装配用例照常通过）。
 
@@ -23,9 +23,9 @@ jdk8-redis-demo/
     │   │   ├── RedisConfig.java             # RedisTemplate(JSON)/StringRedisTemplate 配置 ◆
     │   │   └── PubSubConfig.java            # 发布订阅监听器容器配置 ★★☆
     │   ├── constant/
-    │   │   └── RedisKeyConstants.java       # Key 命名规范（前缀/频道）
-    │   ├── model/
-    │   │   └── User.java                    # 演示实体（对象缓存）
+    │   │   └── RedisKeyConstants.java       # Key 命名规范（前缀/频道/stream）
+    │   └── model/
+    │       └── User.java                    # 演示实体（对象缓存）
     ├── cache/                               # 字符串/对象缓存 ★★★
     │   └── StringCacheService.java
     ├── collection/                          # Hash/List/Set ★★★
@@ -42,8 +42,10 @@ jdk8-redis-demo/
     │   └── StockService.java
     ├── pipeline/                            # Pipeline 批量 ★★☆
     │   └── PipelineService.java
-    └── pubsub/                              # 发布订阅 ★★☆
-        └── PubSubService.java
+    ├── pubsub/                              # 发布订阅 ★★☆
+    │   └── PubSubService.java
+    └── stream/                              # Stream 消息队列 ★★☆
+        └── StreamService.java
 ```
 
 > 设计要点：**能力场景是顶层包**（`cache/collection/rank/...`），`config/constant/model` 这类「配置与支撑」只是学习边缘关注，统一收进 `common/`（与 `jdk8-rocketmq-demo` 的能力顶层包 + `common/` 公共能力一致）。
@@ -62,6 +64,7 @@ jdk8-redis-demo/
 - [Lua 扣库存 stock](#7-lua-扣库存-stock) → 判断-扣减原子，解决超卖
 - [Pipeline pipeline](#8-pipeline-批量-pipeline) → 一次往返批量读写
 - [发布订阅 pubsub](#9-发布订阅-pubsub) → 频道消息广播
+- [Stream 消息队列 stream](#10-stream-消息队列-stream) → 持久化队列（消费组 + ACK，替代 Pub/Sub）
 
 `◆ 基础模块`
 - [RedisConfig 连接配置](#redisconfig-连接配置)
@@ -75,7 +78,7 @@ Spring Boot 默认 `RedisTemplate` 用 JDK 序列化（二进制难读），这�
 | 模板 | key 序列化 | value 序列化 | 用途 |
 |------|-----------|-------------|------|
 | `redisTemplate` (`<String,Object>`) | String | JSON（带 `@class` 类型） | 对象缓存，可正确反序列化回 Java 对象 |
-| `stringRedisTemplate` | String | String | 简单字符串、计数、Pipeline、Lua 等 |
+| `stringRedisTemplate` | String | String | 简单字符串、计数、Pipeline、Lua、Stream 等 |
 
 连接信息见 `application.yml`：`host/port/password/database` + `lettuce.pool`（连接池）。
 
@@ -168,6 +171,22 @@ Spring Boot 默认 `RedisTemplate` 用 JDK 序列化（二进制难读），这�
 
 ---
 
+### 10. Stream 消息队列 stream `★★☆`
+
+Redis 5+ 的 Stream 是**持久化日志结构**，自带消费组（Consumer Group）与消息确认（ACK），弥补 Pub/Sub 无持久化、无 ACK 的短板，可承载可靠消息队列。
+
+- 生产：`produce(field, value)` → `XADD`，返回消息 ID（`<毫秒时间戳>-<序号>`）
+- 建消费组：`ensureGroup(group)` → `XGROUP CREATE`（已存在忽略 BUSYGROUP）
+- 消费：`consume(group, consumer)` → `XREADGROUP`，组内消费者读未投递消息（非阻塞）
+- 确认：`ack(group, id)` → `XACK`，移出 PEL（待确认列表）
+- 堆积监控：`pending(group)` → `XPENDING` 未确认概览
+
+> 建组基于 `latest` 只投递建组后的新消息；建组前须先 `produce` 让 stream 存在（否则需 `MKSTREAM`）。务必 `ack`，否则消息长期堆积在 PEL 占用内存。
+
+验证：见 `RedisScenarioTest.stream_produceConsumeAck`（生产 → 建组 → 消费 → ACK → PEL 归零）。
+
+---
+
 ## 如何运行
 
 ```bash
@@ -178,17 +197,17 @@ docker run -d --name redis -p 6379:6379 redis:7.2
 mvn -pl jdk8-redis-demo -am test
 ```
 
-- 有本地 Redis：4 条集成用例（缓存 JSON 往返 / 排行榜 TopN / 计数原子 / 分布式锁）真实执行并通过。
+- 有本地 Redis：5 条集成用例（缓存 JSON 往返 / 排行榜 TopN / 计数原子 / 分布式锁 / Stream 生产消费确认）真实执行并通过。
 - 无 Redis：集成用例经 `Assumptions` 自动跳过，`RedisApplicationTests`（上下文装配）照常通过，CI 也能绿。
 
-也可单独跑某个场景：在 IDE 里直接执行 `RedisScenarioTest` 的对应方法，或写一条新测试调用任意 Service（如 `CollectionService`、`RateLimitService`）观察输入→输出。
+也可单独跑某个场景：在 IDE 里直接执行 `RedisScenarioTest` 的对应方法，或写一条新测试调用任意 Service（如 `CollectionService`、`RateLimitService`、`StreamService`）观察输入→输出。
 
 ## 进阶方向（依赖外部组件 / 生产考量，未写成独立 Demo）
 
 - `◆` **Redis 集群 / 哨兵**：高可用与分片（配置 `spring.redis.cluster` / `spring.redis.sentinel`）
 - `◆` **Redisson 分布式锁**：成熟锁实现（可重入、看门狗续期、红锁），生产推荐替代手写锁
 - `◆` **缓存三大问题**：缓存穿透（布隆过滤器/空值缓存）、击穿（互斥锁/逻辑过期）、雪崩（随机 TTL/多级缓存）
-- `◆` **Stream**：Redis 5+ 的流结构，可做消息队列（替代 Pub/Sub 的无持久化短板）
+- `◆` **Stream（已实现）**：见 `stream/` 包，`XADD` 生产 + `XGROUP`/`XREADGROUP` 消费组 + `XACK` 确认，替代 Pub/Sub 的无持久化短板
 - `◆` **持久化与内存**：RDB/AOF 策略、maxmemory 与淘汰策略（allkeys-lru 等）
 
 ## 设计要点
@@ -197,4 +216,5 @@ mvn -pl jdk8-redis-demo -am test
 - **序列化选择**：对象用 JSON（可读、跨语言），简单值用 String 模板，避免默认 JDK 二进制。
 - **原子性优先**：计数 `INCR`、扣库存/限流用 Lua，避免「读-改-写」并发竞态。
 - **锁要安全释放**：分布式锁释放必须校验持有者，用 Lua 原子删除，杜绝误删。
-- **频率结论**：生产里 **字符串缓存 + Hash/List/Set + 计数 + ZSet 排行榜** 几乎必写；**分布式锁、限流、Lua、Pipeline、Pub/Sub** 按业务选用；**集群、Redisson、缓存三大问题、Stream** 属进阶/生产范畴。
+- **队列选型**：轻量广播用 Pub/Sub；需要持久化、消费组、ACK 的可靠队列用 Stream。
+- **频率结论**：生产里 **字符串缓存 + Hash/List/Set + 计数 + ZSet 排行榜** 几乎必写；**分布式锁、限流、Lua、Pipeline、Pub/Sub、Stream** 按业务选用；**集群、Redisson、缓存三大问题** 属进阶/生产范畴。

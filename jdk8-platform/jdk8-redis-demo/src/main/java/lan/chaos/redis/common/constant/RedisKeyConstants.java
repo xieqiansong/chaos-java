@@ -25,4 +25,6 @@ public final class RedisKeyConstants {
     public static final String LOCK_KEY = "redis:demo:lock:";
     /** 发布订阅频道 */
     public static final String PUBSUB_CHANNEL = "redis:demo:channel";
+    /** Stream 消息队列 key */
+    public static final String STREAM_KEY = "redis:demo:stream";
 }

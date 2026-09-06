@@ -81,6 +81,7 @@ mvn -pl jdk8-base exec:java -Dexec.mainClass=lan.chaos.simple.web.HttpServer
 | JUC | `java.juc.*`（CountDownLatch/Semaphore/ForkJoin/Phaser…） | `main` | 多线程协作过程日志 |
 | IO | `java.io.bio/nio/aio/netty/*` | 成对运行 Server + Client | Socket 收发、Reactor 多路复用 |
 | JVM | `jvm.CustomClassLoader` / `jvm.JvmTest`（CGLib） | `main` | 自定义类加载、动态代理拦截 |
+| 动态代理 | `proxy.ProxyDemo`（JDK + CGLib） | `main` | JDK 接口代理 + 注解驱动增强；CGLib 继承代理 + `CallbackFilter` 路由 + `LazyLoader` 懒加载 |
 | 迷你容器 | `simple.web.HttpServer` | `main` + 浏览器 | 手写 Servlet 容器处理静态资源/Servlet |
 | JMH 基准 | `SimpleBenchmark` / `RealisticConcatBenchmark` | `main` | 字符串拼接吞吐对比（JMH 报告） |
 | Paxos | `distributed.system.paxos.demo.BasicPaxosDemo` | `main` | 一轮 Prepare/Accept/Chosen 共识过程 |

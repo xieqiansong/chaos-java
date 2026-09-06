@@ -5,13 +5,17 @@ import lan.chaos.redis.common.model.User;
 import lan.chaos.redis.counter.CounterService;
 import lan.chaos.redis.lock.DistributedLock;
 import lan.chaos.redis.rank.RankService;
+import lan.chaos.redis.stream.StreamService;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.connection.stream.MapRecord;
+import org.springframework.data.redis.connection.stream.RecordId;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,6 +39,8 @@ class RedisScenarioTest {
     private CounterService counter;
     @Autowired
     private DistributedLock lock;
+    @Autowired
+    private StreamService stream;
 
     @BeforeEach
     void assumeRedisUp() {
@@ -80,5 +86,19 @@ class RedisScenarioTest {
     void lock_runsExactlyOnce() {
         String r = lock.withLock("k:" + System.nanoTime(), 30, () -> "ok");
         assertEquals("ok", r);
+    }
+
+    @Test
+    void stream_produceConsumeAck() {
+        String group = "g_" + System.nanoTime();
+        stream.produce("boot", "init");   // 先建 stream（建组前需存在）
+        stream.ensureGroup(group);        // 消费组基于 latest，只投递建组后的新消息
+        String id = stream.produce("order", "2");
+        List<MapRecord<String, Object, Object>> recs = stream.consume(group, "c1");
+        assertFalse(recs.isEmpty());
+        RecordId rid = recs.get(0).getId();
+        assertEquals(id, rid.getValue());
+        assertEquals(1, stream.ack(group, rid));
+        assertEquals(0, stream.pending(group).getTotalPendingMessages());
     }
 }
