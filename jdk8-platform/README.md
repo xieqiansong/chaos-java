@@ -52,6 +52,7 @@
 | 28 | `jdk8-tech` | ✅ 完成 | **技术点示例组（JDK8 专属）**：含 3 个子模块——`jdk8-flink-cdc-sync-demo`（Flink CDC 同源库表同步，覆盖 Q1-Q5；因 Flink 1.17 不兼容 JDK21，不能进 `jdk21-tech`）、`jdk8-hmac-auth-demo`（HMAC 签名鉴权）、`jdk8-bitmap-stat-demo`（位图统计）。详见 `jdk8-tech/README.md`。 |
 | 29 | `jdk8-rabbitmq-demo`（jdk8-mq 组） | ✅ 完成 | **RabbitMQ（Spring AMQP 2.4.x）**：Exchange 类型路由（direct/topic/fanout/headers）、Publisher Confirm 生产者确认、消费者手动 Ack（basicAck/basicNack 重入队）、TTL+DLX 死信与延迟消息；rabbitmq-mock 内存 Broker 自包含 *Test + Testcontainers 真实 Broker *Test（无 Docker 优雅跳过）。详见 `jdk8-mq/jdk8-rabbitmq-demo/README.md`。 |
 | 30 | `jdk8-mqtt-demo`（jdk8-mq 组） | ✅ 完成 | **MQTT（Eclipse Paho 1.2.5）**：发布订阅模型、通配符订阅（`+` 单层 / `#` 多层）、QoS 0/1/2 三等级、保留消息（Retained）、遗嘱消息（LWT）；moquette 0.15 内存 Broker 自包含 *Test + Testcontainers 真实 mosquitto *Test（无 Docker 优雅跳过）。详见 `jdk8-mq/jdk8-mqtt-demo/README.md`。 |
+| 31 | `jdk8-game-leaderboard-demo` | ✅ 完成 | **游戏实时积分排行榜**：Redis ZSET 内核（百万用户 O(logN) 更新 / O(logN+K) 查 Top100）+ 四层优化——双层缓存（本地 Caffeine 缓存 Top100）/ 热数据双写（全量+Top1000 专用 ZSET）/ 分片聚合（哈希分片 + 跨分片归并 TopK）/ 异步更新流水线（内存攒批落盘）。存储抽象 `ScoreBoard` 使全部逻辑可内存测试，切 `leaderboard.store=redis` 即走真实 ZSET。详见 `jdk8-game-leaderboard-demo/README.md`。 |
 
 ## 模块详情（同按重要程度排序）
 

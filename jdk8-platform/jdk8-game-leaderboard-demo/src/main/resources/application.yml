@@ -1,0 +1,35 @@
+server:
+  port: 8088
+
+spring:
+  # 排行榜存储后端：memory（默认，纯内存零依赖，可直接跑 DemoApp）
+  # 切到 redis 即使用真实 Redis ZSET（启动 Redis 后加 --leaderboard.store=redis）
+  redis:
+    host: localhost
+    port: 6379
+    password: ${REDIS_PASSWORD:}
+    database: 0
+    timeout: 5000ms
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: 1000ms
+
+leaderboard:
+  # 存储后端：memory / redis
+  store: memory
+  # Top K 查询默认条数
+  topn: 100
+  # 热数据专用 ZSET 容量（Top N 热榜）
+  hot-capacity: 1000
+  # 分片数（跨分片聚合 Top K）
+  shard-count: 4
+  # 异步更新流水线：批次大小 / 兜底刷新间隔(ms)
+  pipeline-batch: 500
+  pipeline-flush-ms: 50
+
+logging:
+  level:
+    lan.chaos.leaderboard: info

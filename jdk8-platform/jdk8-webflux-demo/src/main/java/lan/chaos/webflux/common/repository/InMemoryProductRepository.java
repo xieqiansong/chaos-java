@@ -3,6 +3,7 @@ package lan.chaos.webflux.common.repository;
 import lan.chaos.webflux.common.model.Product;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -21,7 +22,7 @@ public class InMemoryProductRepository {
     }
 
     public List<Product> findAll() {
-        return List.copyOf(store.values());
+        return new ArrayList<>(store.values());
     }
 
     public Optional<Product> findById(Long id) {

@@ -36,6 +36,7 @@
         <module>jdk8-webflux-demo</module>
         <module>jdk8-tech</module>
         <module>jdk8-office-tech</module>
+        <module>jdk8-game-leaderboard-demo</module>
     </modules>
 
     <properties>

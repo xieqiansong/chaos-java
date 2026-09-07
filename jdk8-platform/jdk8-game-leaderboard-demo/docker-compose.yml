@@ -1,0 +1,15 @@
+version: "3.8"
+
+# 游戏实时积分排行榜 Demo 的 Redis 依赖（store=redis 时启用）
+services:
+  redis:
+    image: redis:7.2
+    container_name: chaos-leaderboard-redis
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5

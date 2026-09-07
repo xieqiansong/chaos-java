@@ -452,15 +452,6 @@
         <module name="jdk8-mapstruct-demo" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="jdk11-newfeatures-demo" target="11" />
-      <module name="jdk17-newfeatures-demo" target="17" />
-      <module name="jdk21-base-features-demo" target="21" />
-      <module name="jdk25-base-features-demo" target="25" />
-      <module name="jdk8-base-features-demo" target="1.8" />
-      <module name="jdk8-ms-common" target="1.8" />
-      <module name="jdk8-netty-demo" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
@@ -468,7 +459,6 @@
       <module name="jdk17-springai-demo" options="-parameters" />
       <module name="jdk21-virtualthread-demo" options="--enable-preview" />
       <module name="jdk25-base" options="--enable-preview" />
-      <module name="jdk25-base-features-demo" options="--enable-preview" />
     </option>
   </component>
 </project>
