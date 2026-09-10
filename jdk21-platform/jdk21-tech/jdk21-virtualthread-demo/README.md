@@ -1,7 +1,7 @@
 # 虚拟线程（JDK 21）：机制演示 + 压测量化
 
 > 本工程分两层，从「为什么」到「收益多大」一次讲透：
-> **机制演示层**（吞吐对比 / 载体调度观察 / pinning 复现 / 结构化并发 / ThreadLocal 语义）——为什么快、怎么跑、有什么坑、正确用法、使用边界；
+> **机制演示层**（吞吐对比 / 载体调度观察 / pinning 复现 / ThreadLocal 语义）——为什么快、怎么跑、有什么坑、正确用法、使用边界；
 > **压测量化层**（IO 密集 / 饱和拒绝 / pinning 代价 / CPU 边界 / HTTP 服务）——用可复跑的压测把收益与边界量化，数据见 [TEST_REPORT.md](TEST_REPORT.md)。
 > 全部基于标准 JDK 并发 API，零外部中间件，开箱即跑。
 
@@ -9,7 +9,7 @@
 
 虚拟线程的核心机制是**阻塞时从载体线程卸载（unmount），让载体线程转去服务其他虚拟线程**——因此 IO 密集负载下可用极少量 OS 线程承载海量并发阻塞任务。
 
-- **机制演示层**：五个对照实验，回答「机制 → 收益 → 坑 → 正确用法」，每个场景都有输入参数与可对比的输出指标（秒级）。
+- **机制演示层**：四个对照实验，回答「机制 → 收益 → 坑 → 正确用法」，每个场景都有输入参数与可对比的输出指标（秒级）。
 - **压测量化层**：五个压测场景，用同一套引擎跑出吞吐、延迟分位、拒绝数，回答「收益多大、边界在哪」（分钟级，一条命令自动出报告）。
 
 ## 2. 技术栈与入口
@@ -42,7 +42,6 @@ mvn -pl jdk21-tech/jdk21-virtualthread-demo spring-boot:run -Dspring-boot.run.ar
 - 吞吐对比：虚拟线程组总耗时/吞吐显著优于固定线程池组
 - 载体观察：同时运行峰值远小于任务数，载体线程去重数 ≈ CPU 核数
 - pinning：synchronized 版峰值并发≈载体线程数，ReentrantLock 版远超
-- 结构化并发：并行总耗时≈单个任务；失败传播抛 `ExecutionException`；超时抛 `TimeoutException`
 - ThreadLocal：默认继承父值（与平台线程一致），显式关闭后读到 `null`
 
 ## 4. 场景一览
@@ -52,7 +51,6 @@ mvn -pl jdk21-tech/jdk21-virtualthread-demo spring-boot:run -Dspring-boot.run.ar
 | 吞吐对比 | `throughput.ThroughputCompare` | 总耗时/吞吐/峰值并发 | 平台线程池 vs 虚拟线程，IO 阻塞场景吞吐差异 |
 | 载体调度观察 | `runtime.CarrierObservation` | 同时运行峰值/去重载体数 | 阻塞卸载、载体复用的运行时证据 |
 | pinning 复现 | `pinning.PinningCompare` | 峰值并发/总耗时 | synchronized 临界区内阻塞钉住载体线程 |
-| 结构化并发 | `structured.StructuredConcurrency` | 行为结果 | 并行/失败传播/超时统一收束子任务 |
 | ThreadLocal 语义 | `threadlocal.ThreadLocalSemantics` | 读取结果 | 默认继承可继承上下文，可显式关闭 |
 
 **压测量化层（`mvn test -Dbench=true`，数据见 [TEST_REPORT.md](TEST_REPORT.md)）**
@@ -85,13 +83,7 @@ mvn -pl jdk21-tech/jdk21-virtualthread-demo spring-boot:run -Dspring-boot.run.ar
 - **对照结果**：synchronized 版峰值并发被限制在载体线程数内、总耗时显著变长；ReentrantLock 版阻塞时正常卸载，峰值并发可远超载体线程数。
 - **生产启示**：虚拟线程路径上避免在 `synchronized` 临界区内做阻塞 IO，或改用 `ReentrantLock`；定位 pinning 可用 `jcmd <pid> Thread.dump` 观察载体线程占用。
 
-### 5.4 结构化并发（正确用法）
-
-- **关键 API**：`StructuredTaskScope.ShutdownOnFailure`：`fork()` 提交子任务、`join()` / `joinUntil(deadline)` 等待、`throwIfFailed()` 聚合失败。
-- **三种行为**：成功并行总耗时≈单个任务；任一子任务失败 → scope 关闭并取消其他子任务，`join()` 抛 `ExecutionException`；`joinUntil` 到点抛 `TimeoutException`。
-- **WHY**：虚拟线程可大量创建，但「谁等谁」的并发编排易失控；结构化并发把子任务生命周期收束到父作用域，避免线程逃逸与空跑。
-
-### 5.5 ThreadLocal 继承语义（使用边界）
+### 5.4 ThreadLocal 继承语义（使用边界）
 
 - **WHY**：虚拟线程默认**继承**父线程的可继承上下文（`inheritInheritableThreadLocals` 默认 `true`，与平台线程一致）；但生产上不应依赖「线程本地变量隐式跨虚拟线程传递」——虚拟线程数量巨大、生命周期各异，隐式传递易导致上下文错乱与内存驻留。
 - **对照**：默认读到父值；显式 `Thread.ofVirtual().inheritInheritableThreadLocals(false)` 关闭后子虚拟线程读到 `null`。
@@ -135,12 +127,11 @@ mvn -pl jdk21-tech/jdk21-virtualthread-demo spring-boot:run -Dspring-boot.run.ar
 1. **真实链路压测**：把模拟 IO 换成真实远程调用（DB / HTTP / MQ），量化端到端收益；当前压测用的是可控阻塞，趋势可信但绝对值不能直接搬到线上。可结合压测工具（如 JMeter）观测「线程池饱和 → 排队 → 超时」到「吞吐稳定」的完整收益曲线。
 2. **pinning 全面排查**：除 `synchronized` 外，`Object.wait()`、native 方法等也会 pin；用 `jcmd Thread.dump` 与 `-Djdk.tracePinnedThreads=full` 定位。
 3. **线程池替换边界**：定时任务、有界队列限流、CPU 密集任务仍应保留平台线程语义；虚拟线程不替代线程池的全部职责（缺信号量/批量控制，可配合 `Semaphore` 限流）。
-4. **与结构化并发的工程化结合**：超时/取消/错误聚合与网关超时、批量并行调用（如多路 MQ/DB 并发）整合。
-5. **ThreadLocal 治理**：用 `ThreadLocal` 数量审计、改用参数传递/`ScopedValue`（JDK 24 预览）的迁移路径。
+4. **ThreadLocal 治理**：用 `ThreadLocal` 数量审计、改用参数传递/`ScopedValue`（JDK 24 预览）的迁移路径。
 
 ## 8. 设计要点
 
-- **一个场景一个类**：机制层吞吐/调度/pinning/结构化/ThreadLocal 各自独立，互不耦合，可单独运行与断言。
+- **一个场景一个类**：机制层吞吐/调度/pinning/ThreadLocal 各自独立，互不耦合，可单独运行与断言。
 - **两层解耦**：压测层只依赖 `common/`（`IoSimulator` / `ConcurrentCounter` / `LatencyRecorder`），不碰机制层的五个场景类，因此加压测没有改动任何既有断言。
 - **指标可对照**：机制层输出「总耗时 / 吞吐 / 峰值并发」；压测层输出「吞吐 / p50 / p99 / 成功 / 失败 / 拒绝」，差异全部量化可见。
 - **相对断言**：测试用对比关系（虚拟线程 < 平台线程一半、pinned < unlocked、峰值 < 载体数）而非绝对数值，CI 上不 flaky。
@@ -164,7 +155,6 @@ jdk21-virtualthread-demo/
     │   ├── throughput/ThroughputCompare.java      # 机制层：平台线程池 vs 虚拟线程吞吐
     │   ├── runtime/CarrierObservation.java        # 机制层：载体线程挂载/卸载/复用
     │   ├── pinning/PinningCompare.java            # 机制层：synchronized vs ReentrantLock
-    │   ├── structured/StructuredConcurrency.java  # 机制层：并行/失败传播/超时
     │   ├── threadlocal/ThreadLocalSemantics.java  # 机制层：继承默认值与显式关闭
     │   ├── bench/                                 # 压测层
     │   │   ├── BenchEngine.java                   # 闭环负载引擎：采集吞吐/延迟/拒绝
@@ -180,7 +170,7 @@ jdk21-virtualthread-demo/
     │   │       └── HttpServerBench.java           # E：HTTP 服务 平台 vs 虚拟线程
     │   └── runner/{DemoRunner,BenchRunnerMain}.java
     └── test/java/lan/chaos/virtualthread/
-        ├── *Test.java                             # 机制层断言（5 个）
+        ├── *Test.java                             # 机制层断言（4 个）
         └── bench/
             ├── BenchMarkTest.java                 # 一键压测（-Dbench=true 才跑）
             └── BenchSanityTest.java               # 引擎冒烟（极小参数，默认跑）

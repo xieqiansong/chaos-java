@@ -4,7 +4,6 @@ import lan.chaos.virtualthread.bench.BenchRunner;
 import lan.chaos.virtualthread.common.constant.Scenario;
 import lan.chaos.virtualthread.pinning.PinningCompare;
 import lan.chaos.virtualthread.runtime.CarrierObservation;
-import lan.chaos.virtualthread.structured.StructuredConcurrency;
 import lan.chaos.virtualthread.threadlocal.ThreadLocalSemantics;
 import lan.chaos.virtualthread.throughput.ThroughputCompare;
 import org.springframework.boot.ApplicationArguments;
@@ -28,7 +27,6 @@ public class DemoRunner implements ApplicationRunner {
         SCENARIOS.put(Scenario.THROUGHPUT, new ThroughputCompare()::demo);
         SCENARIOS.put(Scenario.RUNTIME, new CarrierObservation()::demo);
         SCENARIOS.put(Scenario.PINNING, new PinningCompare()::demo);
-        SCENARIOS.put(Scenario.STRUCTURED, new StructuredConcurrency()::demo);
         SCENARIOS.put(Scenario.THREADLOCAL, new ThreadLocalSemantics()::demo);
     }
 
