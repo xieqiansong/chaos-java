@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WorkspaceSettings">
+    <project name="jdk11-platform" path="$PROJECT_DIR$/jdk11-platform" />
+    <project name="jdk17-platform" path="$PROJECT_DIR$/jdk17-platform" />
+    <project name="jdk21-platform" path="$PROJECT_DIR$/jdk21-platform" />
+    <project name="jdk25-platform" path="$PROJECT_DIR$/jdk25-platform" />
+    <project name="jdk8-platform" path="$PROJECT_DIR$/jdk8-platform" />
+    <option name="workspace" value="true" />
+  </component>
+</project>

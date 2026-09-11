@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/chaos-java.iml" filepath="$PROJECT_DIR$/.idea/chaos-java.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jdk8-platform/jdk8-testing-demo/jdk8-testing-demo.iml" filepath="$PROJECT_DIR$/jdk8-platform/jdk8-testing-demo/jdk8-testing-demo.iml" />
     </modules>
   </component>
 </project>
