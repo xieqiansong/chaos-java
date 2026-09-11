@@ -63,6 +63,3 @@ build/
 .DS_Store
 /.DS_Store
 **/.DS_Store
-
-# 临时代码 / 随手测试
-jdk8-testing-demo/scratch/

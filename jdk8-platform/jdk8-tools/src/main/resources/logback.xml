@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  非 SpringBoot 环境（如 JavaTest / YamlConfig.main 裸 main）的日志配置。
+
+  作用：把 root 级别钉在 INFO，关闭 logback 默认的 DEBUG。
+  否则 org.springframework.boot.env.YamlPropertySourceLoader 会以 DEBUG 级别
+  把 application.yml 原文（含密码）打进日志。
+
+  说明：SpringBoot 应用优先加载 logback-spring.xml，届时本文件自动让位，
+  不会覆盖容器里的日志配置。
+-->
+<configuration>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 关键：该包在 DEBUG 下会输出（含密码的）配置原文 -->
+    <logger name="org.springframework.boot.env" level="INFO"/>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>
