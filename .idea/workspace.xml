@@ -5,21 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="756dfd75-f5bb-4b02-8727-c422b96114f9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/go.imports.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jdk8-platform/jdk8-tools/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jdk8-platform/jdk8-tools/src/main/java/lan/chaos/algorithm/ListNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jdk8-platform/jdk8-tools/src/main/java/lan/chaos/algorithm/Solution.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jdk8-platform/jdk8-tools/src/main/java/lan/chaos/algorithm/TreeNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jdk8-platform/jdk8-tools/src/main/java/lan/chaos/tools/CodeSnippetTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jdk8-platform/jdk8-tools/src/main/java/lan/chaos/tools/JavaTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jdk8-platform/jdk8-tools/src/main/java/lan/chaos/tools/YamlConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jdk8-platform/jdk8-tools/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jdk8-platform/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/jdk8-platform/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jdk8-platform/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/jdk8-platform/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,46 +54,46 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.JavaTest.executor": "Debug",
-    "JUnit.GarbageCollectorDemoTest.detectCurrentGC_shouldShowGCInfo.executor": "Run",
-    "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
-    "Maven.jdk11-platform [clean].executor": "Run",
-    "Maven.jdk11-platform [compile].executor": "Run",
-    "Maven.jdk11-platform [package].executor": "Run",
-    "Maven.jdk17-platform [clean].executor": "Run",
-    "Maven.jdk17-platform [compile].executor": "Run",
-    "Maven.jdk21-platform [clean].executor": "Run",
-    "Maven.jdk21-platform [compile].executor": "Run",
-    "Maven.jdk25-platform [clean].executor": "Run",
-    "Maven.jdk25-platform [compile].executor": "Run",
-    "Maven.jdk25-platform [package].executor": "Run",
-    "Maven.jdk8-platform [clean].executor": "Run",
-    "Maven.jdk8-platform [compile].executor": "Run",
-    "Maven.jdk8-platform [package].executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.Workspaces.CheckRemotesActivity": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.restore.workspace.module": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "RunOnceActivity.workspace.git.set.grouping.by.repo": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "master",
-    "js.buildTools.grunt.grunt-cli.package": "",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/project/chaos/chaos-java/jdk8-platform",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.32873562",
-    "run.configurations.included.in.services": "true",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.JavaTest.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.GarbageCollectorDemoTest.detectCurrentGC_shouldShowGCInfo.executor&quot;: &quot;Run&quot;,
+    &quot;Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.jdk11-platform [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.jdk11-platform [compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.jdk11-platform [package].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.jdk17-platform [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.jdk17-platform [compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.jdk21-platform [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.jdk21-platform [compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.jdk25-platform [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.jdk25-platform [compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.jdk25-platform [package].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.jdk8-platform [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.jdk8-platform [compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.jdk8-platform [package].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.Workspaces.CheckRemotesActivity&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.restore.workspace.module&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.workspace.git.set.grouping.by.repo&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;js.buildTools.grunt.grunt-cli.package&quot;: &quot;&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/project/chaos/chaos-java/jdk8-platform&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.32873562&quot;,
+    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\project\chaos\chaos-java\jdk8-platform" />
@@ -468,7 +454,8 @@
       <updated>1706796390580</updated>
       <workItem from="1789116591738" duration="3133000" />
       <workItem from="1789128618123" duration="1197000" />
-      <workItem from="1789131979987" duration="5026000" />
+      <workItem from="1789131979987" duration="6307000" />
+      <workItem from="1789173372511" duration="1963000" />
     </task>
     <servers />
   </component>
