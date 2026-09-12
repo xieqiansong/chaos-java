@@ -29,3 +29,6 @@ Thumbs.db
 
 # 本地环境配置（含真实连接凭证），不提交
 **/application-local.yml
+
+# AI 临时产物（中间文件 / 一次性脚本，不进版本库）
+.scratch/
