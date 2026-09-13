@@ -29,11 +29,11 @@ public class SqlTest {
             List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, DbType.mysql);
 
             // 通常一条语句对应一个 SELECT
-            if (stmtList.isEmpty() || !(stmtList.getFirst() instanceof SQLSelectStatement)) {
+            if (stmtList.isEmpty() || !(stmtList.get(0) instanceof SQLSelectStatement)) {
                 System.out.println("Not a SELECT statement or no statement found.");
                 return;
             }
-            SQLSelectStatement selectStatement = (SQLSelectStatement) stmtList.getFirst();
+            SQLSelectStatement selectStatement = (SQLSelectStatement) stmtList.get(0);
             // 2. 创建一个自定义 Visitor 来遍历 AST
             selectStatement.accept(new MyASTVisitor());
         }
@@ -50,11 +50,11 @@ public class SqlTest {
             // 1. 解析 SQL
             List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, DbType.mysql);
 
-            if (stmtList.isEmpty() || !(stmtList.getFirst() instanceof SQLSelectStatement)) {
+            if (stmtList.isEmpty() || !(stmtList.get(0) instanceof SQLSelectStatement)) {
                 System.out.println("Not a SELECT statement or no statement found.");
                 return;
             }
-            SQLSelectStatement selectStatement = (SQLSelectStatement) stmtList.getFirst();
+            SQLSelectStatement selectStatement = (SQLSelectStatement) stmtList.get(0);
             // 2. 使用自定义 Visitor 遍历 AST
             selectStatement.accept(new WhereInVisitor());
         }

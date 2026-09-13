@@ -2,7 +2,9 @@ package lan.chaos.tools;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileAppender;
+import cn.hutool.core.util.StrUtil;
 import lombok.Cleanup;
+import org.apache.commons.compress.utils.Sets;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 
@@ -15,11 +17,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class WordFrequencyCounter {
 
-    private static final Set<String> TEXT_EXTENSIONS = Set.of("java", "txt", "yaml", "yml", "md", "properties");
+    private static final Set<String> TEXT_EXTENSIONS = Sets.newHashSet("java", "txt", "yaml", "yml", "md", "properties");
 
     private static final Set<String> cocaSet = new HashSet<>();
 
@@ -53,14 +56,14 @@ public class WordFrequencyCounter {
     // 收集所有文本文件路径
     private static List<Path> collectTextFiles(Path directory) throws IOException {
         IOFileFilter filter = new SuffixFileFilter(
-                TEXT_EXTENSIONS.stream().map(s -> "." + s).toList()
+                TEXT_EXTENSIONS.stream().map(s -> "." + s).collect(Collectors.toList())
         );
         @Cleanup
         Stream<Path> paths = Files.walk(directory);
         return paths
                 .filter(Files::isRegularFile)
                 .filter(path -> filter.accept(path.toFile()))
-                .toList();
+                .collect(Collectors.toList());
 
     }
 
@@ -68,10 +71,7 @@ public class WordFrequencyCounter {
     private static Map<String, Long> countWordFrequency(List<Path> files)
             throws InterruptedException, ExecutionException {
 
-
-        @Cleanup
-        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
-
+        ExecutorService executor = ForkJoinPool.commonPool();
         List<Future<Map<String, Long>>> futures = new ArrayList<>();
 
         for (Path file : files) {
@@ -86,9 +86,9 @@ public class WordFrequencyCounter {
                     resultMap.merge(word.toLowerCase(), count, Long::sum)
             );
         }
-
         executor.shutdown();
         return resultMap;
+
     }
 
 /*
@@ -127,10 +127,8 @@ public class WordFrequencyCounter {
                 String[] words = line.split("[^a-zA-Z]+");
 
                 for (String word : words) {
-                    if (cocaSet.contains(word)) {
-                        if (!word.isBlank()) {
-                            wordCount.merge(word.toLowerCase(), 1L, Long::sum);
-                        }
+                    if (StrUtil.isNotBlank(word) && cocaSet.contains(word)) {
+                        wordCount.merge(word.toLowerCase(), 1L, Long::sum);
                     }
                 }
             }

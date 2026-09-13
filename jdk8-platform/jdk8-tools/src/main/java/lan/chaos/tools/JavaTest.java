@@ -6,7 +6,6 @@ package lan.chaos.tools;
 public class JavaTest {
 
     public static void main(String[] args) throws Exception {
-        CodeSnippetTest.dataSourceTest();
     }
 
 

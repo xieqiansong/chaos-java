@@ -61,7 +61,6 @@ public class QuickObjectPool<T> {
             pooledObj = objectFactory.get();
         }
         // 异步补充对象到队列
-        @Cleanup
         ExecutorService executor = ForkJoinPool.commonPool();
         executor.submit(this::refillQueue);
         return Optional.ofNullable(pooledObj).map(PooledObject::getObject).orElse(null);

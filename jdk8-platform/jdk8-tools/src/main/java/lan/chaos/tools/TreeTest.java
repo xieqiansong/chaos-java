@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class TreeTest {
 
@@ -45,7 +46,7 @@ public class TreeTest {
 
     public void testTree() throws Exception {
         List<OrganizationEntity> orgMpEntities = Db.use().findAll(Entity.create("sys_org").set("delete_flag", "1"))
-                .stream().map(o -> BeanUtil.copyProperties(o, OrganizationEntity.class)).toList();
+                .stream().map(o -> BeanUtil.copyProperties(o, OrganizationEntity.class)).collect(Collectors.toList());
         //配置
         TreeNodeConfig treeNodeConfig = new TreeNodeConfig();
         // 自定义属性名 都有默认值的
