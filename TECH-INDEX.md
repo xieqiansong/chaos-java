@@ -142,7 +142,7 @@
 | 技术点 | 模块 | JDK | 关键能力 | 笔记 |
 |---|---|---|---|---|
 | 安全框架与认证授权 | [`jdk8-security-demo`](jdk8-platform/jdk8-security-demo/README.md) | 8 | Spring Security 过滤器链（白名单 / Basic / 无状态）+ jjwt 签发校验 + 方法安全 + OAuth2 资源服务器（条件化启用，附 Keycloak docker-compose）；Session-Cookie 与 Token 方案对比见注释 | [Spring Security 学习记录](https://github.com/xieqiansong/chaos-notes/blob/main/notes/SpringSecurity学习记录.md) |
-| 加密与国密 | [`jdk8-crypto-demo`](jdk8-platform/jdk8-crypto-demo/README.md) | 8 | AES(CBC/GCM) / RSA（加密 + SHA256withRSA 签名）/ SHA-256 / 国密 SM2-SM3-SM4（BouncyCastle），含篡改检测断言，纯算法零外部依赖 | [加密与国密学习记录](https://github.com/xieqiansong/chaos-notes/blob/main/notes/加密与国密学习记录.md) |
+| 加密与国密 | [`jdk8-crypto-demo`](jdk8-platform/jdk8-crypto-demo/README.md) | 8 | 主流加密算法全景：先输出 47 项算法清单（对称/非对称/摘要/MAC/KDF/编码 + 推荐状态），再演示 AES 全模式与 ChaCha20-Poly1305 / RSA-OAEP-PSS / ECDSA-ECDH-Ed25519-X25519-DH / MD5-SHA-1-SHA-2-SHA3 / HMAC-CMAC / PBKDF2-HKDF / 国密 SM2-SM3-SM4 / 混合加密（BouncyCastle 补齐 JDK8 缺失算法）；含标准测试向量与篡改检测断言，纯算法零外部依赖 | [加密与国密学习记录](https://github.com/xieqiansong/chaos-notes/blob/main/notes/加密与国密学习记录.md) |
 | HMAC 鉴权 | [`jdk8-hmac-auth-demo`](jdk8-platform/jdk8-tech/jdk8-hmac-auth-demo/README.md) | 8 | HMAC 签名鉴权 | [HMAC 鉴权学习记录](https://github.com/xieqiansong/chaos-notes/blob/main/notes/HMAC鉴权学习记录.md) |
 
 ---

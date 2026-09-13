@@ -224,6 +224,8 @@
 
     </dependencies>
 
+    <!-- 方案一：只做可执行 fat jar（Flink 提交作业常用）-->
+<!--
     <build>
         <plugins>
             <plugin>
@@ -234,7 +236,8 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                    &lt;!&ndash; 输出到 target 根目录即可，不必再塞到 lib 里 &ndash;&gt;
+                    <outputDirectory>${project.build.directory}</outputDirectory>
                     <archive>
                         <manifest>
                             <mainClass>lan.chaos.flink.cdc.sync.MysqlSyncJob</mainClass>
@@ -251,6 +254,30 @@
                     </execution>
                 </executions>
             </plugin>
+        </plugins>
+    </build>
+-->
+
+    <!--    方案二：普通 jar + lib 目录依赖（本地独立运行）-->
+    <build>
+        <plugins>
+            <!-- 1. 生成带 Main-Class 的普通 jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.1</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>lan.chaos.flink.cdc.sync.MysqlSyncJob</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <!-- 2. 把运行时依赖复制到 target/lib -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>

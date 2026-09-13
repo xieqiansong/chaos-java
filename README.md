@@ -30,7 +30,7 @@ jdk8-platform/
 ├── jdk8-batch-ingest-demo/          批量入库引擎：内存攒批 + 水位触发 + 批量大小在线寻优
 ├── jdk8-base/                       Java 基础内功 + JDK8 新特性合集（分布式 ID / IO-NIO-Netty / JUC / JVM / Agent 等）
 ├── jdk8-common/                     平台公共基础模块（占位）
-├── jdk8-crypto-demo/                加密与签名：AES / RSA / SHA / 国密 SM2-SM3-SM4
+├── jdk8-crypto-demo/                主流加密算法全景：对称(AES/ChaCha20/SM4) / 非对称(RSA/ECC/Ed25519/SM2) / 摘要-MAC / KDF / 混合加密
 ├── jdk8-elasticsearch-demo/         Elasticsearch：索引 / 文档 / 搜索 / 聚合
 ├── jdk8-kafka-demo/                 Kafka：收发 / 批量 / 分区有序 / Exactly-Once 事务 / 重试死信
 ├── jdk8-localcache-demo/            Caffeine 本地缓存：读写 / 过期 / 淘汰 / @Cacheable（★ 标杆模板）

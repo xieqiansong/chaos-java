@@ -1,4 +1,4 @@
-package lan.chaos.common.core.model;
+package lan.chaos.model;
 
 import lombok.Data;
 

@@ -14,14 +14,15 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>jdk8-crypto-demo</name>
-    <description>加密与签名：AES / RSA / SHA-256 / 国密 SM2-SM3-SM4</description>
+    <description>主流加密算法全景：对称 / 非对称 / 摘要 / MAC / KDF / 国密 SM2-SM3-SM4</description>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
-        <!-- 国密与扩展算法（SM2/SM3/SM4）依赖 BouncyCastle 提供者。jdk18on 兼容 JDK8+ -->
+        <!-- 国密与扩展算法（SM2/SM3/SM4、SHA-3、ChaCha20-Poly1305、Ed25519/X25519、HKDF）依赖 BouncyCastle 提供者。
+             平台根 pom 未管理该版本，故此处显式声明；jdk18on 兼容 JDK8+ -->
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk18on</artifactId>
@@ -39,6 +40,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <configuration>
+                    <mainClass>lan.chaos.crypto.CryptoApplication</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>

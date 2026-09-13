@@ -36,7 +36,7 @@
 | 12 | `jdk8-elasticsearch-demo` | ✅ 完成 | Elasticsearch 索引/文档/搜索/聚合 |
 | 13 | `jdk8-zookeeper-demo` | ✅ 完成 | ZooKeeper 协调：Curator 客户端、InterProcessMutex 临时顺序节点分布式锁、LeaderSelector 选主、NodeCache 配置中心 + Watcher 监听，含 docker-compose，无 ZK 时测试优雅跳过 |
 | 14 | `jdk8-security-demo` | ✅ 完成 | Spring Security 过滤器链（白名单/Basic/无状态）+ jjwt 签发校验 JWT 过滤器 + OAuth2 资源服务器（条件化启用，附 Keycloak docker-compose） |
-| 15 | `jdk8-crypto-demo` | ✅ 完成 | 加密与签名：AES(CBC/GCM)/RSA(加密+SHA256withRSA 签名)/SHA-256/国密 SM2-SM3-SM4（BouncyCastle），含篡改检测断言 |
+| 15 | `jdk8-crypto-demo` | ✅ 完成 | **主流加密算法全景（47 项清单 + 12 个可跑场景）**：对称（AES 全模式 ECB/CBC/CTR/CFB/OFB/GCM、ChaCha20-Poly1305、SM4、遗留 DES-3DES-RC4 对照）/ 非对称（RSA-OAEP-PSS、ECDSA、Ed25519、ECDH、X25519、DH、SM2）/ 摘要（MD5/SHA-1/SHA-2/SHA3-256/SM3）/ MAC（HMAC、CMAC）/ KDF（PBKDF2、HKDF）/ 混合加密实战；含标准测试向量与篡改检测断言，13 个测试类 54 条用例，纯算法零外部依赖 |
 | 16 | `jdk8-serialization-demo` | ✅ 完成 | 序列化对比：Jackson 文本 / Kryo 二进制 / JDK 原生三方案同模型对比（往返正确性、体积、健壮性、反序列化安全坑） |
 | 17 | `jdk8-scheduler-demo` | ✅ 完成 | 定时任务：@Scheduled 三种触发模型 / Quartz 内存 RAMJobStore / XXL-JOB 执行端+分片处理器（admin 条件化启用） |
 | 18 | `jdk8-mapstruct-demo` | ✅ 完成 | MapStruct 对象映射：basic / collection / custom / nested |
@@ -74,7 +74,7 @@
 - **jdk8-testing-demo**：基于 JUnit5 + Mockito，覆盖 `@Mock/@Spy/@InjectMocks` 注入、`argThat` 参数匹配与 `verify` 行为验证、BDD 风格（given/when/then）、Spring Boot 切片测试（`@WebMvcTest`），各场景均含可断言 `*Test`，纯库零外部依赖。
 - **jdk8-zookeeper-demo**：基于 Curator，覆盖 InterProcessMutex 临时顺序节点分布式锁（Redis vs ZK 锁对比见 WHY 注释）、LeaderSelector 选主、NodeCache 配置中心 + Watcher 监听，含 docker-compose，无 ZK 时测试经 `Assumptions` 优雅跳过。
 - **jdk8-security-demo**：基于 Spring Security + jjwt，覆盖过滤器链（白名单/Basic/无状态）、JWT 签发校验过滤器、方法安全；OAuth2 资源服务器条件化启用（附 Keycloak docker-compose），Session-Cookie 与 Token 方案对比见注释。
-- **jdk8-crypto-demo**：基于 JDK 原生 + BouncyCastle，覆盖 AES(CBC/GCM)/RSA(加密+SHA256withRSA 签名)/SHA-256/国密 SM2-SM3-SM4，含篡改检测断言，纯算法零外部依赖。
+- **jdk8-crypto-demo**：基于 JDK 原生 + BouncyCastle（补齐 SM 系列 / SHA-3 / ChaCha20-Poly1305 / Ed25519-X25519 / HKDF），把主流加密算法一次列全——先用 `CryptoAlgorithmCatalog` 输出 47 项算法清单（按对称/非对称/摘要/MAC/KDF/编码分类，标注推荐·可用·遗留·禁用），再按能力分包逐场景演示：`symmetric`（AES 六种模式 + ChaCha20-Poly1305 + 遗留算法反面对照）、`asymmetric`（RSA-OAEP/PSS、ECDSA、Ed25519、ECDH、X25519、DH）、`digest`（MD5/SHA-1/SHA-2/SHA3-256 对比 + HMAC/CMAC）、`kdf`（PBKDF2/HKDF）、`sm`（SM4-GCM/SM3/SM2）、`practice`（RSA-OAEP 包裹 AES-GCM 会话密钥的混合加密）。摘要/MAC/SM3 使用官方标准向量做已知答案校验，AEAD 场景断言「篡改即失败」，纯算法零外部依赖。
 - **jdk8-serialization-demo**：覆盖 Jackson 文本 / Kryo 二进制 / JDK 原生三方案同模型对比（往返正确性、体积、健壮性、反序列化安全坑），各场景含可断言 `*Test`。
 - **jdk8-scheduler-demo**：覆盖 @Scheduled 三种触发模型（cron/fixedRate/fixedDelay）/ Quartz 内存 RAMJobStore / XXL-JOB 执行端+分片处理器（admin 条件化启用），含 docker-compose。
 - **jdk8-starter-demo**：基于 Spring Boot 2.7 自动装配机制，**功能次要、机制为主**。以零依赖的 `token-spring-boot-starter` 为载体，覆盖：① 自动配置类 `TokenAutoConfiguration` 经 `META-INF/spring/...AutoConfiguration.imports` 被主动加载；② `@ConfigurationProperties`（`token.starter.*`）外部化配置与默认值；③ `@ConditionalOnProperty` 可开关 + `@ConditionalOnMissingBean` 可被用户自定义覆盖；④ 第三方 starter 命名约定 `xxx-spring-boot-starter`。使用方 `StarterUsageApplication` 演示「引依赖即 `@Autowired` 即用」，控制台 `DemoApp.main` 分节打印三场景，单元测试 `TokenAutoConfigurationTest` 断言装配/绑定/关闭/覆盖四条契约。
