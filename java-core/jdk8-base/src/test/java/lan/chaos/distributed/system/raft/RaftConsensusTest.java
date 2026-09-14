@@ -1,7 +1,6 @@
 package lan.chaos.distributed.system.raft;
 
 import org.junit.jupiter.api.Test;
-import org.testng.annotations.Test;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class RaftConsensusTest {
 
-    @org.testng.annotations.Test
+    @Test
     void election_picksExactlyOneLeader() {
         RaftCluster cluster = new RaftCluster(5, 10);
         RaftNode leader = cluster.electLeader(500);
