@@ -8,7 +8,7 @@
         <groupId>lan.chaos</groupId>
         <artifactId>chaos-parent-jdk25</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../../chaos-parents/chaos-parent-jdk25</relativePath>
+        <relativePath>../../chaos-parents/chaos-parent-jdk25/pom.xml</relativePath>
     </parent>
 
     <artifactId>jdk25-base</artifactId>

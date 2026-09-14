@@ -6,14 +6,27 @@
 
     <parent>
         <groupId>lan.chaos</groupId>
-        <artifactId>jdk17-platform</artifactId>
+        <artifactId>chaos-parent-jdk17</artifactId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>../../chaos-parents/chaos-parent-jdk17/pom.xml</relativePath>
     </parent>
 
-    <artifactId>jdk17-springai-demo</artifactId>
+    <artifactId>springai-demo</artifactId>
     <packaging>jar</packaging>
-    <name>jdk17-springai-demo</name>
+    <name>springai-demo</name>
     <description>Spring AI 学习模块：对话/流式/记忆/工具调用/结构化输出/RAG 高频场景</description>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>lan.chaos</groupId>
+                <artifactId>chaos-dependencies-spring-boot3</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <!-- Spring AI OpenAI 兼容 starter：统一对接本地 llama.cpp llama-server（OpenAI 兼容 /v1 端点）或任意兼容服务 -->
@@ -78,7 +91,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>lan.chaos.springai.SpringAiApplication</mainClass>
                 </configuration>

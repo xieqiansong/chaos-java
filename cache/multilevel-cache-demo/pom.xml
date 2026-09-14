@@ -6,14 +6,27 @@
 
     <parent>
         <groupId>lan.chaos</groupId>
-        <artifactId>jdk21-tech</artifactId>
+        <artifactId>chaos-parent-jdk21</artifactId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>../../chaos-parents/chaos-parent-jdk21/pom.xml</relativePath>
     </parent>
 
-    <artifactId>jdk21-multilevel-cache-demo</artifactId>
+    <artifactId>multilevel-cache-demo</artifactId>
     <packaging>jar</packaging>
     <name>multilevel-cache-demo</name>
     <description>M1 多级缓存：Caffeine(L1) + Redis Hash(L2) + 版本号集群一致性</description>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>lan.chaos</groupId>
+                <artifactId>chaos-dependencies-spring-boot3</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -55,7 +68,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>lan.chaos.multilevelcache.MultilevelCacheApplication</mainClass>
                 </configuration>
