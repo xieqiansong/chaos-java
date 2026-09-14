@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>lan.chaos</groupId>
+    <artifactId>chaos-java</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>chaos-java</name>
+
+
+    <modules>
+        <module>chaos-parents/chaos-parent-jdk8</module>
+        <module>chaos-parents/chaos-parent-jdk11</module>
+        <module>chaos-parents/chaos-parent-jdk17</module>
+        <module>chaos-parents/chaos-parent-jdk21</module>
+        <module>chaos-parents/chaos-parent-jdk25</module>
+        <module>chaos-parents/chaos-parent-spring-boot2</module>
+        <module>chaos-parents/chaos-parent-spring-boot3</module>
+        <module>chaos-parents/chaos-parent-spring-boot4</module>
+    </modules>
+
+    <profiles>
+        <!-- 压测专用：只跑 *Bench / BenchMarkTest，其余单测让位 -->
+        <profile>
+            <id>stress</id>
+            <properties>
+                <surefire.include1>**/*Bench.java</surefire.include1>
+                <surefire.include2>**/BenchMarkTest.java</surefire.include2>
+                <bench.exclude>**/NoSuchBench.java</bench.exclude>
+            </properties>
+        </profile>
+    </profiles>
+</project>

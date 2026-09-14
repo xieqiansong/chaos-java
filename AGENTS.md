@@ -1,8 +1,8 @@
-# AGENTS.md — Demo 生成规范（硬约束 + 形态适配）
+﻿# AGENTS.md — Demo 生成规范（硬约束 + 形态适配）
 
-本仓库以 **「单技术点 Demo」** 为核心交付物，用本规范约束 AI 生成的每一个 demo；综合实战 Demo（如 `jdk8-seckill-demo` / `jdk8-short-link-demo`）仅保留、**不新增**，除非用户明确要求（见第七章）。
+本仓库以 **「单技术点 Demo」** 为核心交付物，用本规范约束 AI 生成的每一个 demo；综合实战 Demo（如 `seckill-demo` / `short-link-demo`）仅保留、**不新增**，除非用户明确要求（见第七章）。
 
-> 新生成的单技术点 demo，优先参考本仓库的 **`jdk8-localcache-demo`（Caffeine 本地缓存）** 的注释风格、测试形态与 README 七段式；但其**单模块目录结构只是形态之一**，当技术点天然多进程时，按本规范第二节选择多模块形态（见 Nacos / Seata 等）。
+> 新生成的单技术点 demo，优先参考本仓库的 **`localcache-demo`（Caffeine 本地缓存，位于 `cache/`）** 的注释风格、测试形态与 README 七段式；但其**单模块目录结构只是形态之一**，当技术点天然多进程时，按本规范第二节选择多模块形态（见 Nacos / Seata 等）。
 
 ---
 
@@ -89,7 +89,7 @@
 
 ### 5.6 共享测试支撑模块
 
-- 各平台维护一个 `*-common-test`（参考 `jdk8-microservice-demo/jdk8-ms-common-test`）：沉淀测试基类、`@Container` Testcontainers 助手、H2 / 嵌入式中间件约定、样例数据工厂 `sampleXxx()`。
+- 各平台维护一个 `*-common-test`（参考 `microservice/microservice-demo/ms-common/ms-common-test`）：沉淀测试基类、`@Container` Testcontainers 助手、H2 / 嵌入式中间件约定、样例数据工厂 `sampleXxx()`。
 - 该模块为 `test` scope 依赖，仅被其他模块的测试代码引用，不进运行时。
 
 ### 5.7 CI 串联（可选，推荐）
@@ -114,40 +114,41 @@ GitHub Actions（或等价 Runner）分阶段：
 
 ## 七、综合实战 Demo（可选，记录不强制）
 
-- 综合实战 = 把多个技术点组合进一个带业务外壳的 demo（如 `jdk8-seckill-demo` / `jdk8-short-link-demo`）。
+- 综合实战 = 把多个技术点组合进一个带业务外壳的 demo（如 `seckill-demo` / `short-link-demo`）。
 - 允许业务分层（controller/service/repository/dto/config），**不要求**对齐单模块 A 类的分包规则；但其中**每个被演示的技术点仍应满足本规范第三节的硬约束**（一个类讲清一个点、WHY 注释、可观察输出、可断言测试）。
 - 在平台 `README.md` 中单独归类为「综合实战（锦上添花）」，标注「可选」。
 - 不新增综合实战 demo，除非用户明确要求。
 
-## 八、仓库结构约束（平台划分、模块命名、README 定位）
+## 八、仓库结构约束（目录划分、模块命名、BOM 归属、README 定位）
 
-本章约束代码落在**哪个平台 / 以什么名字命名**，与第一~七章（Demo 内部怎么写）互补。
+本章约束代码落在**哪个技术域目录 / 以什么名字命名**，与第一~七章（Demo 内部怎么写）互补。
 
-### 8.1 平台划分：JDK 约束取最小可用
+### 8.1 目录与 BOM 归属：技术域优先，版本是模块属性
 
-- 技术对 JDK 有强约束（依赖库 / 字节码要求，如 `mybatis-plus-jsqlparser` 需 JDK 11+）→ 归入**能跑通该技术的最低版本平台**（`jdk11-platform` / `jdk17-platform` / `jdk21-platform` / `jdk25-platform`）。
-- 技术对 JDK 无约束 → 一律归 `jdk8-platform`（默认位，兼容最广）。
-- 已有技术点聚合组（`jdk8-tech` / `jdk21-tech` / `jdk8-office-tech`）能收纳的纯技术点示例，**先进对应聚合组**（子模块仍是单技术点 demo），不随意在平台根平铺新模块。
+- 目录按**技术域**组织（见根 `README.md` 模块总览）：`cache` / `mq` / `distributed` / `microservice` / `persistence` / `ai` / `office` / `engineering` / `crypto` / `showcase` / `java-core` / `jdk-features` / `tools`。
+- JDK / Spring Boot 版本**不进目录名**，由每模块的 pom 属性收口：挂 `chaos-bom-springboot2`（SB 2.7.18，release 8）/ `chaos-bom-springboot3`（SB 3.5.14，release 17 或 21）/ `chaos-bom-springboot4`（SB 4.0.7，release 25）。
+- 技术对 JDK/SB 有强约束（依赖库字节码要求，如 `mybatis-plus-jsqlparser` 需 JDK 11+）→ 挂对应 BOM 并设 `release`；同一技术点因字节码地板分两条主线时（如 MyBatis-Plus `jdk8` 与 `jdk11` 两版），两模块并存、各自说明差异。
+- `jdk-features/` 保留版本轴：仅承载「JDK 新特性」这类**主题本身就是版本**的模块（`jdk11-base` / `jdk17-base` / `jdk21-base` / `jdk25-base`）；`java-core/` 收 Java 内功合集（原 `jdk8-base`）。
 
 ### 8.2 模块命名与目录形态
 
-- 平台内模块统一 `jdk<version>-*-demo` 形式，**一个模块 = 一个技术点**。
-- `jdk<version>-base`：对应 JDK 版本的基础知识与新特性。
-- `jdk<version>-common`：平台内公共基础模块（占位 / 沉淀跨 demo 公共工具）。
-- 聚合组模块：`jdk<version>-tech` 等父目录自含 `pom.xml`，组内每个子模块仍是单技术点 demo，须遵守本规范全部硬约束。
-- 综合实战 demo（`jdk8-seckill-demo` / `jdk8-short-link-demo` / `jdk8-microservice-demo`）保留但**不新增**（见第七章）。
-- 依赖 Demo 原样归位：同一技术点按 JDK 基线拆分时，旧基线模块若仍可跑**保留原位**，新拦截器 / 新特性版本放入更高版本平台，两者并存且各自说明差异。
+- 模块统一 `*-demo` 形式（去掉 `jdk<version>-` 前缀），**一个模块 = 一个技术点**；同技术点多版本需区分时显式带版本，如 `mybatis-plus-jdk8-demo` / `mybatis-plus-jdk11-demo`。
+- `*-base` 仅保留在 `jdk-features/`（`jdk11-base` / `jdk17-base` / `jdk21-base` / `jdk25-base`），对应 JDK 版本新特性。
+- 不再设 `*-common` 占位模块与 `jdk<version>-tech` 聚合父目录；跨 demo 公共工具沉淀到对应技术域模块或 `java-core/`。
+- 聚合模块（多进程基础设施）：`microservice/nacos-demo`、`microservice/microservice-demo`（含 `ms-common` 等子模块）按部署/角色单元分子模块，每进程一个 `<Role>Application`，模块内仍按能力分包。
+- 综合实战 demo（`seckill-demo` / `short-link-demo` / `microservice-demo` / `game-leaderboard-demo`）保留但**不新增**（见第七章）。
 
 ### 8.3 版本与工程约定
 
-- 依赖版本、测试框架版本与插件（surefire / failsafe / JaCoCo / `stress` profile）统一在平台根 `pom.xml` 的 `dependencyManagement` / `pluginManagement` 收口，子模块不写版本号。
-- 引入新组件前先查平台根是否已管理该版本；确需覆盖时在子模块显式声明并注释原因。
+- 依赖版本、测试框架版本与插件（surefire / failsafe / JaCoCo / `stress` profile）统一在三条 BOM（`chaos-bom-springboot2/3/4`）的 `dependencyManagement` / `pluginManagement` 收口；跨 SB 版本安全的件（junit-bom / assertj / mockito / testcontainers 等）可在根 `pom.xml` 收口。子模块不写版本号。
+- 引入新组件前先查对应 BOM 是否已管理该版本；确需覆盖时在子模块显式声明并注释原因。
+- 模块 `maven.compiler.release` 按所挂 BOM 设（SB2→8，部分 11；SB3→17 或 21；SB4→25），不写 `source`/`target`。
 
 ### 8.4 README 定位
 
-- 仓库根 `README.md` **只做模块树形概述**，不承载任何规则 / 约束 / 清单。
+- 仓库根 `README.md` **只做模块树形概述（按技术域）**，不承载任何规则 / 约束 / 清单。
 - 一切生成规范、仓库结构与自检约束写在本文件（`AGENTS.md`）。
-- 平台 / 模块 `README.md` 的内容形态遵循第六章七段式。
+- 主题目录 / 模块 `README.md` 的内容形态遵循第六章七段式。
 
 ---
 
@@ -160,5 +161,9 @@ GitHub Actions（或等价 Runner）分阶段：
 - [ ] 测试分层 `*Test` / `*IT` / `*Bench`，JUnit5 + AssertJ + Mockito，版本在平台根 pom 收口（第五章）
 - [ ] 外部依赖顺序 内存/Embedded > Testcontainers > docker-compose；敏感信息只走 `application-local.yml`（5.3）
 - [ ] README 七段式；平台「已完成学习记录」置 ✅；根 `README.md` 树形概述同步（第六章 / 8.4）
-- [ ] 归位：JDK 强约束 → 最低版本平台，无约束 → `jdk8-platform`，可入聚合组先入组（第八章）
-- [ ] 模块名 `jdk<version>-<tech>-demo`；不新增综合实战 / 不随意建新聚合组（第七章 / 8.2）
+- [ ] 归位：JDK/SB 强约束 → 挂对应 BOM（chaos-bom-springboot2/3/4），无约束 → SB2（release 8）；技术点按技术域入对应主题目录（第八章）
+- [ ] 模块名 `<tech>-demo`（去掉 `jdk<version>-` 前缀）；不新增综合实战（第七章 / 8.2）
+
+
+
+
