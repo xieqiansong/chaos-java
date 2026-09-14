@@ -23,127 +23,66 @@
 
 按**技术域**组织主题目录；JDK / Spring Boot 版本是每模块的 pom 属性（详见 [`AGENTS.md`](AGENTS.md) 第八章），不体现在目录名。聚合模块（microservice-demo / nacos-demo / ms-common）内部仍按部署/角色单元分子模块。
 
-### java-core · Java 内功合集（SB2 / release 8）
-
 ```
-java-core/
-└── java-core/     Java 基础内功 + JDK8 新特性合集（分布式 ID / IO-NIO-Netty / JUC / JVM / Agent / 一致性算法等）
-```
-
-### jdk-features · 各版本新特性（版本即主题）
-
-```
-jdk-features/
-├── jdk11-base/    JDK11 新特性（String / Files / Optional / Stream / HttpClient / var）
-├── jdk17-base/    JDK17 新特性（文本块 / Record / 密封类 / Switch 表达式 / 模式匹配）
-├── jdk21-base/    JDK21 新特性（虚拟线程 / Sequenced 集合 / 模式匹配 switch / Record 模式）
-└── jdk25-base/    JDK25 新特性（模块导入 / 灵活构造器体 / 隐式类 main / Stream Gatherers / 原始类型模式）
-```
-
-### cache · 缓存
-
-```
-cache/
-├── localcache-demo/          Caffeine 本地缓存（★ 标杆模板）
-├── redis-demo/               Redis 全场景：缓存 / 集合 / 排行榜 / 计数 / 分布式锁 / Lua / Pipeline / PubSub
-└── multilevel-cache-demo/    多级缓存：Caffeine L1 + Redis Hash L2 + 版本号一致性（JDK 21）
-```
-
-### mq · 消息队列
-
-```
-mq/
-├── kafka-demo/               Kafka：收发 / 批量 / 分区有序 / Exactly-Once 事务 / 重试死信
-├── rocketmq-demo/            RocketMQ 全场景
-├── rabbitmq-demo/            RabbitMQ（Spring AMQP）：Exchange 路由 / publisher confirm / 手动 Ack / TTL+DLX
-└── mqtt-demo/               MQTT（Eclipse Paho）：发布订阅 / 通配符 / QoS / 保留消息 / 遗嘱消息
-```
-
-### distributed · 分布式与协调
-
-```
-distributed/
-├── seata-demo/              分布式事务：AT / TCC / SAGA / XA
-├── ratelimiter-demo/        多租户分布式限流三实现对比（Redis+Lua / 本地+Redis / 纯本地）
-├── idempotent-demo/         接口幂等：请求级 / 消费级 / 状态机三层去重（JDK 21）
-└── zookeeper-demo/          ZooKeeper 协调：Curator 锁 / 选主 / 配置中心
-```
-
-### microservice · 微服务与治理
-
-```
-microservice/
-├── nacos-demo/              Nacos 注册发现 + 配置中心（provider / consumer / config 多进程）
-├── sentinel-demo/           流控 / 熔断 / 热点参数 / @SentinelResource
-├── security-demo/           Spring Security 过滤器链 + JWT + OAuth2 资源服务器
-└── microservice-demo/       企业级 Spring Cloud Alibaba 微服务（common 支撑 6 模块 + gateway/auth/user/order）
-```
-
-### persistence · 数据持久层
-
-```
-persistence/
-├── mybatis-plus-jdk8-demo/   MyBatis-Plus 高阶用法（内置拦截器版，SB2 / release 8）
-├── mybatis-plus-jdk11-demo/  MyBatis-Plus 高阶用法（独立 mybatis-plus-jsqlparser 拦截器链，需 JDK 11+）
-├── batch-ingest-demo/        批量入库引擎：内存攒批 + 水位触发 + 批量大小在线寻优
-├── elasticsearch-demo/       Elasticsearch：索引 / 文档 / 搜索 / 聚合
-└── flink-cdc-sync-demo/       Flink CDC 同源库表同步（Flink 1.17 不兼容 JDK 21，留在 SB2）
-```
-
-### ai · AI 应用
-
-```
-ai/
-├── springai-demo/            Spring AI：chat / stream / memory / prompt / 结构化输出 / 工具调用 / RAG / MCP 客户端（JDK 17）
-└── mcp-server-demo/          最小 MCP 服务端（SSE 传输，JDK 17）
-```
-
-### office · 办公文档处理
-
-```
-office/
-├── excel-demo/               Excel：POI / EasyExcel / Hutool 三体系横评
-├── word-demo/                文档生成与处理
-└── pdf-demo/                 PDFBox 处理
-```
-
-### engineering · 工程化与测试
-
-```
-engineering/
-├── mapstruct-demo/           对象映射：basic / collection / custom / nested
-├── testing-demo/             JUnit5 + Mockito 测试专项
-├── serialization-demo/       序列化对比：Jackson / Kryo / JDK 原生
-├── scheduler-demo/           定时任务：@Scheduled / Quartz / XXL-JOB
-├── starter-demo/             Spring Boot Starter 自动装配机制
-├── webflux-demo/             WebFlux 响应式编程
-├── servlet-filter-async-demo/ 热路径 Servlet Filter 异步化
-├── virtualthread-demo/       虚拟线程：机制演示 + 压测量化（JDK 21）
-└── bitmap-stat-demo/         位图统计应用
-```
-
-### crypto · 安全与加密
-
-```
-crypto/
-├── crypto-demo/             主流加密算法全景（对称 / 非对称 / 摘要-MAC / KDF / 国密）
-└── hmac-auth-demo/          HMAC 签名鉴权
-```
-
-### showcase · 综合实战（保留不新增）
-
-```
-showcase/
-├── seckill-demo/            秒杀：分桶库存 + Lua 扣减 + Kafka 异步下单
-├── short-link-demo/         短链：Snowflake+Base62 + 布隆过滤 + Redis 缓存
-└── game-leaderboard-demo/   游戏排行榜：Redis ZSet 排行榜
-```
-
-### tools · 工具
-
-```
-tools/
-└── tools/                   杂项工具：算法题 / 模型 / CPU 负载控制 / 空目录清理等
+chaos-java/
+├── java-core/                           Java 内功合集（SB2 / release 8）
+│   └── java-core/                       Java 基础内功 + JDK8 新特性合集（分布式 ID / IO-NIO-Netty / JUC / JVM / Agent / 一致性算法等）
+├── jdk-features/                       各版本新特性（版本即主题）
+│   ├── jdk11-base/                      JDK11 新特性（String / Files / Optional / Stream / HttpClient / var）
+│   ├── jdk17-base/                      JDK17 新特性（文本块 / Record / 密封类 / Switch 表达式 / 模式匹配）
+│   ├── jdk21-base/                      JDK21 新特性（虚拟线程 / Sequenced 集合 / 模式匹配 switch / Record 模式）
+│   └── jdk25-base/                      JDK25 新特性（模块导入 / 灵活构造器体 / 隐式类 main / Stream Gatherers / 原始类型模式）
+├── cache/                              缓存
+│   ├── localcache-demo/                 Caffeine 本地缓存（★ 标杆模板）
+│   ├── redis-demo/                      Redis 全场景：缓存 / 集合 / 排行榜 / 计数 / 分布式锁 / Lua / Pipeline / PubSub
+│   └── multilevel-cache-demo/           多级缓存：Caffeine L1 + Redis Hash L2 + 版本号一致性（JDK 21）
+├── mq/                                 消息队列
+│   ├── kafka-demo/                      Kafka：收发 / 批量 / 分区有序 / Exactly-Once 事务 / 重试死信
+│   ├── rocketmq-demo/                   RocketMQ 全场景
+│   ├── rabbitmq-demo/                   RabbitMQ（Spring AMQP）：Exchange 路由 / publisher confirm / 手动 Ack / TTL+DLX
+│   └── mqtt-demo/                       MQTT（Eclipse Paho）：发布订阅 / 通配符 / QoS / 保留消息 / 遗嘱消息
+├── distributed/                        分布式与协调
+│   ├── seata-demo/                      分布式事务：AT / TCC / SAGA / XA
+│   ├── ratelimiter-demo/                多租户分布式限流三实现对比（Redis+Lua / 本地+Redis / 纯本地）
+│   ├── idempotent-demo/                 接口幂等：请求级 / 消费级 / 状态机三层去重（JDK 21）
+│   └── zookeeper-demo/                  ZooKeeper 协调：Curator 锁 / 选主 / 配置中心
+├── microservice/                       微服务与治理
+│   ├── nacos-demo/                      Nacos 注册发现 + 配置中心（provider / consumer / config 多进程）
+│   ├── sentinel-demo/                   流控 / 熔断 / 热点参数 / @SentinelResource
+│   ├── security-demo/                   Spring Security 过滤器链 + JWT + OAuth2 资源服务器
+│   └── microservice-demo/               企业级 Spring Cloud Alibaba 微服务（common 支撑 6 模块 + gateway/auth/user/order）
+├── persistence/                        数据持久层
+│   ├── mybatis-plus-jdk8-demo/          MyBatis-Plus 高阶用法（内置拦截器版，SB2 / release 8）
+│   ├── mybatis-plus-jdk11-demo/         MyBatis-Plus 高阶用法（独立 mybatis-plus-jsqlparser 拦截器链，需 JDK 11+）
+│   ├── batch-ingest-demo/               批量入库引擎：内存攒批 + 水位触发 + 批量大小在线寻优
+│   ├── elasticsearch-demo/              Elasticsearch：索引 / 文档 / 搜索 / 聚合
+│   └── flink-cdc-sync-demo/             Flink CDC 同源库表同步（Flink 1.17 不兼容 JDK 21，留在 SB2）
+├── ai/                                 AI 应用
+│   ├── springai-demo/                   Spring AI：chat / stream / memory / prompt / 结构化输出 / 工具调用 / RAG / MCP 客户端（JDK 17）
+│   └── mcp-server-demo/                 最小 MCP 服务端（SSE 传输，JDK 17）
+├── office/                             办公文档处理
+│   ├── excel-demo/                      Excel：POI / EasyExcel / Hutool 三体系横评
+│   ├── word-demo/                       文档生成与处理
+│   └── pdf-demo/                        PDFBox 处理
+├── engineering/                        工程化与测试
+│   ├── mapstruct-demo/                  对象映射：basic / collection / custom / nested
+│   ├── testing-demo/                    JUnit5 + Mockito 测试专项
+│   ├── serialization-demo/              序列化对比：Jackson / Kryo / JDK 原生
+│   ├── scheduler-demo/                  定时任务：@Scheduled / Quartz / XXL-JOB
+│   ├── starter-demo/                    Spring Boot Starter 自动装配机制
+│   ├── webflux-demo/                    WebFlux 响应式编程
+│   ├── servlet-filter-async-demo/        热路径 Servlet Filter 异步化
+│   ├── virtualthread-demo/              虚拟线程：机制演示 + 压测量化（JDK 21）
+│   └── bitmap-stat-demo/                位图统计应用
+├── crypto/                             安全与加密
+│   ├── crypto-demo/                     主流加密算法全景（对称 / 非对称 / 摘要-MAC / KDF / 国密）
+│   └── hmac-auth-demo/                  HMAC 签名鉴权
+├── showcase/                           综合实战（保留不新增）
+│   ├── seckill-demo/                   秒杀：分桶库存 + Lua 扣减 + Kafka 异步下单
+│   ├── short-link-demo/                短链：Snowflake+Base62 + 布隆过滤 + Redis 缓存
+│   └── game-leaderboard-demo/          游戏排行榜：Redis ZSet 排行榜
+└── tools/                              工具
+    └── tools/                          杂项工具：算法题 / 模型 / CPU 负载控制 / 空目录清理等
 ```
 
 ---
