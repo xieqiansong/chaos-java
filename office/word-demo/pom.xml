@@ -1,17 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>lan.chaos</groupId>
-        <artifactId>jdk8-office-tech</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
+    <parent>
+    <groupId>lan.chaos</groupId>
+    <artifactId>chaos-parent-jdk8</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath>../../chaos-parents/chaos-parent-jdk8/pom.xml</relativePath>
+</parent>
+    <dependencyManagement><dependencies><dependency><groupId>lan.chaos</groupId><artifactId>chaos-dependencies-spring-boot2</artifactId><version>1.0-SNAPSHOT</version><type>pom</type><scope>import</scope></dependency></dependencies></dependencyManagement>
 
-    <artifactId>jdk8-word-demo</artifactId>
-    <name>jdk8-word-demo</name>
+    <artifactId>word-demo</artifactId>
+    <name>word-demo</name>
     <description>Word 导入导出 Demo：XWPF 结构化文档、样式与中文字体、复杂表格、大文档内存模型、模板占位符替换（跨 run 坑）、HWPF 读取 .doc 限制。</description>
 
     <properties>
@@ -114,3 +116,4 @@
         </plugins>
     </build>
 </project>
+

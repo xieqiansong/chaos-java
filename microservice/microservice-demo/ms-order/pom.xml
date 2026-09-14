@@ -1,39 +1,40 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>lan.chaos</groupId>
-        <artifactId>jdk8-microservice-demo</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
+    <parent>
+    <groupId>lan.chaos</groupId>
+    <artifactId>microservice-demo</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+</parent>
 
-    <artifactId>jdk8-ms-order</artifactId>
+    <artifactId>ms-order</artifactId>
     <packaging>jar</packaging>
-    <name>jdk8-ms-order</name>
+    <name>ms-order</name>
     <description>订单服务：创建 / 查询，Feign 编排调 user（演示跨服务 + Seata，P1/P3 落地）</description>
 
     <dependencies>
         <dependency>
             <groupId>lan.chaos</groupId>
-            <artifactId>jdk8-ms-common-core</artifactId>
+            <artifactId>ms-common-core</artifactId>
         </dependency>
         <dependency>
             <groupId>lan.chaos</groupId>
-            <artifactId>jdk8-ms-common-log</artifactId>
+            <artifactId>ms-common-log</artifactId>
         </dependency>
         <dependency>
             <groupId>lan.chaos</groupId>
-            <artifactId>jdk8-ms-common-web</artifactId>
+            <artifactId>ms-common-web</artifactId>
         </dependency>
         <dependency>
             <groupId>lan.chaos</groupId>
-            <artifactId>jdk8-ms-common-feign</artifactId>
+            <artifactId>ms-common-feign</artifactId>
         </dependency>
         <!-- P4 方法级权限：@RequiresPermission + PermissionInterceptor（JwtProvider 由 common-security 自动配置提供） -->
         <dependency>
             <groupId>lan.chaos</groupId>
-            <artifactId>jdk8-ms-common-security</artifactId>
+            <artifactId>ms-common-security</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -112,3 +113,4 @@
         </plugins>
     </build>
 </project>
+

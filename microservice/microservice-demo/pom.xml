@@ -1,16 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>lan.chaos</groupId>
-        <artifactId>jdk8-platform</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
 
-    <artifactId>jdk8-microservice-demo</artifactId>
+    <groupId>lan.chaos</groupId>
+
+    <artifactId>chaos-parent-jdk8</artifactId>
+
+    <version>1.0-SNAPSHOT</version>
+
+    <relativePath>../../chaos-parents/chaos-parent-jdk8/pom.xml</relativePath>
+
+</parent>
+
+    <artifactId>microservice-demo</artifactId>
     <packaging>pom</packaging>
-    <name>jdk8-microservice-demo</name>
+    <name>microservice-demo</name>
 
     <description>
         企业级 Spring Cloud Alibaba 微服务学习项目（形态二：多进程）。
@@ -19,20 +25,15 @@
 
     <!--
       模块结构（已在开发计划中规划）：
-      common 层（非部署，纯依赖库，嵌套于 jdk8-ms-common/）：common-core / common-log / common-web / common-security / common-feign / common-test
-      业务服务（可独立部署进程）：  jdk8-ms-gateway / jdk8-ms-auth / jdk8-ms-user / jdk8-ms-order
+      common 层（非部署，纯依赖库，嵌套于 ms-common/）：common-core / common-log / common-web / common-security / common-feign / common-test
+      业务服务（可独立部署进程）：  ms-gateway / ms-auth / ms-user / ms-order
     -->
     <modules>
-        <module>jdk8-ms-common/jdk8-ms-common-core</module>
-        <module>jdk8-ms-common/jdk8-ms-common-log</module>
-        <module>jdk8-ms-common/jdk8-ms-common-web</module>
-        <module>jdk8-ms-common/jdk8-ms-common-security</module>
-        <module>jdk8-ms-common/jdk8-ms-common-feign</module>
-        <module>jdk8-ms-common/jdk8-ms-common-test</module>
-        <module>jdk8-ms-gateway</module>
-        <module>jdk8-ms-auth</module>
-        <module>jdk8-ms-user</module>
-        <module>jdk8-ms-order</module>
+        <module>ms-common</module>
+        <module>ms-gateway</module>
+        <module>ms-auth</module>
+        <module>ms-user</module>
+        <module>ms-order</module>
     </modules>
 
     <properties>
@@ -50,13 +51,7 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
+            <dependency><groupId>lan.chaos</groupId><artifactId>chaos-dependencies-spring-boot2</artifactId><version>1.0-SNAPSHOT</version><type>pom</type><scope>import</scope></dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -111,32 +106,32 @@
             <!-- 内部 common 模块版本管理（共享父工程版本，避免子模块逐个写 version） -->
             <dependency>
                 <groupId>lan.chaos</groupId>
-                <artifactId>jdk8-ms-common-core</artifactId>
+                <artifactId>ms-common-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>lan.chaos</groupId>
-                <artifactId>jdk8-ms-common-log</artifactId>
+                <artifactId>ms-common-log</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>lan.chaos</groupId>
-                <artifactId>jdk8-ms-common-web</artifactId>
+                <artifactId>ms-common-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>lan.chaos</groupId>
-                <artifactId>jdk8-ms-common-security</artifactId>
+                <artifactId>ms-common-security</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>lan.chaos</groupId>
-                <artifactId>jdk8-ms-common-feign</artifactId>
+                <artifactId>ms-common-feign</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>lan.chaos</groupId>
-                <artifactId>jdk8-ms-common-test</artifactId>
+                <artifactId>ms-common-test</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
@@ -154,3 +149,4 @@
         </pluginManagement>
     </build>
 </project>
+

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -34,6 +34,50 @@
         <module>java-core/jdk17-base</module>
         <module>java-core/jdk21-base</module>
         <module>java-core/jdk25-base</module>
+
+        <module>mq/kafka-demo</module>
+        <module>mq/rocketmq-demo</module>
+        <module>mq/rabbitmq-demo</module>
+        <module>mq/mqtt-demo</module>
+
+        <module>distributed/seata-demo</module>
+        <module>distributed/ratelimiter-demo</module>
+        <module>distributed/idempotent-demo</module>
+        <module>distributed/zookeeper-demo</module>
+
+        <module>microservice/nacos-demo</module>
+        <module>microservice/sentinel-demo</module>
+        <module>microservice/security-demo</module>
+        <module>microservice/microservice-demo</module>
+
+        <module>persistence/mybatis-plus-jdk8-demo</module>
+        <module>persistence/mybatis-plus-jdk11-demo</module>
+        <module>persistence/batch-ingest-demo</module>
+        <module>persistence/elasticsearch-demo</module>
+        <module>persistence/flink-cdc-sync-demo</module>
+
+        <module>office/excel-demo</module>
+        <module>office/word-demo</module>
+        <module>office/pdf-demo</module>
+
+        <module>engineering/mapstruct-demo</module>
+        <module>engineering/testing-demo</module>
+        <module>engineering/serialization-demo</module>
+        <module>engineering/scheduler-demo</module>
+        <module>engineering/starter-demo</module>
+        <module>engineering/webflux-demo</module>
+        <module>engineering/servlet-filter-async-demo</module>
+        <module>engineering/virtualthread-demo</module>
+        <module>engineering/bitmap-stat-demo</module>
+
+        <module>crypto/crypto-demo</module>
+        <module>crypto/hmac-auth-demo</module>
+
+        <module>showcase/seckill-demo</module>
+        <module>showcase/short-link-demo</module>
+        <module>showcase/game-leaderboard-demo</module>
+
+        <module>tools/tools</module>
     </modules>
 
     <dependencyManagement>

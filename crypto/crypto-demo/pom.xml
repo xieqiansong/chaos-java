@@ -1,19 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>lan.chaos</groupId>
-        <artifactId>jdk8-platform</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
+    <parent>
+    <groupId>lan.chaos</groupId>
+    <artifactId>chaos-parent-jdk8</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath>../../chaos-parents/chaos-parent-jdk8/pom.xml</relativePath>
+</parent>
+    <dependencyManagement><dependencies><dependency><groupId>lan.chaos</groupId><artifactId>chaos-dependencies-spring-boot2</artifactId><version>1.0-SNAPSHOT</version><type>pom</type><scope>import</scope></dependency></dependencies></dependencyManagement>
 
-    <artifactId>jdk8-crypto-demo</artifactId>
+    <artifactId>crypto-demo</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>jdk8-crypto-demo</name>
+    <name>crypto-demo</name>
     <description>主流加密算法全景：对称 / 非对称 / 摘要 / MAC / KDF / 国密 SM2-SM3-SM4</description>
 
     <dependencies>
@@ -48,3 +50,4 @@
         </plugins>
     </build>
 </project>
+

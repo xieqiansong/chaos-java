@@ -12,7 +12,7 @@
 
     <artifactId>redis-demo</artifactId>
     <packaging>jar</packaging>
-    <name>jdk8-redis-demo</name>
+    <name>redis-demo</name>
 
     <dependencyManagement>
         <dependencies>

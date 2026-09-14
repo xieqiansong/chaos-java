@@ -1,31 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>lan.chaos</groupId>
-        <artifactId>jdk8-microservice-demo</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
+    <parent>
+    <groupId>lan.chaos</groupId>
+    <artifactId>microservice-demo</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+</parent>
 
-    <artifactId>jdk8-ms-auth</artifactId>
+    <artifactId>ms-auth</artifactId>
     <packaging>jar</packaging>
-    <name>jdk8-ms-auth</name>
+    <name>ms-auth</name>
     <description>P4 鉴权服务：登录签发 JWT（access+refresh）、刷新、登出吊销（refresh 存 Redis 可吊销）</description>
 
     <dependencies>
         <dependency>
             <groupId>lan.chaos</groupId>
-            <artifactId>jdk8-ms-common-core</artifactId>
+            <artifactId>ms-common-core</artifactId>
         </dependency>
         <dependency>
             <groupId>lan.chaos</groupId>
-            <artifactId>jdk8-ms-common-log</artifactId>
+            <artifactId>ms-common-log</artifactId>
         </dependency>
         <!-- P4 安全基座：JwtProvider / LoginUser / SecurityConstants -->
         <dependency>
             <groupId>lan.chaos</groupId>
-            <artifactId>jdk8-ms-common-security</artifactId>
+            <artifactId>ms-common-security</artifactId>
         </dependency>
 
         <dependency>
@@ -63,3 +64,4 @@
         </plugins>
     </build>
 </project>
+

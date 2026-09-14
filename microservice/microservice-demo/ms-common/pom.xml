@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>lan.chaos</groupId>
+        <artifactId>microservice-demo</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>ms-common</artifactId>
+    <packaging>pom</packaging>
+    <name>ms-common</name>
+    <description>微服务公共层聚合模块（common-core / log / web / security / feign / test）</description>
+
+    <modules>
+        <module>ms-common-core</module>
+        <module>ms-common-log</module>
+        <module>ms-common-web</module>
+        <module>ms-common-security</module>
+        <module>ms-common-feign</module>
+        <module>ms-common-test</module>
+    </modules>
+</project>

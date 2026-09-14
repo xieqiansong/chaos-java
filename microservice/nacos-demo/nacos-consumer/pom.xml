@@ -1,14 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>lan.chaos</groupId>
-        <artifactId>jdk8-nacos-demo</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
+    <parent>
+    <groupId>lan.chaos</groupId>
+    <artifactId>nacos-demo</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+</parent>
 
-    <artifactId>jdk8-nacos-consumer</artifactId>
+    <artifactId>nacos-consumer</artifactId>
     <packaging>jar</packaging>
     <name>nacos-consumer</name>
 
@@ -33,7 +34,7 @@
         <!-- 共享实体 + Feign 客户端接口 -->
         <dependency>
             <groupId>lan.chaos</groupId>
-            <artifactId>jdk8-nacos-common</artifactId>
+            <artifactId>nacos-common</artifactId>
         </dependency>
     </dependencies>
 
@@ -46,3 +47,4 @@
         </plugins>
     </build>
 </project>
+

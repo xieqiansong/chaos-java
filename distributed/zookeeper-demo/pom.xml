@@ -1,19 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>lan.chaos</groupId>
-        <artifactId>jdk8-platform</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
+    <parent>
+    <groupId>lan.chaos</groupId>
+    <artifactId>chaos-parent-jdk8</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath>../../chaos-parents/chaos-parent-jdk8/pom.xml</relativePath>
+</parent>
+    <dependencyManagement><dependencies><dependency><groupId>lan.chaos</groupId><artifactId>chaos-dependencies-spring-boot2</artifactId><version>1.0-SNAPSHOT</version><type>pom</type><scope>import</scope></dependency></dependencies></dependencyManagement>
 
-    <artifactId>jdk8-zookeeper-demo</artifactId>
+    <artifactId>zookeeper-demo</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>jdk8-zookeeper-demo</name>
+    <name>zookeeper-demo</name>
     <description>ZooKeeper：分布式锁 / Leader 选举 / 配置中心 / Watcher</description>
 
     <dependencies>
@@ -43,3 +45,4 @@
         </plugins>
     </build>
 </project>
+
