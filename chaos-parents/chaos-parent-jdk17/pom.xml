@@ -15,111 +15,87 @@
     <name>chaos-parent-jdk17</name>
     <packaging>pom</packaging>
 
+    <!-- 纯 Java 基线 parent：作为示例模块的 <parent> 引用。
+         本 POM 不含任何 Spring Boot 组件；需要 Spring 版本管理时，
+         请在模块中 import chaos-parent-spring-boot* BOM。 -->
 
     <properties>
         <!-- 编码 -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <!-- JDK 17 核心：使用 release 统一管理 -->
+        <!-- Java 17 基线：使用 release 统一管理 -->
         <java.version>17</java.version>
         <maven.compiler.release>17</maven.compiler.release>
 
-        <!-- 统一版本管理（便于子模块继承） -->
-        <spring-boot.version>3.5.14</spring-boot.version>
-        <spring-ai.version>1.1.0</spring-ai.version>
-        <spring-cloud.version>2025.1.0</spring-cloud.version>
-        <spring-cloud-alibaba.version>2025.0.0.0</spring-cloud-alibaba.version>
-        <mybatis-plus.version>3.5.7</mybatis-plus.version>
-        <druid.version>1.2.23</druid.version>
-        <hutool.version>5.8.46</hutool.version>
-        <guava.version>33.6.0-jre</guava.version>
-        <lombok.version>1.18.46</lombok.version>
-
-        <!-- Maven 插件版本 -->
+        <!-- 插件版本（统一收口，全程用属性） -->
         <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
-        <maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
-        <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
-
-        <!-- 测试分层（统一收口）：surefire 包含/排除与 failsafe 版本 -->
+        <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+
+        <!-- 测试分层：surefire 包含/排除 -->
         <surefire.include1>**/*Test.java</surefire.include1>
         <surefire.include2>**/*Tests.java</surefire.include2>
         <bench.exclude>**/*Bench.java</bench.exclude>
+
+        <!-- 纯 Java 第三方库版本（不含任何 Spring Boot 组件） -->
+        <guava.version>33.6.0-jre</guava.version>
+        <hutool.version>5.8.46</hutool.version>
+        <lombok.version>1.18.46</lombok.version>
+        <caffeine.version>3.1.8</caffeine.version>
+        <!-- Office 文档处理（纯 Java，JDK8+ 可用） -->
+        <poi.version>5.5.1</poi.version>
+        <easyexcel.version>4.0.3</easyexcel.version>
+        <pdfbox.version>3.0.6</pdfbox.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- 1. Spring Boot Dependencies (JDK 17 基线，3.5.x 是当前最成熟系列) -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <!-- 2. Spring AI BOM (生成式 AI 统一抽象，1.1.x 对齐 Spring Boot 3.5.x，要求 JDK 17+) -->
-            <dependency>
-                <groupId>org.springframework.ai</groupId>
-                <artifactId>spring-ai-bom</artifactId>
-                <version>${spring-ai.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <!-- 2. Spring Cloud Dependencies (对应 2025.x 发行版，与 Boot 3.5.x 完美对齐) -->
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <!-- 3. Spring Cloud Alibaba (2025.0 对应 Spring Cloud 2025.x) -->
-            <dependency>
-                <groupId>com.alibaba.cloud</groupId>
-                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>${spring-cloud-alibaba.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <!-- 4. 第三方组件（Spring BOM 未涵盖，显式管理版本） -->
-            <!-- Druid 连接池：1.2.23 完全支持 Spring Boot 3.x 和 JDK 17 -->
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>druid-spring-boot-3-starter</artifactId>
-                <version>${druid.version}</version>
-            </dependency>
-
-            <!-- MyBatis-Plus：使用专为 Spring Boot 3.x 设计的 starter -->
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-
-            <!-- Hutool 工具库 -->
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-all</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-
-            <!-- Guava 工具库 -->
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
             </dependency>
-
-            <!-- Lombok -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${caffeine.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml-full</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>pdfbox</artifactId>
+                <version>${pdfbox.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -127,7 +103,6 @@
     <build>
         <pluginManagement>
             <plugins>
-                <!-- Maven 编译插件：JDK 17 下使用 release 17 -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -135,23 +110,20 @@
                     <configuration>
                         <release>${maven.compiler.release}</release>
                         <encoding>${project.build.sourceEncoding}</encoding>
-                        <!-- 显式配置注解处理器，确保 Lombok 在 JDK 17 下正常工作 -->
                         <annotationProcessorPaths>
                             <path>
                                 <groupId>org.projectlombok</groupId>
                                 <artifactId>lombok</artifactId>
                                 <version>${lombok.version}</version>
                             </path>
-                            <!-- 若使用 MapStruct 等，也可在此添加 -->
                         </annotationProcessorPaths>
                     </configuration>
                 </plugin>
 
-                <!-- 单元测试插件 -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.2.5</version>
+                    <version>${maven-surefire-plugin.version}</version>
                     <configuration>
                         <includes>
                             <include>${surefire.include1}</include>
@@ -176,11 +148,10 @@
                     </configuration>
                 </plugin>
 
-                <!-- 源码打包插件 -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>${maven-source-plugin.version}</version>
                     <executions>
                         <execution>
                             <id>attach-sources</id>
@@ -208,5 +179,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

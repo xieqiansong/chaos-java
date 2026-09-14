@@ -15,103 +15,87 @@
     <name>chaos-parent-jdk25</name>
     <packaging>pom</packaging>
 
+    <!-- 纯 Java 基线 parent：作为示例模块的 <parent> 引用。
+         本 POM 不含任何 Spring Boot 组件；需要 Spring 版本管理时，
+         请在模块中 import chaos-parent-spring-boot* BOM。 -->
 
     <properties>
         <!-- 编码 -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <!-- JDK 25 核心配置：使用 release 统一管理 -->
+        <!-- Java 25 基线：使用 release 统一管理 -->
         <java.version>25</java.version>
         <maven.compiler.release>25</maven.compiler.release>
 
-        <!-- Spring 生态核心（面向未来的最新版本） -->
-        <spring-boot.version>4.0.7</spring-boot.version>
-        <spring-cloud.version>2025.1.2</spring-cloud.version>
-        <spring-cloud-alibaba.version>2025.1.0.0</spring-cloud-alibaba.version>
-
-        <!-- 常用第三方组件 -->
-        <mybatis-plus.version>3.5.7</mybatis-plus.version>
-        <druid.version>1.2.23</druid.version>
-        <hutool.version>5.8.46</hutool.version>
-        <guava.version>33.6.0-jre</guava.version>
-        <lombok.version>1.18.46</lombok.version> <!-- JDK 25 需要 1.18.36+ -->
-
-        <!-- Maven 插件版本 -->
+        <!-- 插件版本（统一收口，全程用属性） -->
         <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
 
-        <!-- 测试分层（统一收口）：surefire 包含/排除与 failsafe 版本 -->
-        <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
+        <!-- 测试分层：surefire 包含/排除 -->
         <surefire.include1>**/*Test.java</surefire.include1>
         <surefire.include2>**/*Tests.java</surefire.include2>
         <bench.exclude>**/*Bench.java</bench.exclude>
+
+        <!-- 纯 Java 第三方库版本（不含任何 Spring Boot 组件） -->
+        <guava.version>33.6.0-jre</guava.version>
+        <hutool.version>5.8.46</hutool.version>
+        <lombok.version>1.18.46</lombok.version>
+        <caffeine.version>3.1.8</caffeine.version>
+        <!-- Office 文档处理（纯 Java，JDK8+ 可用） -->
+        <poi.version>5.5.1</poi.version>
+        <easyexcel.version>4.0.3</easyexcel.version>
+        <pdfbox.version>3.0.6</pdfbox.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- 1. Spring Boot BOM（4.x 系列，基于 Spring Framework 7 和 Jakarta EE 11） -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <!-- 2. Spring Cloud BOM（2025.1.x 对应 Spring Boot 4.0.x） -->
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <!-- 3. Spring Cloud Alibaba BOM（2025.1.x 适配 Spring Boot 4.0.x） -->
-            <dependency>
-                <groupId>com.alibaba.cloud</groupId>
-                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>${spring-cloud-alibaba.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <!-- 4. 第三方组件（Spring BOM 未涵盖） -->
-            <!-- Druid：使用 spring-boot-3-starter 即可兼容 Spring Boot 4.x -->
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>druid-spring-boot-3-starter</artifactId>
-                <version>${druid.version}</version>
-            </dependency>
-
-            <!-- MyBatis-Plus：使用 spring-boot3-starter 兼容 Spring Boot 4.x -->
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-
-            <!-- Hutool 工具库 -->
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-all</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-
-            <!-- Guava 工具库 -->
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
             </dependency>
-
-            <!-- Lombok：JDK 25 需要 1.18.36+ -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${caffeine.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml-full</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>pdfbox</artifactId>
+                <version>${pdfbox.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -195,5 +179,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

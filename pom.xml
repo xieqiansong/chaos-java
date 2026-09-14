@@ -18,10 +18,27 @@
         <module>chaos-parents/chaos-parent-jdk17</module>
         <module>chaos-parents/chaos-parent-jdk21</module>
         <module>chaos-parents/chaos-parent-jdk25</module>
-        <module>chaos-parents/chaos-parent-spring-boot2</module>
-        <module>chaos-parents/chaos-parent-spring-boot3</module>
-        <module>chaos-parents/chaos-parent-spring-boot4</module>
+        <module>chaos-parents/chaos-dependencies-spring-boot2</module>
+        <module>chaos-parents/chaos-dependencies-spring-boot3</module>
+        <module>chaos-parents/chaos-dependencies-spring-boot4</module>
+
+        <module>java-core/jdk8-base</module>
+        <module>java-core/jdk11-base</module>
+        <module>java-core/jdk17-base</module>
+        <module>java-core/jdk21-base</module>
+        <module>java-core/jdk25-base</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>5.13.4</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <profiles>
         <!-- 压测专用：只跑 *Bench / BenchMarkTest，其余单测让位 -->
