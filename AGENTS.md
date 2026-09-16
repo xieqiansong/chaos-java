@@ -1,4 +1,4 @@
-﻿# AGENTS.md — Demo 生成规范（硬约束 + 形态适配）
+# AGENTS.md — Demo 生成规范（硬约束 + 形态适配）
 
 本仓库以 **「单技术点 Demo」** 为核心交付物，用本规范约束 AI 生成的每一个 demo；综合实战 Demo（如 `seckill-demo` / `short-link-demo`）仅保留、**不新增**，除非用户明确要求（见第七章）。
 
@@ -40,7 +40,7 @@
 
 ## 四、验证与触发形态（强制，首选顺序）
 
-1. **单元测试（首要形态，及格线）**：每个场景至少一条可断言的 `*Test`，既验证语义又充当「可观察输出」。无外部依赖时直接跑；CI 无外部依赖时靠 `Assumptions` 优雅跳过。**禁止**用「`@Disabled` 整体禁用 + `Thread.sleep` 当入口」的做法（那是 RocketMQ demo 的历史包袱，新 demo 不得复制）。
+1. **单元测试（首要形态，及格线）**：每个场景至少一条可断言的 `*Test`，既验证语义又充当「可观察输出」。无外部依赖时直接跑；CI 无外部依赖时靠 `Assumptions` 优雅跳过。**禁止**用「`@Disabled` 整体禁用 + `Thread.sleep` 当入口」的做法。
 2. **控制台 Runner（可选）**：纯库/非 Web 想分节打印「输入→输出」时，提供 `DemoApp.main()`，用分隔线把每个场景的输出分节打印。
 3. **场景注册表（可选，非强制）**：把场景抽象为 `Scenario { name(); description(); run(); }` 由 Spring 收集，经 `ApplicationRunner` 或测试加载，支持「按名 / 一键全跑」。
 
@@ -61,7 +61,7 @@
 - **默认只跑单测**：`mvn test` 必须快、稳定、零外部依赖或靠 `Assumptions` 跳过。
 - **集成测试分流**：凡依赖真实 / 容器化中间件且无法内存化的用例，命名 `*IT`，由 failsafe 在 `verify` 阶段执行；禁止把集成测试伪造成 `*Test` 挤进单测阶段。
 - **压测隔离**：所有 `*Bench` 必须排除在 surefire 之外，仅通过 `-Pstress` 单独跑；产物落 `bench-results/*.md`，**不得写入任何连接凭证 / 内网地址等敏感信息**（呼应根 `AGENTS.md` 公开项目脱敏约束）。
-- **历史命名兼容**：既有 `BenchMarkTest`、`*IntegrationTest` 沿用旧名，由各平台父 pom 的 surefire 排除 / failsafe 包含规则直接兼容；**新增**测试请严格遵循 `*Bench` / `*IT` 命名。
+- **命名兼容**：既有 `BenchMarkTest`、`*IntegrationTest` 沿用现名，由各平台父 pom 的 surefire 排除 / failsafe 包含规则直接兼容；**新增**测试请严格遵循 `*Bench` / `*IT` 命名。
 
 ### 5.2 框架统一（淘汰 JUnit4）
 
@@ -128,7 +128,7 @@ GitHub Actions（或等价 Runner）分阶段：
 - 目录按**技术域**组织（见根 `README.md` 模块总览）：`cache` / `mq` / `distributed` / `microservice` / `persistence` / `ai` / `office` / `engineering` / `crypto` / `showcase` / `java-core` / `jdk-features` / `tools`。
 - JDK / Spring Boot 版本**不进目录名**，由每模块的 pom 属性收口：挂 `chaos-bom-springboot2`（SB 2.7.18，release 8）/ `chaos-bom-springboot3`（SB 3.5.14，release 17 或 21）/ `chaos-bom-springboot4`（SB 4.0.7，release 25）。
 - 技术对 JDK/SB 有强约束（依赖库字节码要求，如 `mybatis-plus-jsqlparser` 需 JDK 11+）→ 挂对应 BOM 并设 `release`；同一技术点因字节码地板分两条主线时（如 MyBatis-Plus `jdk8` 与 `jdk11` 两版），两模块并存、各自说明差异。
-- `jdk-features/` 保留版本轴：仅承载「JDK 新特性」这类**主题本身就是版本**的模块（`jdk11-base` / `jdk17-base` / `jdk21-base` / `jdk25-base`）；`java-core/` 收 Java 内功合集（原 `jdk8-base`）。
+- `jdk-features/` 保留版本轴：仅承载「JDK 新特性」这类**主题本身就是版本**的模块（`jdk11-base` / `jdk17-base` / `jdk21-base` / `jdk25-base`）；`java-core/` 收 Java 内功合集。
 
 ### 8.2 模块命名与目录形态
 
