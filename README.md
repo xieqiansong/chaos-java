@@ -26,7 +26,11 @@
 ```
 chaos-java/
 ├── java-core/                           Java 内功合集（SB2 / release 8）
-│   └── java-core/                       Java 基础内功 + JDK8 新特性合集（分布式 ID / IO-NIO-Netty / JUC / JVM / Agent / 一致性算法等）
+│   ├── jdk8-base/                       JDK8 新特性（Lambda / Stream / Optional / 方法引用 / 默认方法 / 日期时间 / Base64 / StringJoiner / CompletableFuture）
+│   ├── juc-demo/                        JUC 并发：AQS / 锁 / 并发容器 / 阻塞队列 / 线程池 / ForkJoin / Phaser
+│   ├── io-netty-demo/                   IO 演进：BIO / NIO / AIO / 多路复用(Reactor) / 零拷贝 / Netty 3.x
+│   ├── jvm-demo/                        JVM：类加载器 / HeapOOM / GC 对比 / wait-notify + Java Agent（Premain / Agent-Class）
+│   └── java-basic-demo/                 Java 基础：反射 / 泛型 / 注解 / 集合源码 / SPI / 动态代理 / 手写迷你 Servlet 容器 / JMH 基准
 ├── jdk-features/                       各版本新特性（版本即主题）
 │   ├── jdk11-base/                      JDK11 新特性（String / Files / Optional / Stream / HttpClient / var）
 │   ├── jdk17-base/                      JDK17 新特性（文本块 / Record / 密封类 / Switch 表达式 / 模式匹配）

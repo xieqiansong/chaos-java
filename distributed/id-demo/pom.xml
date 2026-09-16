@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>lan.chaos</groupId>
+        <artifactId>chaos-parent-jdk8</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../../chaos-parents/chaos-parent-jdk8/pom.xml</relativePath>
+    </parent>
+
+    <artifactId>id-demo</artifactId>
+    <packaging>jar</packaging>
+    <name>id-demo</name>
+    <description>分布式 ID 生成方案对比：UUID / Snowflake(Hutool) / Redis-INCR / 美团 Leaf / 滴滴 TinyId</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <!-- 工具库：Snowflake、IO、线程等（版本由父 POM 管理） -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+
+        <!-- 日志：Leaf 示例（@Autowired 注入 SegmentService）使用 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+            <version>2.7.18</version>
+        </dependency>
+
+        <!-- 分布式 ID：Redis INCR 示例（RedisIdExample） -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>3.7.0</version>
+        </dependency>
+
+        <!-- 分布式 ID：美团 Leaf 号段模式（LeafSegmentExample） -->
+        <dependency>
+            <groupId>com.tencent.devops.leaf</groupId>
+            <artifactId>leaf-boot-starter</artifactId>
+            <version>1.0.2-RELEASE</version>
+        </dependency>
+
+        <!-- 分布式 ID：滴滴 TinyId 客户端（TinyIdExample） -->
+        <!--来源 https://github.com/didi/tinyid.git-->
+        <dependency>
+            <groupId>com.xiaoju.uemc.tinyid</groupId>
+            <artifactId>tinyid-client</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+</project>

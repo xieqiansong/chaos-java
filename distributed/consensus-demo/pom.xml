@@ -11,17 +11,16 @@
         <relativePath>../../chaos-parents/chaos-parent-jdk8/pom.xml</relativePath>
     </parent>
 
-    <artifactId>jdk8-base</artifactId>
+    <artifactId>consensus-demo</artifactId>
     <packaging>jar</packaging>
-    <name>jdk8-base</name>
-    <description>JDK8 新特性：Lambda、Stream、Optional、方法引用、默认方法、日期时间、Base64、StringJoiner、CompletableFuture</description>
+    <name>consensus-demo</name>
+    <description>分布式一致性算法：最小可跑 Basic Paxos（Proposer/Acceptor/Learner + 本地传输）与 Raft 选举 / 日志复制确定性模拟</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
-        <!-- JDK8 新特性测试：JUnit 5 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>

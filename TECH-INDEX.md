@@ -1,4 +1,4 @@
-﻿# 技术点索引（按技术域检索）
+# 技术点索引（按技术域检索）
 
 > 按**技术域**组织的全仓库索引，覆盖 JDK 8 / 11 / 17 / 21 / 25 五个平台。
 > 一份文件承载两件事：**前半部分**按技术域检索「已有什么」；**末尾**
@@ -58,10 +58,13 @@
 
 | 技术点 | 模块 | JDK | 关键能力 | 笔记 |
 |---|---|---|---|---|
-| Java 内功合集 | [`java-core`](java-core/java-core/README.md) | 8 | 106 个可运行例子：JUC/AQS/线程池/Fork-Join/Phaser、BIO/NIO/AIO/Netty/零拷贝/Reactor、JVM 类加载/GC 对比、SPI、迷你 Servlet 容器、JMH、Java Agent（Premain/Agent-Class）、手写 Basic Paxos + Raft 模拟 | [JDK8 内核与并发内功](https://github.com/xieqiansong/chaos-notes/blob/main/notes/JDK8内核与并发内功.md) |
-| 分布式 ID | `java-core`（`java.base/id` 相关子包） | 8 | UUID / Snowflake / Redis-INCR / Leaf / TinyId | 见上 |
-| 一致性算法 | `java-core`（Paxos / Raft 子包） | 8 | 最小 Basic Paxos、Raft 选举与日志复制确定性模拟（内存状态机 + 可断言测试） | 见上 |
-| JDK 8 新特性 | `java-core` | 8 | Lambda / Stream / Optional / 方法引用 / 默认方法 / 日期时间 API / Base64 / CompletableFuture | [JDK8 到 25 新特性演进](https://github.com/xieqiansong/chaos-notes/blob/main/notes/JDK8到25新特性演进.md) |
+| Java 并发 | [`juc-demo`](java-core/juc-demo/README.md) | 8 | JUC/AQS/锁/并发容器/阻塞队列/线程池/ForkJoin/Phaser/CountDownLatch/Semaphore/StampedLock/ThreadLocal | [JDK8 内核与并发内功](https://github.com/xieqiansong/chaos-notes/blob/main/notes/JDK8内核与并发内功.md) |
+| Java IO 演进 | [`io-netty-demo`](java-core/io-netty-demo/README.md) | 8 | BIO/NIO/AIO/多路复用(Reactor)/零拷贝/Netty 3.x 收发 | 见上 |
+| JVM 与 Agent | [`jvm-demo`](java-core/jvm-demo/README.md) | 8 | 类加载器/HeapOOM/GC 对比/wait-notify 调试/Java Agent（Premain/Agent-Class）/CGLib | 见上 |
+| Java 基础内功 | [`java-basic-demo`](java-core/java-basic-demo/README.md) | 8 | 反射/泛型/注解/集合源码/SPI/动态代理/手写迷你 Servlet 容器/JMH 字符串拼接基准 | 见上 |
+| 分布式 ID | [`id-demo`](distributed/id-demo/README.md) | 8 | UUID / Snowflake / Redis-INCR / Leaf / TinyId | 见上 |
+| 一致性算法 | [`consensus-demo`](distributed/consensus-demo/README.md) | 8 | 最小 Basic Paxos、Raft 选举与日志复制确定性模拟（内存状态机 + 可断言测试） | 见上 |
+| JDK 8 新特性 | [`jdk8-base`](java-core/jdk8-base/README.md) | 8 | Lambda / Stream / Optional / 方法引用 / 默认方法 / 日期时间 API / Base64 / CompletableFuture | [JDK8 到 25 新特性演进](https://github.com/xieqiansong/chaos-notes/blob/main/notes/JDK8到25新特性演进.md) |
 | JDK 11 新特性 | [`jdk11-base`](jdk-features/jdk11-base/README.md) | 11 | String / Files / Optional / Stream 增强 / HttpClient / var（含 JDK 9、10 引入项） | 见上 |
 | JDK 17 新特性 | [`jdk17-base`](jdk-features/jdk17-base/README.md) | 17 | 文本块 / Record / 密封类 / Switch 表达式 / instanceof 模式匹配 | 见上 |
 | JDK 21 新特性 | [`jdk21-base`](jdk-features/jdk21-base/README.md) | 21 | 虚拟线程 / Sequenced 集合 / 模式匹配 switch / Record 模式 | 见上 |

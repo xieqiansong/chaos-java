@@ -4,7 +4,7 @@ package lan.chaos.proxy;
  * 动态代理综合示例入口：对比 JDK 动态代理与 CGLib 动态代理的写法与进阶用法。
  *
  * <p>运行：直接执行 {@code main}，或
- * {@code mvn -pl jdk8-base exec:java -Dexec.mainClass=lan.chaos.proxy.ProxyDemo}
+ * {@code mvn -pl java-core/java-basic-demo exec:java -Dexec.mainClass=lan.chaos.proxy.ProxyDemo}
  */
 public class ProxyDemo {
 

@@ -11,17 +11,29 @@
         <relativePath>../../chaos-parents/chaos-parent-jdk8/pom.xml</relativePath>
     </parent>
 
-    <artifactId>jdk8-base</artifactId>
+    <artifactId>jvm-demo</artifactId>
     <packaging>jar</packaging>
-    <name>jdk8-base</name>
-    <description>JDK8 新特性：Lambda、Stream、Optional、方法引用、默认方法、日期时间、Base64、StringJoiner、CompletableFuture</description>
+    <name>jvm-demo</name>
+    <description>JVM 内功：自定义类加载器 / HeapOOM / GC 对比 / wait-notify 调试 + Java Agent（Premain / Agent-Class）</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
-        <!-- JDK8 新特性测试：JUnit 5 -->
+        <!-- 工具库：FileUtil、Console、ThreadUtil 等（版本由父 POM 管理） -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+
+        <!-- JVM 章节：CGLib 动态代理（JvmTest） -->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>

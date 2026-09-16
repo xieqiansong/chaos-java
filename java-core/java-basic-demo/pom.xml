@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>lan.chaos</groupId>
+        <artifactId>chaos-parent-jdk8</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../../chaos-parents/chaos-parent-jdk8/pom.xml</relativePath>
+    </parent>
+
+    <artifactId>java-basic-demo</artifactId>
+    <packaging>jar</packaging>
+    <name>java-basic-demo</name>
+    <description>Java 基础内功：反射 / 异常 / 泛型 / 注解 / 集合源码 / SPI / JDK+CGLib 动态代理 / 手写迷你 Servlet 容器 / JMH 字符串拼接基准</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <!-- 工具库：迷你 Servlet 容器 IoUtil 等（版本由父 POM 管理） -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+
+        <!-- 动态代理：CGLib 继承代理 + CallbackFilter + LazyLoader（proxy 包） -->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+
+        <!-- JMH 微基准：字符串拼接等基准（SimpleBenchmark/RealisticConcatBenchmark） -->
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <version>1.37</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <version>1.37</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>

@@ -11,17 +11,16 @@
         <relativePath>../../chaos-parents/chaos-parent-jdk8/pom.xml</relativePath>
     </parent>
 
-    <artifactId>jdk8-base</artifactId>
+    <artifactId>juc-demo</artifactId>
     <packaging>jar</packaging>
-    <name>jdk8-base</name>
-    <description>JDK8 新特性：Lambda、Stream、Optional、方法引用、默认方法、日期时间、Base64、StringJoiner、CompletableFuture</description>
+    <name>juc-demo</name>
+    <description>JUC 并发合集：AQS / 锁 / 并发容器 / 阻塞队列 / 线程池 / ForkJoin / Phaser / CountDownLatch / Semaphore / StampedLock / ThreadLocal 等</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
-        <!-- JDK8 新特性测试：JUnit 5 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>

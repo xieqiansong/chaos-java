@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -30,6 +30,10 @@
         <module>cache/redis-demo</module>
 
         <module>java-core/jdk8-base</module>
+        <module>java-core/juc-demo</module>
+        <module>java-core/io-netty-demo</module>
+        <module>java-core/jvm-demo</module>
+        <module>java-core/java-basic-demo</module>
         <module>java-core/jdk11-base</module>
         <module>java-core/jdk17-base</module>
         <module>java-core/jdk21-base</module>
@@ -40,6 +44,8 @@
         <module>mq/rabbitmq-demo</module>
         <module>mq/mqtt-demo</module>
 
+        <module>distributed/id-demo</module>
+        <module>distributed/consensus-demo</module>
         <module>distributed/seata-demo</module>
         <module>distributed/ratelimiter-demo</module>
         <module>distributed/idempotent-demo</module>
