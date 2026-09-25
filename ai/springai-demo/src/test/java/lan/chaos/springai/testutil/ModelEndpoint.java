@@ -1,5 +1,9 @@
 package lan.chaos.springai.testutil;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
+
+import javax.swing.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -112,8 +116,8 @@ public final class ModelEndpoint {
 
     /** 云端可用性：API Key 已配置且 /models 返回 200（规避无网/欠费等环境直接失败）。 */
     private static boolean isDeepSeekUp() {
-        String apiKey = System.getenv(API_KEY_ENV);
-        if (apiKey == null || apiKey.isBlank()) {
+        String apiKey = StrUtil.firstNonNull(System.getenv(API_KEY_ENV), SpringUtil.getProperty("spring.ai.openai.api-key"));
+        if(apiKey == null || apiKey.isBlank()) {
             return false;
         }
         try {
