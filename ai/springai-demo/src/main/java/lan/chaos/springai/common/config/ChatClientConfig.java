@@ -1,6 +1,7 @@
 package lan.chaos.springai.common.config;
 
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,6 +24,7 @@ public class ChatClientConfig {
     public ChatClient defaultChatClient(ChatClient.Builder builder) {
         return builder
                 .defaultSystem(DEFAULT_SYSTEM_PROMPT)
+                .defaultAdvisors(new SimpleLoggerAdvisor())
                 .build();
     }
 }

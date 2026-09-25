@@ -34,5 +34,6 @@ spring:
 
 logging:
   level:
-    # 生产可观察性：查看请求/响应（含 token 用量），学习阶段保持 ON 便于观察
-    org.springframework.ai.chat.client: INFO
+    # 生产可观察性：查看请求/响应（含 token 用量）。SimpleLoggerAdvisor 在 DEBUG 下打印
+    # ChatClientRequest（入参，系统+用户消息）与 ChatResponse（出参，含 usage 的 pretty JSON）
+    org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor: DEBUG
