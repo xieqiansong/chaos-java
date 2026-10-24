@@ -54,6 +54,7 @@ chaos-java/
 │   ├── nacos-demo/                      Nacos 注册发现 + 配置中心（provider / consumer / config 多进程）
 │   ├── sentinel-demo/                   流控 / 熔断 / 热点参数 / @SentinelResource
 │   ├── security-demo/                   Spring Security 过滤器链 + JWT + OAuth2 资源服务器
+│   ├── oauth2-demo/                      OAuth2 授权服务器 + Token 生命周期（授权码 / PKCE / JWT / 刷新 / 撤销 / 自省 / JWKS；含资源服务器与第三方客户端）
 │   └── microservice-demo/               企业级 Spring Cloud Alibaba 微服务（common 支撑 6 模块 + gateway/auth/user/order）
 ├── persistence/                        数据持久层
 │   ├── mybatis-plus-jdk8-demo/          MyBatis-Plus 高阶用法（内置拦截器版，SB2 / release 8）

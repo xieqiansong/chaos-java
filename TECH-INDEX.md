@@ -142,6 +142,7 @@
 | 技术点 | 模块 | JDK | 关键能力 | 笔记 |
 |---|---|---|---|---|
 | 安全框架与认证授权 | [`security-demo`](microservice/security-demo/README.md) | 8 | Spring Security 过滤器链（白名单 / Basic / 无状态）+ jjwt 签发校验 + 方法安全 + OAuth2 资源服务器（条件化启用，附 Keycloak docker-compose）；Session-Cookie 与 Token 方案对比见注释 | [Spring Security 学习记录](https://github.com/xieqiansong/chaos-notes/blob/main/notes/SpringSecurity学习记录.md) |
+| OAuth2 授权服务与 Token 生命周期 | [`oauth2-demo`](microservice/oauth2-demo/README.md) | 8 | 手写授权服务器：客户端注册 / 审核 / 密钥轮换 + 授权码（含 PKCE）+ JWT access + 不透明 refresh + 滚动刷新 + 撤销（黑名单）+ 自省 + JWK 公钥分发；配套资源服务器（JWK 验签）与第三方客户端端到端演示 | （学习笔记待补） |
 | 加密与国密 | [`crypto-demo`](crypto/crypto-demo/README.md) | 8 | 主流加密算法全景：先输出 47 项算法清单（对称/非对称/摘要/MAC/KDF/编码 + 推荐状态），再演示 AES 全模式与 ChaCha20-Poly1305 / RSA-OAEP-PSS / ECDSA-ECDH-Ed25519-X25519-DH / MD5-SHA-1-SHA-2-SHA3 / HMAC-CMAC / PBKDF2-HKDF / 国密 SM2-SM3-SM4 / 混合加密（BouncyCastle 补齐 JDK8 缺失算法）；含标准测试向量与篡改检测断言，纯算法零外部依赖 | [加密与国密学习记录](https://github.com/xieqiansong/chaos-notes/blob/main/notes/加密与国密学习记录.md) |
 | HMAC 鉴权 | [`hmac-auth-demo`](crypto/hmac-auth-demo/README.md) | 8 | HMAC 签名鉴权 | [HMAC 鉴权学习记录](https://github.com/xieqiansong/chaos-notes/blob/main/notes/HMAC鉴权学习记录.md) |
 

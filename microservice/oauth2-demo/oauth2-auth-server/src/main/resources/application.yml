@@ -1,0 +1,12 @@
+server:
+  port: 18081
+
+oauth2:
+  access-token-ttl-seconds: 1800        # access_token 30 分钟（短生命周期，平衡安全与体验）
+  refresh-token-ttl-seconds: 1209600     # refresh_token 14 天（比 access 长）
+
+logging:
+  level:
+    lan.chaos.oauth2: INFO
+    # 演示用：关闭 Spring Security 的默认请求日志噪音
+    org.springframework.security: WARN

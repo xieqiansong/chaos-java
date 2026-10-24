@@ -54,6 +54,7 @@
         <module>microservice/nacos-demo</module>
         <module>microservice/sentinel-demo</module>
         <module>microservice/security-demo</module>
+        <module>microservice/oauth2-demo</module>
         <module>microservice/microservice-demo</module>
 
         <module>persistence/mybatis-plus-jdk8-demo</module>

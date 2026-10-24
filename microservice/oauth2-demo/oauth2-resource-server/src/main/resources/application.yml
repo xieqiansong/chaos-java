@@ -1,0 +1,10 @@
+server:
+  port: 18082
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # 从授权服务器拉取 RS256 公钥；auth-server 换密钥(kid 轮换)时资源服务器自动跟随
+          jwk-set-uri: http://localhost:18081/.well-known/jwks.json
