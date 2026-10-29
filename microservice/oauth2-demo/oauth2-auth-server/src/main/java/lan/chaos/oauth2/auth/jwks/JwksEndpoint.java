@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigInteger;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,7 +37,7 @@ public class JwksEndpoint {
         jwk.put("n", base64Url(publicKey.getModulus()));
         jwk.put("e", base64Url(publicKey.getPublicExponent()));
         Map<String, Object> response = new LinkedHashMap<>();
-        response.put("keys", List.of(jwk));
+        response.put("keys", Collections.singletonList(jwk));
         return ResponseEntity.ok(response);
     }
 
