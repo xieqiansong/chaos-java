@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: dubbo-consumer
+
+dubbo:
+  application:
+    name: dubbo-consumer
+
+# 默认无注册中心：供 DemoApp 以「单进程点对点直连」形态演示各机制（零外部依赖）。
+# 真实多进程 + 注册中心发现请通过 spring.profiles.active=nacos 激活 application-nacos.yml。
+
+logging:
+  level:
+    root: INFO

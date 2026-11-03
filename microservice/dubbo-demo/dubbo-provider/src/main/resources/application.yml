@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: ${DUBBO_APP_NAME:dubbo-provider}
+
+dubbo:
+  application:
+    name: ${DUBBO_APP_NAME:dubbo-provider}
+  # 导出协议与端口：consumer 通过 dubbo://host:20880 连上来
+  protocol:
+    name: dubbo
+    port: 20880
+  # Nacos 注册中心：provider 把自己登记到这里，consumer 从这里发现实例
+  registry:
+    address: nacos://127.0.0.1:8848
+  # 扫描 @DubboService 的包（也可用 @EnableDubbo 注解替代）
+  scan:
+    base-packages: lan.chaos.dubbo
+  # 实例标识，多实例负载均衡演示时通过环境变量区分（如 -Ddubbo.instance-id=provider-20881）
+  instance-id: ${DUBBO_INSTANCE_ID:provider-20880}
+
+logging:
+  level:
+    root: INFO

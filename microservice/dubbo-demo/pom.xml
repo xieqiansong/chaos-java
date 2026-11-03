@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>lan.chaos</groupId>
+        <artifactId>chaos-parent-jdk8</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../../chaos-parents/chaos-parent-jdk8/pom.xml</relativePath>
+    </parent>
+
+    <artifactId>dubbo-demo</artifactId>
+    <packaging>pom</packaging>
+    <name>dubbo-demo</name>
+
+    <modules>
+        <module>dubbo-api</module>
+        <module>dubbo-provider</module>
+        <module>dubbo-consumer</module>
+    </modules>
+
+    <properties>
+        <!--
+          Dubbo 版本定版说明：chaos-dependencies-spring-boot2 BOM 未管理 Apache Dubbo，
+          故在此聚合 pom 的 dependencyManagement 显式声明（符合 AGENTS.md 8.3「确需覆盖时显式声明并注释原因」）。
+          Dubbo 3.2.x 兼容 Spring Boot 2.7（SB2 主线）与 JDK 8，与 microservice 域既有 demo 对齐。
+        -->
+        <dubbo.version>3.2.10</dubbo.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Spring Boot 2.x 生态版本管理（SB2 / release 8） -->
+            <dependency>
+                <groupId>lan.chaos</groupId>
+                <artifactId>chaos-dependencies-spring-boot2</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Apache Dubbo 核心（3.2.x 兼容 SB2 / JDK8） -->
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-spring-boot-starter</artifactId>
+                <version>${dubbo.version}</version>
+            </dependency>
+            <!-- Dubbo Nacos 注册中心（与 nacos-demo 同栈，复用 docker-compose 起 Nacos） -->
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-registry-nacos</artifactId>
+                <version>${dubbo.version}</version>
+            </dependency>
+
+            <!-- 内部公共契约模块 -->
+            <dependency>
+                <groupId>lan.chaos</groupId>
+                <artifactId>dubbo-api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

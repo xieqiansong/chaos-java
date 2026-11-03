@@ -52,6 +52,7 @@
         <module>distributed/zookeeper-demo</module>
 
         <module>microservice/nacos-demo</module>
+        <module>microservice/dubbo-demo</module>
         <module>microservice/sentinel-demo</module>
         <module>microservice/security-demo</module>
         <module>microservice/oauth2-demo</module>

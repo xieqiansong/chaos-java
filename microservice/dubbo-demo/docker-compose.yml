@@ -1,0 +1,17 @@
+services:
+  nacos:
+    image: nacos/nacos-server:v2.3.2
+    container_name: chaos-dubbo-nacos
+    ports:
+      - "8848:8848"     # HTTP 控制台 / 配置 / 注册（http://localhost:8848/nacos，默认 nacos/nacos）
+      - "9848:9848"     # 客户端 gRPC 主端口（2.x 必需，=8848+1000）
+      - "9849:9849"     # 客户端 gRPC 辅端口（=8848+1001）
+    environment:
+      MODE: standalone          # 单机模式，无需 MySQL，demo 自包含
+      JVM_XMS: 256m
+      JVM_XMX: 256m
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8848/nacos/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10

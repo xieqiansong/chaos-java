@@ -113,6 +113,7 @@
 | 技术点 | 模块 | JDK | 关键能力 | 笔记 |
 |---|---|---|---|---|
 | 注册 / 配置中心 | [`nacos-demo`](microservice/nacos-demo/README.md) | 8 | 形态二（多进程）：拆 provider / consumer / config 三个可独立启动的进程，还原「注册 → 发现 → 跨进程调用 → 配置动态刷新」全链路 | [Nacos 学习记录](https://github.com/xieqiansong/chaos-notes/blob/main/notes/Nacos学习记录.md) |
+| RPC 框架 | [`dubbo-demo`](microservice/dubbo-demo/README.md) | 8 | Apache Dubbo：接口先行（`@DubboService` 暴露 / `@DubboReference` 引用）、Nacos 注册中心发现、异步调用（`CompletableFuture`）、集群容错（`cluster` failover/failfast/failsafe）、负载均衡（`loadbalance`）；单进程点对点直连零依赖可测 + 真实多进程 Nacos 形态 | — |
 | 熔断限流 | [`sentinel-demo`](microservice/sentinel-demo/README.md) | 8 | QPS 直接/关联/WarmUp 流控、异常数/比例/慢调用比例熔断、热点参数、`@SentinelResource`、程序化 `SphU.entry()` | [Sentinel 学习记录](https://github.com/xieqiansong/chaos-notes/blob/main/notes/Sentinel学习记录.md) |
 | **热路径 Filter 异步化（压测量化）** | [`servlet-filter-async-demo`](engineering/servlet-filter-async-demo/README.md) | 8 | `HIGHEST_PRECEDENCE` Filter 在 DispatcherServlet 之前截断最高频接口，异步提交即返回释放 Tomcat 线程；双 mode 内嵌 Tomcat 对照，量化「绕过 MVC 省下的链路 CPU」 | **[热路径 Filter 异步化：高频接口绕过 Spring MVC](https://github.com/xieqiansong/chaos-notes/blob/main/performance/热路径Filter异步化-高频接口绕过SpringMVC.md)** |
 | 微服务全链路 | [`microservice-demo`](microservice/microservice-demo/README.md) | 8 | 形态二（多进程，10 模块）：common 层 6 模块 + gateway/auth/user/order；已落地 P0–P6——统一响应异常、MDC traceId、多数据源（PG 主 / MySQL 副）、Sentinel 熔断降级、Seata AT 全局事务、双令牌 JWT、AccessLog 脱敏、Nacos 多环境 | [企业级微服务架构实践](https://github.com/xieqiansong/chaos-notes/blob/main/notes/企业级微服务架构实践.md) |

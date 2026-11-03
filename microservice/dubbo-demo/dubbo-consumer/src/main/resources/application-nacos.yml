@@ -1,0 +1,6 @@
+# Nacos 注册中心形态：consumer 通过 Nacos 发现 dubbo-provider 实例并发起跨进程调用。
+# 激活方式：--spring.profiles.active=nacos（运行 ConsumerApplication 前先 docker-compose up -d 起 Nacos）。
+
+dubbo:
+  registry:
+    address: nacos://127.0.0.1:8848

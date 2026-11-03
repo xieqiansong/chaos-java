@@ -52,6 +52,7 @@ chaos-java/
 │   └── zookeeper-demo/                  ZooKeeper 协调：Curator 锁 / 选主 / 配置中心
 ├── microservice/                       微服务与治理
 │   ├── nacos-demo/                      Nacos 注册发现 + 配置中心（provider / consumer / config 多进程）
+│   ├── dubbo-demo/                       Apache Dubbo RPC：服务暴露/引用 + Nacos 发现 + 异步/集群容错/负载均衡（provider / consumer 多进程）
 │   ├── sentinel-demo/                   流控 / 熔断 / 热点参数 / @SentinelResource
 │   ├── security-demo/                   Spring Security 过滤器链 + JWT + OAuth2 资源服务器
 │   ├── oauth2-demo/                      OAuth2 授权服务器 + Token 生命周期（授权码 / PKCE / JWT / 刷新 / 撤销 / 自省 / JWKS；含资源服务器与第三方客户端）

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>lan.chaos</groupId>
+        <artifactId>dubbo-demo</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>dubbo-consumer</artifactId>
+    <packaging>jar</packaging>
+    <name>dubbo-consumer</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-registry-nacos</artifactId>
+        </dependency>
+
+        <!-- Spring Boot 基础 starter（dubbo-spring-boot-starter 不传递引入，需显式声明） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- 共享契约 -->
+        <dependency>
+            <groupId>lan.chaos</groupId>
+            <artifactId>dubbo-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- 集成测试（*IT）复用真实 provider 实现，验证 Nacos 注册中心发现链路 -->
+        <dependency>
+            <groupId>lan.chaos</groupId>
+            <artifactId>dubbo-provider</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <!--
+              Dubbo 在 JDK 16+ 上运行时需要放开 java.base 等模块的反射访问：
+              Hessian2 序列化跨网络传播的 Throwable（如集群容错场景里 provider 抛出的异常）
+              会反射读取 java.lang.Throwable 的私有字段，强封装默认禁止。
+              仅作用于本模块的测试 JVM，不影响运行时分发。
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>--add-opens java.base/java.lang=ALL-UNNAMED
+                             --add-opens java.base/java.lang.reflect=ALL-UNNAMED
+                             --add-opens java.base/java.util=ALL-UNNAMED
+                             --add-opens java.base/java.util.concurrent=ALL-UNNAMED</argLine>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <argLine>--add-opens java.base/java.lang=ALL-UNNAMED
+                             --add-opens java.base/java.lang.reflect=ALL-UNNAMED
+                             --add-opens java.base/java.util=ALL-UNNAMED
+                             --add-opens java.base/java.util.concurrent=ALL-UNNAMED</argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
