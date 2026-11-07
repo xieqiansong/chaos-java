@@ -83,10 +83,11 @@ chaos-java/
 ├── crypto/                             安全与加密
 │   ├── crypto-demo/                     主流加密算法全景（对称 / 非对称 / 摘要-MAC / KDF / 国密）
 │   └── hmac-auth-demo/                  HMAC 签名鉴权
-├── showcase/                           综合实战（保留不新增）
+├── showcase/                           综合实战（保留不新增；finance-demo 为用户显式要求新增）
 │   ├── seckill-demo/                   秒杀：分桶库存 + Lua 扣减 + Kafka 异步下单
 │   ├── short-link-demo/                短链：Snowflake+Base62 + 布隆过滤 + Redis 缓存
-│   └── game-leaderboard-demo/          游戏排行榜：Redis ZSet 排行榜
+│   ├── game-leaderboard-demo/          游戏排行榜：Redis ZSet 排行榜
+│   └── finance-demo/                   金融支付清结算与账务核心：金额/复式记账/状态机幂等/TCC/对账/日终/审计（零外部依赖）
 └── tools/                              工具
     └── tools/                          杂项工具：算法题 / 模型 / CPU 负载控制 / 空目录清理等
 ```

@@ -183,11 +183,13 @@
 ## 综合实战
 
 > 综合实战 = 把多个技术点组合进一个带业务外壳的 demo。按 [`AGENTS.md`](AGENTS.md) 第七章，**保留但不新增**。
+> 下表 `finance-demo` 为用户**显式要求新增**（见模块内 [`DESIGN.md`](showcase/finance-demo/DESIGN.md)）。
 
 | 技术点 | 模块 | JDK | 关键能力 | 笔记 |
 |---|---|---|---|---|
 | 秒杀 | [`seckill-demo`](showcase/seckill-demo/README.md) | 8 | Redis 分桶库存预热 + Lua 原子扣减防超卖 + 令牌桶限流 + Redisson 锁 + Kafka 异步下单 + 库存定时回写 | [高并发秒杀实战](https://github.com/xieqiansong/chaos-notes/blob/main/notes/高并发秒杀实战.md)<br>⚠️ [秒杀链路压测与优化](https://github.com/xieqiansong/chaos-notes/blob/main/performance/秒杀链路压测与优化.md)（数据为示意框架，待实测回填） |
 | 短链 | [`short-link-demo`](showcase/short-link-demo/README.md) | 8 | Snowflake 发号 + Base62 短码 + Redisson 布隆过滤器防穿透 + Redis 缓存 + PG 持久化 + 302 跳转 | [短链系统设计](https://github.com/xieqiansong/chaos-notes/blob/main/notes/短链系统设计.md)<br>⚠️ [短链缓存命中率与防穿透压测](https://github.com/xieqiansong/chaos-notes/blob/main/performance/短链缓存命中率与防穿透压测.md)（数据为示意框架，待实测回填） |
+| **金融支付清结算与账务核心** | [`finance-demo`](showcase/finance-demo/README.md) | 8 | 金额 BigDecimal 值对象 / 复式记账·冲正·总分勾稽 / 交易状态机 + 并发幂等 / 手写最小 TCC（空回滚·防悬挂）+ 清算轧差 / 对账差错分类 / 日终分片断点续跑 / 审计留痕 + 脱敏 / 并发资金正确性回归（Try 不重复冻结、热点账户不丢更新）；零外部依赖，40 单测 + 1 端到端 IT | （学习笔记待补） |
 
 ---
 

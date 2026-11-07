@@ -84,6 +84,7 @@
         <module>showcase/seckill-demo</module>
         <module>showcase/short-link-demo</module>
         <module>showcase/game-leaderboard-demo</module>
+        <module>showcase/finance-demo</module>
 
         <module>tools/tools</module>
     </modules>
