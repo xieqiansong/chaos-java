@@ -118,6 +118,7 @@
 | **热路径 Filter 异步化（压测量化）** | [`servlet-filter-async-demo`](engineering/servlet-filter-async-demo/README.md) | 8 | `HIGHEST_PRECEDENCE` Filter 在 DispatcherServlet 之前截断最高频接口，异步提交即返回释放 Tomcat 线程；双 mode 内嵌 Tomcat 对照，量化「绕过 MVC 省下的链路 CPU」 | **[热路径 Filter 异步化：高频接口绕过 Spring MVC](https://github.com/xieqiansong/chaos-notes/blob/main/performance/热路径Filter异步化-高频接口绕过SpringMVC.md)** |
 | 微服务全链路 | [`microservice-demo`](microservice/microservice-demo/README.md) | 8 | 形态二（多进程，10 模块）：common 层 6 模块 + gateway/auth/user/order；已落地 P0–P6——统一响应异常、MDC traceId、多数据源（PG 主 / MySQL 副）、Sentinel 熔断降级、Seata AT 全局事务、双令牌 JWT、AccessLog 脱敏、Nacos 多环境 | [企业级微服务架构实践](https://github.com/xieqiansong/chaos-notes/blob/main/notes/企业级微服务架构实践.md) |
 | **WebFlux 响应式编程** | [`webflux-demo`](engineering/webflux-demo/README.md) | 8 | Reactor（Mono/Flux + map/flatMap/filter）、背压（request(n) 按需拉取 + onBackpressure* 策略）、RouterFunction 函数式路由、注解式响应式 Controller（对照）、WebClient 异步非阻塞调用；Netty 非阻塞，内存仓储 + 内嵌端点，零外部依赖，StepVerifier/WebTestClient 双轨验证 | （学习笔记待补） |
+| **Gateway 集成 TCP over WebSocket 隧道** | [`websocket-tunnel-demo`](microservice/websocket-tunnel-demo/README.md) | 8 | 同 JVM 内嵌 Netty WS 服务（127.0.0.1:7002）+ Gateway `ws://` 路由代理 `/forward/**`；`SmartLifecycle` 异步启停、首包缓冲、目标白名单（fail-closed 防 SSRF）、query token 握手鉴权；Netty 版本与 Reactor Netty 对齐，本地 echo 端到端验证 | [TCP-over-WebSocket 隧道：端到端性能基准与瓶颈分析](https://github.com/xieqiansong/chaos-notes/blob/main/performance/TCP-over-WebSocket隧道-端到端性能基准与瓶颈分析.md) |
 
 ---
 

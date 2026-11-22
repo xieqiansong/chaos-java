@@ -56,7 +56,8 @@ chaos-java/
 │   ├── sentinel-demo/                   流控 / 熔断 / 热点参数 / @SentinelResource
 │   ├── security-demo/                   Spring Security 过滤器链 + JWT + OAuth2 资源服务器
 │   ├── oauth2-demo/                      OAuth2 授权服务器 + Token 生命周期（授权码 / PKCE / JWT / 刷新 / 撤销 / 自省 / JWKS；含资源服务器与第三方客户端）
-│   └── microservice-demo/               企业级 Spring Cloud Alibaba 微服务（common 支撑 6 模块 + gateway/auth/user/order）
+│   ├── microservice-demo/               企业级 Spring Cloud Alibaba 微服务（common 支撑 6 模块 + gateway/auth/user/order）
+│   └── websocket-tunnel-demo/           Gateway 集成 TCP over WebSocket 隧道：同 JVM 内嵌 7002 WS 服务 + ws 路由代理 + 目标白名单
 ├── persistence/                        数据持久层
 │   ├── mybatis-plus-jdk8-demo/          MyBatis-Plus 高阶用法（内置拦截器版，SB2 / release 8）
 │   ├── mybatis-plus-jdk11-demo/         MyBatis-Plus 高阶用法（独立 mybatis-plus-jsqlparser 拦截器链，需 JDK 11+）

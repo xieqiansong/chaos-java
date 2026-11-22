@@ -1,0 +1,33 @@
+server:
+  port: 18080
+
+spring:
+  application:
+    name: websocket-tunnel-demo
+  cloud:
+    gateway:
+      routes:
+        # ws:// 协议才会激活 Gateway 的 WebSocketRoutingFilter；不要加 StripPrefix，
+        # 隧道端要看到原始 /forward/{host}/{port} 路径
+        - id: tcp-tunnel-ws
+          uri: ws://127.0.0.1:7002
+          predicates:
+            - Path=/forward/**
+      httpclient:
+        connect-timeout: 3000
+        # WebSocket 升级后是长连接；给一个足够大的值，避免被当慢响应掐断
+        response-timeout: 1h
+
+tunnel:
+  embedded:
+    enabled: true
+    # 只绑回环地址，7002 不对外暴露；外部流量统一从网关 18080 进
+    host: 127.0.0.1
+    port: 7002
+    max-frame-size: 8388608
+    connect-timeout-ms: 3000
+    access-token: demo-token
+    # fail-closed：只有列入白名单的 host[:port] 才能被转发
+    allowed-targets:
+      - 127.0.0.1:3306
+      - 127.0.0.1:6379

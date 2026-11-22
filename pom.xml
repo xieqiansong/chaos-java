@@ -57,6 +57,7 @@
         <module>microservice/security-demo</module>
         <module>microservice/oauth2-demo</module>
         <module>microservice/microservice-demo</module>
+        <module>microservice/websocket-tunnel-demo</module>
 
         <module>persistence/mybatis-plus-jdk8-demo</module>
         <module>persistence/mybatis-plus-jdk11-demo</module>
